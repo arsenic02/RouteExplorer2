@@ -26,6 +26,7 @@ class MainActivity : ComponentActivity() {
                     RouteExplorer()
                 }
             }
+//            RouteExplorer()
         }
     }
 }
@@ -44,4 +45,10 @@ fun GreetingPreview() {
     RouteExplorer2Theme {
         Greeting("Android")
     }
+}
+
+@Preview
+@Composable
+fun DefaultPreview(){
+    RouteExplorer()
 }

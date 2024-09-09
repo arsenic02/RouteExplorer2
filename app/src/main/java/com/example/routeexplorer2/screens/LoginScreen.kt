@@ -15,6 +15,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.routeexplorer2.R
 import com.example.routeexplorer2.components.ButtonComponent
 import com.example.routeexplorer2.components.ClickableLoginTextComponent
@@ -22,11 +23,13 @@ import com.example.routeexplorer2.components.HeadingTextComponent
 import com.example.routeexplorer2.components.MyTextFieldComponent
 import com.example.routeexplorer2.components.NormalTextComponent
 import com.example.routeexplorer2.components.PasswordFieldComponent
+import com.example.routeexplorer2.data.LoginViewModel
+import com.example.routeexplorer2.data.UIEvent
 import com.example.routeexplorer2.navigation.RouterExplorerAppRouter
 import com.example.routeexplorer2.navigation.Screen
 
 @Composable
-fun LoginScreen(){
+fun LoginScreen(loginViewModel: LoginViewModel = viewModel()){
     Surface(
         //color = Color.White,
         modifier= Modifier
@@ -43,10 +46,20 @@ fun LoginScreen(){
             Spacer(modifier =Modifier.height(20.dp))
 
             MyTextFieldComponent(labelValue = stringResource(id = R.string.email),
-                painterResource(id =R.drawable.ic_mail_24 ))
+                painterResource(id =R.drawable.ic_mail_24 ),
+                onTextSelected = {
+                    loginViewModel.onEvent(UIEvent.EmailChanged(it))
+                }
+            )
+
 
             PasswordFieldComponent(labelValue = stringResource(id = R.string.password),
-                painterResource(id =R.drawable.ic_lock_24 ))
+                painterResource(id =R.drawable.ic_lock_24 ),
+                onTextSelected = {
+                    loginViewModel.onEvent(UIEvent.PasswordChanged(it))
+                }
+
+            )
             
             Spacer(modifier =Modifier.height(40.dp))
 
@@ -56,7 +69,12 @@ fun LoginScreen(){
 
             Spacer(modifier =Modifier.height(40.dp))
 
-            ButtonComponent(value = stringResource(id=R.string.login))
+            ButtonComponent(value = stringResource(id=R.string.login),
+                onButtonClicked = {
+                    //loginViewModel.onEvent(UIEvent.)
+                },
+                isEnabled = false
+                )
         }
 
     }

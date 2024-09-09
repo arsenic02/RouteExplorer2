@@ -92,7 +92,9 @@ fun HeadingTextComponent(value: String){
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTextFieldComponent(labelValue:String, painterResource: Painter){
+fun MyTextFieldComponent(labelValue:String, painterResource: Painter,
+                         onTextSelected: (String) -> Unit
+                         ){
 
     val textValue =remember{
         mutableStateOf("")
@@ -114,6 +116,7 @@ fun MyTextFieldComponent(labelValue:String, painterResource: Painter){
         value=textValue.value,
         onValueChange={
             textValue.value = it
+            onTextSelected(it)
         },
         leadingIcon={
             Icon(painter = painterResource,contentDescription="")
@@ -125,7 +128,9 @@ fun MyTextFieldComponent(labelValue:String, painterResource: Painter){
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 
-fun PasswordFieldComponent(labelValue:String, painterResource: Painter){
+fun PasswordFieldComponent(labelValue:String, painterResource: Painter,
+                           onTextSelected: (String) -> Unit
+){
 
     val localFocusManager = LocalFocusManager.current
     val password =remember{
@@ -155,6 +160,7 @@ fun PasswordFieldComponent(labelValue:String, painterResource: Painter){
         },
         onValueChange={
             password.value = it
+            onTextSelected(it)
         },
         leadingIcon={
             Icon(painter = painterResource,contentDescription="")
@@ -240,15 +246,21 @@ fun ClickableTextComponent(value:String, onTextSelected:(String) -> Unit){
 }
 
 @Composable
-fun ButtonComponent(value:String){
+fun ButtonComponent(value:String, onButtonClicked: () -> Unit,isEnabled: Boolean=true){
     Button(
-        onClick={},
+
         modifier= Modifier
             .fillMaxWidth()
             .heightIn(48.dp),
+        onClick={
+            onButtonClicked.invoke()
+        },
         contentPadding= PaddingValues(),
 //        colors = ButtonDefaults.buttonColors(Color.Transparent)
-        colors = ButtonDefaults.buttonColors(Color.White)
+        colors = ButtonDefaults.buttonColors(Color.White),
+        shape=RoundedCornerShape(50.dp),
+        enabled = isEnabled
+
 
     ){
         Box(modifier=Modifier

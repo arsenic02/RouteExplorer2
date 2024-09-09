@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "558578792015",
+    "project_id": "routeexplorer2-2e4c5",
+    "storage_bucket": "routeexplorer2-2e4c5.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:558578792015:android:d0d944c8de18a14c3fdc3a",
+        "android_client_info": {
+          "package_name": "com.example.routeexplorer2"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCIMdje_4tiX7rSKS2inKO0RPuu6Y0z_lU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

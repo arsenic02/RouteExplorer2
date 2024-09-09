@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -45,8 +46,10 @@ import androidx.compose.material3.Checkbox
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.withStyle
 import com.example.routeexplorer2.ui.theme.Blue
 import com.example.routeexplorer2.ui.theme.LightBlue
@@ -67,9 +70,6 @@ fun NormalTextComponent(value: String){
         )
     , color= Color.White,//colorResource(id = R.color.colorText),
         textAlign = TextAlign.Center
-
-
-
     )
 }
 
@@ -87,9 +87,6 @@ fun HeadingTextComponent(value: String){
         )
         , color= Color.White,//colorResource(id = R.color.colorText),
         textAlign = TextAlign.Center
-
-
-
     )
 }
 
@@ -111,14 +108,17 @@ fun MyTextFieldComponent(labelValue:String, painterResource: Painter){
             cursorColor= LightBlue,//Pink80,
 //            backgroundColor= TextColor //nece kod mene
         ),
-        keyboardOptions = KeyboardOptions.Default,
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),// ima u tastaturi dugme kojim se prelazi u novi red
+        singleLine=true,
+        maxLines=1,
         value=textValue.value,
         onValueChange={
             textValue.value = it
         },
         leadingIcon={
             Icon(painter = painterResource,contentDescription="")
-        }
+        },
+
     )
 }
 
@@ -127,6 +127,7 @@ fun MyTextFieldComponent(labelValue:String, painterResource: Painter){
 
 fun PasswordFieldComponent(labelValue:String, painterResource: Painter){
 
+    val localFocusManager = LocalFocusManager.current
     val password =remember{
         mutableStateOf("")
     }
@@ -145,8 +146,13 @@ fun PasswordFieldComponent(labelValue:String, painterResource: Painter){
             cursorColor= LightBlue,
 //            backgroundColor= Blue //nece kod mene
         ),
-        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password ),
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+        singleLine=true,
+        maxLines=1,
         value=password.value,
+        keyboardActions = KeyboardActions{
+            localFocusManager.clearFocus()
+        },
         onValueChange={
             password.value = it
         },
@@ -266,10 +272,10 @@ fun ButtonComponent(value:String){
 
 
 @Composable
-fun ClickableLoginTextComponent(onTextSelected: (String) -> Unit){
+fun ClickableLoginTextComponent(tryingToLogin:Boolean=true,onTextSelected: (String) -> Unit){
 
-    val initialText="Already have an account? "
-    val loginText="Login"
+    val initialText=if(tryingToLogin)"Already have an account? " else "Don't have an account yet? "
+    val loginText=if(tryingToLogin)"Login" else "Register"
 
     val annotatedString = buildAnnotatedString {
         // Stil za "Already have an account?" u beloj boji

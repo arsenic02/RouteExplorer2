@@ -48,6 +48,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.withStyle
+import com.example.routeexplorer2.ui.theme.Blue
+import com.example.routeexplorer2.ui.theme.LightBlue
 import com.example.routeexplorer2.ui.theme.Pink40
 
 
@@ -63,7 +65,7 @@ fun NormalTextComponent(value: String){
             fontWeight = FontWeight.Normal,
             fontStyle= FontStyle.Normal
         )
-    , color= colorResource(id = R.color.colorText),
+    , color= Color.White,//colorResource(id = R.color.colorText),
         textAlign = TextAlign.Center
 
 
@@ -83,7 +85,7 @@ fun HeadingTextComponent(value: String){
             fontWeight = FontWeight.Bold,
             fontStyle= FontStyle.Normal
         )
-        , color= colorResource(id = R.color.colorText),
+        , color= Color.White,//colorResource(id = R.color.colorText),
         textAlign = TextAlign.Center
 
 
@@ -104,9 +106,9 @@ fun MyTextFieldComponent(labelValue:String, painterResource: Painter){
         label = {Text(text=labelValue)},
 
         colors=TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = Pink80,
-            focusedLabelColor= Pink80,
-            cursorColor= Pink80,
+            focusedBorderColor = LightBlue,//Pink80,
+            focusedLabelColor= LightBlue,//Pink80,
+            cursorColor= LightBlue,//Pink80,
 //            backgroundColor= TextColor //nece kod mene
         ),
         keyboardOptions = KeyboardOptions.Default,
@@ -138,10 +140,10 @@ fun PasswordFieldComponent(labelValue:String, painterResource: Painter){
         label = {Text(text=labelValue)},
 
         colors=TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = Pink80,
-            focusedLabelColor= Pink80,
-            cursorColor= Pink80,
-//            backgroundColor= TextColor //nece kod mene
+            focusedBorderColor = LightBlue,
+            focusedLabelColor= LightBlue,
+            cursorColor= LightBlue,
+//            backgroundColor= Blue //nece kod mene
         ),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password ),
         value=password.value,
@@ -208,12 +210,12 @@ fun ClickableTextComponent(value:String, onTextSelected:(String) -> Unit){
     val termsAndConditionsText=" Term of Use"
     val annotatedString = buildAnnotatedString {
         append(initialText)
-        withStyle(style=SpanStyle(color= Pink80)){
+        withStyle(style=SpanStyle(color= Color.White)){
             pushStringAnnotation(tag=privacyPolicyText, annotation = privacyPolicyText)
             append(privacyPolicyText)
         }
         append(andText)
-        withStyle(style=SpanStyle(color= Pink80)){
+        withStyle(style=SpanStyle(color= Color.White)){
             pushStringAnnotation(tag=termsAndConditionsText, annotation = termsAndConditionsText)
             append(termsAndConditionsText)
         }
@@ -239,14 +241,15 @@ fun ButtonComponent(value:String){
             .fillMaxWidth()
             .heightIn(48.dp),
         contentPadding= PaddingValues(),
-        colors = ButtonDefaults.buttonColors(Color.Transparent)
+//        colors = ButtonDefaults.buttonColors(Color.Transparent)
+        colors = ButtonDefaults.buttonColors(Color.White)
 
     ){
         Box(modifier=Modifier
             .fillMaxWidth()
             .heightIn(48.dp)
             .background(
-                brush= Brush.horizontalGradient(listOf(Pink80, Pink40)),
+                brush= Brush.horizontalGradient(listOf(LightBlue, Blue)),
                 shape= RoundedCornerShape(50.dp)
             ),
             contentAlignment=Alignment.Center
@@ -269,13 +272,17 @@ fun ClickableLoginTextComponent(onTextSelected: (String) -> Unit){
     val loginText="Login"
 
     val annotatedString = buildAnnotatedString {
-        append(initialText)
-        withStyle(style=SpanStyle(color= Pink80)){
-            pushStringAnnotation(tag=loginText, annotation = loginText)
+        // Stil za "Already have an account?" u beloj boji
+        withStyle(style = SpanStyle(color = Color.White, fontSize = 16.sp)) {
+            append(initialText)
+        }
+        // Stil za "Login" u plavoj boji
+        withStyle(style = SpanStyle(color = Color.Blue,  fontSize = 16.sp)) {
+            pushStringAnnotation(tag = loginText, annotation = loginText)
             append(loginText)
         }
-
     }
+
 
     ClickableText(text =annotatedString ,onClick={offset ->
         annotatedString.getStringAnnotations(offset,offset)

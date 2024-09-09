@@ -17,7 +17,7 @@ import com.example.routeexplorer2.screens.TermsAndConditionsScreen
 fun RouteExplorer(){
     Surface (
         modifier= Modifier.fillMaxSize(),
-        color = Color.White
+//        color = Color.White
     ) {
         //SignUpScreen()
         

@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">RouteExplorer2</string>
     <string name="hello">Hey there,</string>
-    <string name="create_account">Create an Account</string>
+    <string name="routeExpl">RouteExplorer</string>
     <string name="welcome">Welcome Back</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>

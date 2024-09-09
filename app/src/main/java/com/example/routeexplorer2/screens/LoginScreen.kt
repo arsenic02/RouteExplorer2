@@ -49,7 +49,8 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()){
                 painterResource(id =R.drawable.ic_mail_24 ),
                 onTextSelected = {
                     loginViewModel.onEvent(UIEvent.EmailChanged(it))
-                }
+                },
+                errorStatus = loginViewModel.registrationUIState.value.emailError
             )
 
 
@@ -57,7 +58,8 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()){
                 painterResource(id =R.drawable.ic_lock_24 ),
                 onTextSelected = {
                     loginViewModel.onEvent(UIEvent.PasswordChanged(it))
-                }
+                },
+                errorStatus = loginViewModel.registrationUIState.value.passwordError
 
             )
             
@@ -73,7 +75,7 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()){
                 onButtonClicked = {
                     //loginViewModel.onEvent(UIEvent.)
                 },
-                isEnabled = false
+                isEnabled = true
                 )
         }
 

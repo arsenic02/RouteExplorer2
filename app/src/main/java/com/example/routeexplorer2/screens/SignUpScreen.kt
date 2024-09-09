@@ -50,7 +50,8 @@ fun SignUpScreen (loginViewModel: LoginViewModel=viewModel()){
                     painterResource(id=R.drawable.ic_person_24),
                     onTextSelected = {
                         loginViewModel.onEvent(UIEvent.UsernameChanged(it))
-                    }
+                    },
+                    errorStatus = loginViewModel.registrationUIState.value.usernameError
                 )
 
                 MyTextFieldComponent(
@@ -58,21 +59,25 @@ fun SignUpScreen (loginViewModel: LoginViewModel=viewModel()){
                     painterResource(id=R.drawable.ic_person_24),
                     onTextSelected = {
                         loginViewModel.onEvent(UIEvent.FirstNameChanged(it))
-                    }
+                    },
+                    errorStatus = loginViewModel.registrationUIState.value.firstNameError
                 )
                 MyTextFieldComponent(
                     labelValue = stringResource(id = R.string.last_name),
                     painterResource(id=R.drawable.ic_person_24),
                     onTextSelected = {
                         loginViewModel.onEvent(UIEvent.LastNameChanged(it))
-                    }
+                    },
+                    errorStatus = loginViewModel.registrationUIState.value.lastNameError
                 )
+
                 MyTextFieldComponent(
                     labelValue = stringResource(id = R.string.email),
                     painterResource(id=R.drawable.ic_mail_24),
                     onTextSelected = {
                         loginViewModel.onEvent(UIEvent.EmailChanged(it))
-                    }
+                    },
+                    errorStatus = loginViewModel.registrationUIState.value.emailError
                 )
 
                 PasswordFieldComponent(
@@ -80,7 +85,8 @@ fun SignUpScreen (loginViewModel: LoginViewModel=viewModel()){
                     painterResource(id=R.drawable.ic_lock_24),
                     onTextSelected = {
                         loginViewModel.onEvent(UIEvent.PasswordChanged(it))
-                    }
+                    },
+                    errorStatus = loginViewModel.registrationUIState.value.passwordError
                 )
                 
 //                CheckboxComponent(value = stringResource(id = R.string.terms_and_conditions),

@@ -1,6 +1,6 @@
 package com.example.routeexplorer2.screens
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -8,8 +8,10 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -23,63 +25,77 @@ import com.example.routeexplorer2.components.HeadingTextComponent
 import com.example.routeexplorer2.components.MyTextFieldComponent
 import com.example.routeexplorer2.components.NormalTextComponent
 import com.example.routeexplorer2.components.PasswordFieldComponent
+import com.example.routeexplorer2.data.LoginUIEvent
 import com.example.routeexplorer2.data.LoginViewModel
-import com.example.routeexplorer2.data.UIEvent
+import com.example.routeexplorer2.data.SignupViewModel
+import com.example.routeexplorer2.data.SignupUIEvent
 import com.example.routeexplorer2.navigation.RouterExplorerAppRouter
 import com.example.routeexplorer2.navigation.Screen
 
 @Composable
 fun LoginScreen(loginViewModel: LoginViewModel = viewModel()){
-    Surface(
-        //color = Color.White,
-        modifier= Modifier
-            .fillMaxSize()
-            // .background(Color.White)
-            .padding(28.dp)
-            .verticalScroll(rememberScrollState())
+
+    Box(
+        modifier=Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
     ) {
-        Column(modifier=Modifier
-            .fillMaxSize()) {
-            NormalTextComponent(value = stringResource(id = R.string.login))
-            HeadingTextComponent(value = stringResource(id = R.string.routeExpl ))
+        Surface(
+            //color = Color.White,
+            modifier= Modifier
+                .fillMaxSize()
+                // .background(Color.White)
+                .padding(28.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            Column(modifier=Modifier
+                .fillMaxSize()) {
+                NormalTextComponent(value = stringResource(id = R.string.login))
+                HeadingTextComponent(value = stringResource(id = R.string.routeExpl ))
 
-            Spacer(modifier =Modifier.height(20.dp))
+                Spacer(modifier =Modifier.height(20.dp))
 
-            MyTextFieldComponent(labelValue = stringResource(id = R.string.email),
-                painterResource(id =R.drawable.ic_mail_24 ),
-                onTextSelected = {
-                    loginViewModel.onEvent(UIEvent.EmailChanged(it))
-                },
-                errorStatus = loginViewModel.registrationUIState.value.emailError
-            )
-
-
-            PasswordFieldComponent(labelValue = stringResource(id = R.string.password),
-                painterResource(id =R.drawable.ic_lock_24 ),
-                onTextSelected = {
-                    loginViewModel.onEvent(UIEvent.PasswordChanged(it))
-                },
-                errorStatus = loginViewModel.registrationUIState.value.passwordError
-
-            )
-            
-            Spacer(modifier =Modifier.height(40.dp))
-
-            ClickableLoginTextComponent(tryingToLogin = false, onTextSelected = {
-                RouterExplorerAppRouter.navigateTo(Screen.SignUpScreen)
-            })
-
-            Spacer(modifier =Modifier.height(40.dp))
-
-            ButtonComponent(value = stringResource(id=R.string.login),
-                onButtonClicked = {
-                    //loginViewModel.onEvent(UIEvent.)
-                },
-                isEnabled = loginViewModel.allValidationsPassed.value//true
+                MyTextFieldComponent(labelValue = stringResource(id = R.string.email),
+                    painterResource(id =R.drawable.ic_mail_24 ),
+                    onTextSelected = {
+                        loginViewModel.onEvent(LoginUIEvent.EmailChanged(it))
+                    },
+                    errorStatus = loginViewModel.loginUiState.value.emailError
                 )
+
+
+                PasswordFieldComponent(labelValue = stringResource(id = R.string.password),
+                    painterResource(id =R.drawable.ic_lock_24 ),
+                    onTextSelected = {
+                        loginViewModel.onEvent(LoginUIEvent.PasswordChanged(it))
+                    },
+                    errorStatus = loginViewModel.loginUiState.value.passwordError
+
+                )
+
+                Spacer(modifier =Modifier.height(40.dp))
+
+                ClickableLoginTextComponent(tryingToLogin = false, onTextSelected = {
+                    RouterExplorerAppRouter.navigateTo(Screen.SignUpScreen)
+                })
+
+                Spacer(modifier =Modifier.height(40.dp))
+
+                ButtonComponent(value = stringResource(id=R.string.login),
+                    onButtonClicked = {
+                        loginViewModel.onEvent(LoginUIEvent.LoginButtonCLicked)
+                    },
+                    isEnabled = loginViewModel.allValidationsPassed.value//true
+                )
+            }
+
+        }
+
+        if(loginViewModel.loginInProgress.value){
+            CircularProgressIndicator()
         }
 
     }
+
 }
 
 @Preview //sluzi tako da imamo preview odnosno gledamo kako na telefnou izgleda

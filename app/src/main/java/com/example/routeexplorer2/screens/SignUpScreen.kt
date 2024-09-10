@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.CircularProgressIndicator
@@ -29,13 +28,13 @@ import com.example.routeexplorer2.components.HeadingTextComponent
 import com.example.routeexplorer2.components.MyTextFieldComponent
 import com.example.routeexplorer2.components.NormalTextComponent
 import com.example.routeexplorer2.components.PasswordFieldComponent
-import com.example.routeexplorer2.data.LoginViewModel
-import com.example.routeexplorer2.data.UIEvent
+import com.example.routeexplorer2.data.SignupViewModel
+import com.example.routeexplorer2.data.SignupUIEvent
 import com.example.routeexplorer2.navigation.RouterExplorerAppRouter
 import com.example.routeexplorer2.navigation.Screen
 
 @Composable
-fun SignUpScreen (loginViewModel: LoginViewModel=viewModel()){
+fun SignUpScreen (signupViewModel: SignupViewModel=viewModel()){
 
     Box(
         modifier=Modifier.fillMaxSize(),
@@ -59,44 +58,44 @@ fun SignUpScreen (loginViewModel: LoginViewModel=viewModel()){
                     labelValue = stringResource(id = R.string.username),
                     painterResource(id=R.drawable.ic_person_24),
                     onTextSelected = {
-                        loginViewModel.onEvent(UIEvent.UsernameChanged(it))
+                        signupViewModel.onEvent(SignupUIEvent.UsernameChanged(it))
                     },
-                    errorStatus = loginViewModel.registrationUIState.value.usernameError
+                    errorStatus = signupViewModel.registrationUIState.value.usernameError
                 )
 
                 MyTextFieldComponent(
                     labelValue = stringResource(id = R.string.first_name),
                     painterResource(id=R.drawable.ic_person_24),
                     onTextSelected = {
-                        loginViewModel.onEvent(UIEvent.FirstNameChanged(it))
+                        signupViewModel.onEvent(SignupUIEvent.FirstNameChanged(it))
                     },
-                    errorStatus = loginViewModel.registrationUIState.value.firstNameError
+                    errorStatus = signupViewModel.registrationUIState.value.firstNameError
                 )
                 MyTextFieldComponent(
                     labelValue = stringResource(id = R.string.last_name),
                     painterResource(id=R.drawable.ic_person_24),
                     onTextSelected = {
-                        loginViewModel.onEvent(UIEvent.LastNameChanged(it))
+                        signupViewModel.onEvent(SignupUIEvent.LastNameChanged(it))
                     },
-                    errorStatus = loginViewModel.registrationUIState.value.lastNameError
+                    errorStatus = signupViewModel.registrationUIState.value.lastNameError
                 )
 
                 MyTextFieldComponent(
                     labelValue = stringResource(id = R.string.email),
                     painterResource(id=R.drawable.ic_mail_24),
                     onTextSelected = {
-                        loginViewModel.onEvent(UIEvent.EmailChanged(it))
+                        signupViewModel.onEvent(SignupUIEvent.EmailChanged(it))
                     },
-                    errorStatus = loginViewModel.registrationUIState.value.emailError
+                    errorStatus = signupViewModel.registrationUIState.value.emailError
                 )
 
                 PasswordFieldComponent(
                     labelValue = stringResource(id = R.string.password),
                     painterResource(id=R.drawable.ic_lock_24),
                     onTextSelected = {
-                        loginViewModel.onEvent(UIEvent.PasswordChanged(it))
+                        signupViewModel.onEvent(SignupUIEvent.PasswordChanged(it))
                     },
-                    errorStatus = loginViewModel.registrationUIState.value.passwordError
+                    errorStatus = signupViewModel.registrationUIState.value.passwordError
                 )
 
 //                CheckboxComponent(value = stringResource(id = R.string.terms_and_conditions),
@@ -114,9 +113,9 @@ fun SignUpScreen (loginViewModel: LoginViewModel=viewModel()){
                 ButtonComponent(
                     value =stringResource(id=R.string.register),
                     onButtonClicked = {
-                        loginViewModel.onEvent(UIEvent.RegisterButtonCLicked)
+                        signupViewModel.onEvent(SignupUIEvent.RegisterButtonCLicked)
                     },
-                    isEnabled = loginViewModel.allValidationsPassed.value
+                    isEnabled = signupViewModel.allValidationsPassed.value
 
                 )
 
@@ -127,7 +126,7 @@ fun SignUpScreen (loginViewModel: LoginViewModel=viewModel()){
 
         }
 
-        if(loginViewModel.signUpInProgress.value){ //NZM ZASTO CRASHUJE APLIKACIJA  KADA SE KLIKNE REGISTER
+        if(signupViewModel.signUpInProgress.value){ //NZM ZASTO je CRASHOVALA APLIKACIJA  KADA SE KLIKNE REGISTER
             CircularProgressIndicator()
         }
 

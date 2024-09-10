@@ -61,8 +61,8 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
-//    implementation(libs.androidx.material3) //OVO NE TREBA DA BUDE ZAKOMENTARISANO
-    implementation("androidx.compose.material3:material3-android:1.2.0-rc01")
+//    implementation(libs.androidx.material3) //ovo se koristilo dok nisam ubacio ispod, ako nesto zeza, onda mozda koristiti ovaj
+    implementation("androidx.compose.material3:material3-android:1.2.0-rc01")//ovo da bi radio circularprogress indicator
     implementation(libs.androidx.constraintlayout.compose)
 
     implementation("androidx.compose.material:material-icons-extended:1.5.0")

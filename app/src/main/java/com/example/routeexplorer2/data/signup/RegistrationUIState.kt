@@ -1,4 +1,4 @@
-package com.example.routeexplorer2.data
+package com.example.routeexplorer2.data.signup
 
 data class RegistrationUIState (
     var userName:String ="",

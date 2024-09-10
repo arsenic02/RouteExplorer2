@@ -6,9 +6,13 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardActions
@@ -27,7 +31,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontStyle
@@ -38,26 +41,28 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.constraintlayout.compose.Visibility
 import com.example.routeexplorer2.R
-import com.example.routeexplorer2.ui.theme.Pink80
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.TextUnit
+import com.example.routeexplorer2.data.NavigationItem
 import com.example.routeexplorer2.ui.theme.Blue
 import com.example.routeexplorer2.ui.theme.LightBlue
-import com.example.routeexplorer2.ui.theme.Pink40
 
 
 @Composable
@@ -326,8 +331,10 @@ fun ClickableLoginTextComponent(tryingToLogin:Boolean=true,onTextSelected: (Stri
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppToolbar(toolbarTitle:String,logoutButtonClicked:() ->Unit){
+fun AppToolbar(toolbarTitle:String, logoutButtonClicked:() ->Unit,
+               onMenuClicked:() -> Unit){
     TopAppBar(
+        //backgroundColor= LightBlue, ne moze ovako u ovoj verziji
         title = {
             Text(
                 text = toolbarTitle,
@@ -335,12 +342,17 @@ fun AppToolbar(toolbarTitle:String,logoutButtonClicked:() ->Unit){
             )
         },
         navigationIcon = {
-            Icon(
-                imageVector = Icons.Filled.Menu,
-                contentDescription = "Menu",
-                //modifier=Modifier.clickable {   } tu ce drawer da ide
-                tint = Color.White
-            )
+            IconButton(onClick = {
+                onMenuClicked.invoke()
+            }) {
+                Icon(
+                    imageVector = Icons.Filled.Menu,
+                    contentDescription = "Menu",
+                    //modifier=Modifier.clickable {   } tu ce drawer da ide
+                    tint = Color.White
+                )
+            }
+
         },
         actions = {
             IconButton(onClick={
@@ -352,8 +364,76 @@ fun AppToolbar(toolbarTitle:String,logoutButtonClicked:() ->Unit){
                 )
             }
 
-        }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = LightBlue // Ovde setuješ boju pozadine
+        )
     )
 }
 
+@Composable
+fun NavigationDrawerHeader(){
+    Box(modifier= Modifier
+        .fillMaxWidth()
+        .padding(32.dp)
+    ){
+        NavigationDrawerText(title = stringResource(R.string.navigation_header)
+            ,28.sp)
 
+      //  HeadingTextComponent(value = stringResource(R.string.navigation_header))
+    }
+}
+
+
+@Composable
+fun NavigationDrawerBody(navigationDrawerItems:List<NavigationItem>,
+                         onNavigationItemClicked: (NavigationItem) -> Unit){
+    LazyColumn(modifier=Modifier.fillMaxWidth()){
+
+        items(navigationDrawerItems){
+            NavigationItemRow(item = it, onNavigationItemClicked)
+        }
+
+    }
+}
+
+@Composable
+fun NavigationItemRow(item:NavigationItem,
+                      onNavigationItemClicked:(NavigationItem) -> Unit){
+
+
+    Row(
+        modifier= Modifier
+            .fillMaxWidth()
+            .clickable {
+                onNavigationItemClicked.invoke(item)
+            }
+            .padding(all = 16.dp)
+    ){
+        Icon(
+            imageVector = item.icon,
+            contentDescription = item.description
+        )
+        Spacer(modifier=Modifier.width(18.dp))
+
+        NavigationDrawerText(title = item.title,18.sp)
+
+//        NormalTextComponent(value = item.title)
+    }
+}
+
+@Composable
+fun NavigationDrawerText(title:String,textUnit:TextUnit){
+    val shadowOffset = Offset(4f,6f)
+    Text(
+        text=title,style= TextStyle(
+            color= Color.Blue,
+            fontSize=textUnit,
+            fontStyle=FontStyle.Normal,
+            shadow= Shadow(
+                color=Color.White,
+                offset=shadowOffset,2f
+            )
+        )
+    )
+}

@@ -25,10 +25,8 @@ import com.example.routeexplorer2.components.HeadingTextComponent
 import com.example.routeexplorer2.components.MyTextFieldComponent
 import com.example.routeexplorer2.components.NormalTextComponent
 import com.example.routeexplorer2.components.PasswordFieldComponent
-import com.example.routeexplorer2.data.LoginUIEvent
-import com.example.routeexplorer2.data.LoginViewModel
-import com.example.routeexplorer2.data.SignupViewModel
-import com.example.routeexplorer2.data.SignupUIEvent
+import com.example.routeexplorer2.data.login.LoginUIEvent
+import com.example.routeexplorer2.data.login.LoginViewModel
 import com.example.routeexplorer2.navigation.RouterExplorerAppRouter
 import com.example.routeexplorer2.navigation.Screen
 

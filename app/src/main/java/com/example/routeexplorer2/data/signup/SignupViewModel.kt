@@ -1,4 +1,4 @@
-package com.example.routeexplorer2.data
+package com.example.routeexplorer2.data.signup
 
 import android.util.Log
 import androidx.compose.runtime.mutableStateOf
@@ -11,13 +11,13 @@ import com.google.firebase.auth.FirebaseAuth.AuthStateListener
 
 class SignupViewModel: ViewModel() {
 
-    private val TAG =SignupViewModel::class.simpleName
+    private val TAG = SignupViewModel::class.simpleName
     var registrationUIState= mutableStateOf(RegistrationUIState())//cuvaju se inputi za registraciju
 
     var allValidationsPassed= mutableStateOf(false)
 
     var signUpInProgress = mutableStateOf(false) //onaj kruzic sto se vrti kada se ucitava
-    fun onEvent(event:SignupUIEvent){
+    fun onEvent(event: SignupUIEvent){
         validateDataWithRules()
         when(event){
 
@@ -149,20 +149,21 @@ class SignupViewModel: ViewModel() {
             }
     }
 
-    fun logout(){
-        val firebaseAuth = FirebaseAuth.getInstance()
-
-        firebaseAuth.signOut()
-        val authStateListener = AuthStateListener{
-            if(it.currentUser == null){
-                Log.d(TAG, "Inside sign out complete")
-                RouterExplorerAppRouter.navigateTo(Screen.LoginScreen)
-            }
-            else {
-                Log.d(TAG, "Inside sign out NOT completed")
-            }
-        }
-
-        firebaseAuth.addAuthStateListener (authStateListener)
-    }
+    //nzm zasto je zakomentarisao metodu
+//    fun logout(){
+//        val firebaseAuth = FirebaseAuth.getInstance()
+//
+//        firebaseAuth.signOut()
+//        val authStateListener = AuthStateListener{
+//            if(it.currentUser == null){
+//                Log.d(TAG, "Inside sign out complete")
+//                RouterExplorerAppRouter.navigateTo(Screen.LoginScreen)
+//            }
+//            else {
+//                Log.d(TAG, "Inside sign out NOT completed")
+//            }
+//        }
+//
+//        firebaseAuth.addAuthStateListener (authStateListener)
+//    }
 }

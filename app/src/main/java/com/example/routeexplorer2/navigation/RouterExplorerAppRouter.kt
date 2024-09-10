@@ -13,7 +13,7 @@ sealed class Screen{
 }
 
 object RouterExplorerAppRouter {
-    var currentScreen: MutableState<Screen> = mutableStateOf(Screen.SignUpScreen)
+    var currentScreen: MutableState<Screen> = mutableStateOf(Screen.SignUpScreen)//pocetni ekran aplikacije
 
     fun navigateTo(destination: Screen){
         currentScreen.value=destination

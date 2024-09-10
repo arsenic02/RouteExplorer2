@@ -1,14 +1,20 @@
 package com.example.routeexplorer2.screens
 
+
+
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -31,13 +37,17 @@ import com.example.routeexplorer2.navigation.Screen
 @Composable
 fun SignUpScreen (loginViewModel: LoginViewModel=viewModel()){
 
-    Surface(
-        //color = Color.White,
-        modifier= Modifier
-            .fillMaxSize()
-           // .background(Color.White)
-            .padding(28.dp)
-            .verticalScroll(rememberScrollState())
+    Box(
+        modifier=Modifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+        ){
+        Surface(
+            //color = Color.White,
+            modifier= Modifier
+                .fillMaxSize()
+                // .background(Color.White)
+                .padding(28.dp)
+                .verticalScroll(rememberScrollState())
         ) {
             Column(modifier =Modifier.fillMaxSize()){
                 //NormalTextComponent(value = stringResource(id= R.string.hello) )
@@ -88,7 +98,7 @@ fun SignUpScreen (loginViewModel: LoginViewModel=viewModel()){
                     },
                     errorStatus = loginViewModel.registrationUIState.value.passwordError
                 )
-                
+
 //                CheckboxComponent(value = stringResource(id = R.string.terms_and_conditions),
 //                    onTextSelected = {
 //                        RouterExplorerAppRouter.navigateTo(Screen.TermsAndConditionsScreen)
@@ -106,16 +116,23 @@ fun SignUpScreen (loginViewModel: LoginViewModel=viewModel()){
                     onButtonClicked = {
                         loginViewModel.onEvent(UIEvent.RegisterButtonCLicked)
                     },
-                    //isEnabled = false
+                    isEnabled = loginViewModel.allValidationsPassed.value
 
-                    )
+                )
 
                 Spacer(modifier=Modifier.height(20.dp))
 
 
             }
 
+        }
+
+        if(loginViewModel.signUpInProgress.value){ //NZM ZASTO CRASHUJE APLIKACIJA  KADA SE KLIKNE REGISTER
+            CircularProgressIndicator()
+        }
+
     }
+
 }
 
 @Preview

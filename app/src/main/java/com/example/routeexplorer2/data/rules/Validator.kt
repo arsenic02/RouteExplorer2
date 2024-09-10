@@ -4,19 +4,19 @@ object Validator {
 
     fun validateUserName(uName:String):ValidationResult{
          return ValidationResult(
-             (!uName.isNullOrEmpty() && uName.length >=6 )
+             (!uName.isNullOrEmpty() && uName.length >=5 )
         )
     }
 
     fun validateFirstName(fName:String):ValidationResult{
         return ValidationResult(
-            (!fName.isNullOrEmpty() && fName.length >=6 )
+            (!fName.isNullOrEmpty() && fName.length >=3 )
         )
     }
 
     fun validateLastName(lName:String):ValidationResult{
         return ValidationResult(
-            (!lName.isNullOrEmpty() && lName.length >=6 )
+            (!lName.isNullOrEmpty() && lName.length >=2 )
         )
     }
 

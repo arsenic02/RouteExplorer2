@@ -9,6 +9,7 @@ sealed class Screen{
     object TermsAndConditionsScreen: Screen()
     object LoginScreen:Screen()
 //    object RegisterScreen:Screen()
+    object HomeScreen:Screen()
 }
 
 object RouterExplorerAppRouter {

@@ -8,6 +8,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.example.routeexplorer2.navigation.RouterExplorerAppRouter
 import com.example.routeexplorer2.navigation.Screen
+import com.example.routeexplorer2.screens.HomeScreen
 import com.example.routeexplorer2.screens.LoginScreen
 //import com.example.routeexplorer2.screens.RegisterScreen
 import com.example.routeexplorer2.screens.SignUpScreen
@@ -33,6 +34,9 @@ fun RouteExplorer(){
                 }
                 is Screen.LoginScreen -> {
                     LoginScreen()
+                }
+                is Screen.HomeScreen ->{
+                    HomeScreen()
                 }
 //                is Screen.RegisterScreen -> {
 ////                    RegisterScreen()

@@ -4,12 +4,18 @@ import android.util.Log
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.routeexplorer2.data.rules.Validator
+import com.example.routeexplorer2.navigation.RouterExplorerAppRouter
+import com.example.routeexplorer2.navigation.Screen
+import com.google.firebase.auth.FirebaseAuth
 
 class LoginViewModel: ViewModel() {
 
     private val TAG =LoginViewModel::class.simpleName
     var registrationUIState= mutableStateOf(RegistrationUIState())//cuvaju se inputi za registraciju
 
+    var allValidationsPassed= mutableStateOf(false)
+
+    var signUpInProgress = mutableStateOf(false) //onaj kruzic sto se vrti kada se ucitava
     fun onEvent(event:UIEvent){
         validateDataWithRules()
         when(event){
@@ -60,7 +66,11 @@ class LoginViewModel: ViewModel() {
         Log.d(TAG,"INside_signUp")
         printState()
 
-        validateDataWithRules()
+        createUserInFirebase(
+            email=registrationUIState.value.email,
+            password=registrationUIState.value.password
+        )
+        //validateDataWithRules()
 
 
     }
@@ -99,9 +109,42 @@ class LoginViewModel: ViewModel() {
             emailError = emailResult.status,
             passwordError =passwordResult.status
         )
+
+        allValidationsPassed.value=fNameResult.status && lNameResult.status && uNameResult.status &&
+                emailResult.status && passwordResult.status
+        //zakomentarisano je zapravo duzi zapis ovoga iznad
+//        if(fNameResult.status && lNameResult.status && uNameResult.status &&
+//            emailResult.status && passwordResult.status
+//            ){
+//            allValidationsPassed.value=true
+//        }
+//        else
+//            allValidationsPassed.value=false
     }
     private fun printState(){
         Log.d(TAG,"Inside_printState")
         Log.d(TAG,registrationUIState.value.toString())
+    }
+
+    private fun createUserInFirebase(email:String,password:String){
+
+        signUpInProgress.value=true
+
+        FirebaseAuth.getInstance()
+            .createUserWithEmailAndPassword(email,password)
+            .addOnCompleteListener {
+                Log.d(TAG,"Inside_OnCompleteListener")
+                Log.d(TAG," isSuccessful = ${it.isSuccessful}")
+
+                signUpInProgress.value=false
+                if(it.isSuccessful){
+                    RouterExplorerAppRouter.navigateTo(Screen.HomeScreen)
+                }
+            }
+            .addOnFailureListener{
+                Log.d(TAG,"Inside_OnFailureListener")
+                Log.d(TAG," Exception = ${it.message}")
+                Log.d(TAG," Exception = ${it.localizedMessage}")
+            }
     }
 }

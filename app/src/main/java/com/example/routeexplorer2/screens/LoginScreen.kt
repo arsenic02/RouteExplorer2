@@ -75,7 +75,7 @@ fun LoginScreen(loginViewModel: LoginViewModel = viewModel()){
                 onButtonClicked = {
                     //loginViewModel.onEvent(UIEvent.)
                 },
-                isEnabled = true
+                isEnabled = loginViewModel.allValidationsPassed.value//true
                 )
         }
 

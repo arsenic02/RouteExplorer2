@@ -3,7 +3,14 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
    // id("com.android.application")
     id("com.google.gms.google-services")
+   id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin") //ovo  me zezalo nesto, ne znam zasto
 
+}
+
+buildscript {
+    dependencies {
+        classpath("com.google.android.libraries.mapsplatform.secrets-gradle-plugin:secrets-gradle-plugin:2.0.1")
+    }
 }
 
 android {
@@ -90,4 +97,7 @@ dependencies {
     debugImplementation(libs.androidx.ui.test.manifest)
 
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+    implementation("com.google.maps.android:maps-compose:4.4.1")
+    implementation ("com.google.android.gms:play-services-maps:18.2.0")
+    implementation ("com.google.android.gms:play-services-location:21.2.0")
 }

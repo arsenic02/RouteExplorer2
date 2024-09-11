@@ -372,12 +372,12 @@ fun AppToolbar(toolbarTitle:String, logoutButtonClicked:() ->Unit,
 }
 
 @Composable
-fun NavigationDrawerHeader(){
+fun NavigationDrawerHeader(value:String?){
     Box(modifier= Modifier
         .fillMaxWidth()
         .padding(32.dp)
     ){
-        NavigationDrawerText(title = stringResource(R.string.navigation_header)
+        NavigationDrawerText(title = value?:stringResource(R.string.navigation_header)
             ,28.sp)
 
       //  HeadingTextComponent(value = stringResource(R.string.navigation_header))

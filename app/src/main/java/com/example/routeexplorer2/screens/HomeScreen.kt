@@ -30,12 +30,13 @@ import kotlinx.coroutines.launch
 fun HomeScreen(homeViewModel: HomeViewModel = viewModel()) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
+    homeViewModel.getUserData()
 
     ModalNavigationDrawer(
         drawerState = drawerState,
         gesturesEnabled=drawerState.isOpen,
         drawerContent = {
-            NavigationDrawerHeader()
+            NavigationDrawerHeader(homeViewModel.emailId.value)
             NavigationDrawerBody(navigationDrawerItems = homeViewModel.navigationItemsList,
                 onNavigationItemClicked={
                     Log.d("Coming here","Inside_onNavigationItemClicked")

@@ -99,114 +99,208 @@ fun HeadingTextComponent(value: String){
     )
 }
 
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//fun MyTextFieldComponent(labelValue:String, painterResource: Painter,
+//                         onTextSelected: (String) -> Unit,
+//                         errorStatus:Boolean=false
+//                         ){
+//
+//    val textValue =remember{
+//        mutableStateOf("")
+//    }
+//
+//    OutlinedTextField(
+//        modifier = Modifier.fillMaxWidth(),//.clip(componentShapes.small),
+//        label = {Text(text=labelValue)},
+//
+//        colors=TextFieldDefaults.outlinedTextFieldColors(
+//            focusedBorderColor = LightBlue,//Pink80,
+//            focusedLabelColor= LightBlue,//Pink80,
+//            cursorColor= LightBlue,//Pink80,
+////            backgroundColor= TextColor //nece kod mene
+//        ),
+//        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),// ima u tastaturi dugme kojim se prelazi u novi red
+//        singleLine=true,
+//        maxLines=1,
+//        value=textValue.value,
+//        onValueChange={
+//            textValue.value = it
+//            onTextSelected(it)
+//        },
+//        leadingIcon={
+//            Icon(painter = painterResource,contentDescription="")
+//        },
+//        isError =!errorStatus
+//
+//    )
+//}
+
+//modifikovana verzija
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MyTextFieldComponent(labelValue:String, painterResource: Painter,
-                         onTextSelected: (String) -> Unit,
-                         errorStatus:Boolean=false
-                         ){
-
-    val textValue =remember{
-        mutableStateOf("")
-    }
-
+fun MyTextFieldComponent(
+    labelValue: String,
+    painterResource: Painter,
+    textValue: String,
+    onTextSelected: (String) -> Unit,
+    errorStatus: Boolean = false
+) {
     OutlinedTextField(
-        modifier = Modifier.fillMaxWidth(),//.clip(componentShapes.small),
-        label = {Text(text=labelValue)},
-
-        colors=TextFieldDefaults.outlinedTextFieldColors(
-            focusedBorderColor = LightBlue,//Pink80,
-            focusedLabelColor= LightBlue,//Pink80,
-            cursorColor= LightBlue,//Pink80,
-//            backgroundColor= TextColor //nece kod mene
+        modifier = Modifier.fillMaxWidth(),
+        label = { Text(text = labelValue) },
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = LightBlue,
+            focusedLabelColor = LightBlue,
+            cursorColor = LightBlue
         ),
-        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),// ima u tastaturi dugme kojim se prelazi u novi red
-        singleLine=true,
-        maxLines=1,
-        value=textValue.value,
-        onValueChange={
-            textValue.value = it
+        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),
+        singleLine = true,
+        maxLines = 1,
+        value = textValue,
+        onValueChange = {
             onTextSelected(it)
         },
-        leadingIcon={
-            Icon(painter = painterResource,contentDescription="")
+        leadingIcon = {
+            Icon(painter = painterResource, contentDescription = "")
         },
-        isError =!errorStatus
-
+        isError = !errorStatus
     )
 }
 
+
+//@OptIn(ExperimentalMaterial3Api::class)
+//@Composable
+//
+//fun PasswordFieldComponent(labelValue:String, painterResource: Painter,
+//                           onTextSelected: (String) -> Unit,
+//                           errorStatus: Boolean=false
+//){
+//
+//    val localFocusManager = LocalFocusManager.current
+//    val password =remember{
+//        mutableStateOf("")
+//    }
+//
+//    val passwordVisible = remember {
+//        mutableStateOf(false)
+//    }
+//
+//    OutlinedTextField(
+//        modifier = Modifier.fillMaxWidth(),//.clip(componentShapes.small),
+//        label = {Text(text=labelValue)},
+//
+//        colors=TextFieldDefaults.outlinedTextFieldColors(
+//            focusedBorderColor = LightBlue,
+//            focusedLabelColor= LightBlue,
+//            cursorColor= LightBlue,
+////            backgroundColor= Blue //nece kod mene
+//        ),
+//        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+//        singleLine=true,
+//        maxLines=1,
+//        value=password.value,
+//        keyboardActions = KeyboardActions{
+//            localFocusManager.clearFocus()
+//        },
+//        onValueChange={
+//            password.value = it
+//            onTextSelected(it)
+//        },
+//        leadingIcon={
+//            Icon(painter = painterResource,contentDescription="")
+//        },
+//        trailingIcon = {
+//            val iconImage =if(passwordVisible.value){
+//                Icons.Filled.Visibility
+//            }else{
+//                Icons.Filled.VisibilityOff
+//            }
+//
+//            var description =if(passwordVisible.value){
+////                "Hide password"
+//                stringResource(id=R.string.hide_password)
+//            } else{
+////                "Show password"
+//                stringResource(id=R.string.show_password)
+//            }
+//
+//            IconButton(onClick = { passwordVisible.value = !passwordVisible.value }) {
+//                Icon(imageVector=iconImage, contentDescription = description)
+//            }
+//        },
+//
+//        visualTransformation =
+//        if(passwordVisible.value)
+//            VisualTransformation.None
+//        else
+//            PasswordVisualTransformation()
+//        ,
+//        isError =!errorStatus
+//
+//    )
+//}
+
+//modifikovana verzija
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-
-fun PasswordFieldComponent(labelValue:String, painterResource: Painter,
-                           onTextSelected: (String) -> Unit,
-                           errorStatus: Boolean=false
-){
-
+fun PasswordFieldComponent(
+    labelValue: String,
+    painterResource: Painter,
+    password: String,
+    onTextSelected: (String) -> Unit,
+    errorStatus: Boolean = false
+) {
     val localFocusManager = LocalFocusManager.current
-    val password =remember{
-        mutableStateOf("")
-    }
-
-    val passwordVisible = remember {
-        mutableStateOf(false)
-    }
+    val passwordVisible = remember { mutableStateOf(false) }
 
     OutlinedTextField(
-        modifier = Modifier.fillMaxWidth(),//.clip(componentShapes.small),
-        label = {Text(text=labelValue)},
-
-        colors=TextFieldDefaults.outlinedTextFieldColors(
+        modifier = Modifier.fillMaxWidth(),
+        label = { Text(text = labelValue) },
+        colors = TextFieldDefaults.outlinedTextFieldColors(
             focusedBorderColor = LightBlue,
-            focusedLabelColor= LightBlue,
-            cursorColor= LightBlue,
-//            backgroundColor= Blue //nece kod mene
+            focusedLabelColor = LightBlue,
+            cursorColor = LightBlue
         ),
         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
-        singleLine=true,
-        maxLines=1,
-        value=password.value,
-        keyboardActions = KeyboardActions{
+        singleLine = true,
+        maxLines = 1,
+        value = password,
+        keyboardActions = KeyboardActions {
             localFocusManager.clearFocus()
         },
-        onValueChange={
-            password.value = it
+        onValueChange = {
             onTextSelected(it)
         },
-        leadingIcon={
-            Icon(painter = painterResource,contentDescription="")
+        leadingIcon = {
+            Icon(painter = painterResource, contentDescription = "")
         },
         trailingIcon = {
-            val iconImage =if(passwordVisible.value){
+            val iconImage = if (passwordVisible.value) {
                 Icons.Filled.Visibility
-            }else{
+            } else {
                 Icons.Filled.VisibilityOff
             }
 
-            var description =if(passwordVisible.value){
-//                "Hide password"
-                stringResource(id=R.string.hide_password)
-            } else{
-//                "Show password"
-                stringResource(id=R.string.show_password)
+            val description = if (passwordVisible.value) {
+                stringResource(id = R.string.hide_password)
+            } else {
+                stringResource(id = R.string.show_password)
             }
-            
+
             IconButton(onClick = { passwordVisible.value = !passwordVisible.value }) {
-                Icon(imageVector=iconImage, contentDescription = description)
+                Icon(imageVector = iconImage, contentDescription = description)
             }
         },
-
-        visualTransformation =
-        if(passwordVisible.value)
+        visualTransformation = if (passwordVisible.value) {
             VisualTransformation.None
-        else
+        } else {
             PasswordVisualTransformation()
-        ,
-        isError =!errorStatus
-
+        },
+        isError = !errorStatus
     )
 }
+
 
 @Composable
 fun CheckboxComponent(value:String, onTextSelected:(String) -> Unit){

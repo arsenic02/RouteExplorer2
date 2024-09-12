@@ -3,6 +3,7 @@ package com.example.routeexplorer2
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -10,9 +11,31 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import com.example.routeexplorer2.data.home.HomeViewModel
+import com.example.routeexplorer2.data.login.LoginViewModel
+import com.example.routeexplorer2.data.login.LoginViewModelFactory
 import com.example.routeexplorer2.ui.theme.RouteExplorer2Theme
+import com.example.routeexplorer2.viewModels.UserViewModel
+import com.example.routeexplorer2.viewModels.UserViewModelFactory
+
+//import com.example.routeexplorer2.utils.checkLocationPermission
 
 class MainActivity : ComponentActivity() {
+
+    private val userViewModel: UserViewModel by viewModels {
+        UserViewModelFactory(
+            userRepository = (application as LoginFlowApp).container.userRepository,
+            //locationClient = (application as MainApplication).container.locationClient
+        )
+    }
+    private val homeViewModel: HomeViewModel by viewModels()
+   // private val loginViewModel: LoginViewModel by viewModels()
+    private val loginViewModel: LoginViewModel by viewModels {
+        LoginViewModelFactory(
+            userRepository = (application as LoginFlowApp).container.userRepository
+        )
+    }
+    //private val homeViewModel:HomeViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -23,10 +46,14 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
 //                    Greeting("Android")
-                    RouteExplorer()
+                    RouteExplorer(
+                        homeViewModel,
+                        userViewModel,
+                        loginViewModel
+                    )
                 }
             }
-//            RouteExplorer()
+//            checkLocationPermission();
         }
     }
 }
@@ -47,8 +74,8 @@ fun GreetingPreview() {
     }
 }
 
-@Preview
-@Composable
-fun DefaultPreview(){
-    RouteExplorer()
-}
+//@Preview
+//@Composable
+//fun DefaultPreview(){
+//    RouteExplorer()
+//}

@@ -29,11 +29,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.example.routeexplorer2.MainActivity
 import com.example.routeexplorer2.components.AppToolbar
 import com.example.routeexplorer2.components.NavigationDrawerBody
 import com.example.routeexplorer2.components.NavigationDrawerHeader
 import com.example.routeexplorer2.data.home.HomeViewModel
+import com.example.routeexplorer2.data.login.LoginViewModel
+import com.example.routeexplorer2.navigation.RouterExplorerAppRouter
+import com.example.routeexplorer2.navigation.Screen
+import com.example.routeexplorer2.viewModels.UserViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
@@ -53,7 +58,13 @@ import kotlinx.coroutines.launch
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
-    homeViewModel: HomeViewModel = viewModel()) {
+    navController: NavController,
+    homeViewModel: HomeViewModel = viewModel(),
+    loginViewModel: LoginViewModel,
+    userViewModel: UserViewModel
+
+
+) {
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -89,7 +100,20 @@ fun HomeScreen(
                 AppToolbar(
                     toolbarTitle = "Home",
                     logoutButtonClicked = {
-                        homeViewModel.logout()
+                        loginViewModel.signOut { success ->
+                            if (success) {
+                                RouterExplorerAppRouter.navigateTo(Screen.LoginScreen)
+//                                navController.navigate(Screens.Login.name) {
+//                                    popUpTo(Screens.GoogleMap.name) { inclusive = true }
+//                                }
+                                //removeFilter()
+                                Toast.makeText(context, "Successfully signed out", Toast.LENGTH_SHORT)
+                                    .show()
+                            } else {
+                                Toast.makeText(context, "Sign out failed", Toast.LENGTH_SHORT).show()
+                            }
+                        }
+                        //homeViewModel.logout()
                     },
                     onMenuClicked = {
                         scope.launch { drawerState.open() } // Otvara meni
@@ -150,6 +174,6 @@ fun HomeScreen(
 @Preview
 @Composable
 fun HomeScreenPreview(){
-    HomeScreen()
+    //HomeScreen()
 }
 

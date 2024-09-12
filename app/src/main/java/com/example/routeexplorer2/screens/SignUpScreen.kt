@@ -54,49 +54,50 @@ fun SignUpScreen (signupViewModel: SignupViewModel =viewModel()){
                 HeadingTextComponent(value = stringResource(id = R.string.routeExpl) )
                 Spacer(modifier = Modifier.height(20.dp))
 
-                MyTextFieldComponent(
-                    labelValue = stringResource(id = R.string.username),
-                    painterResource(id=R.drawable.ic_person_24),
-                    onTextSelected = {
-                        signupViewModel.onEvent(SignupUIEvent.UsernameChanged(it))
-                    },
-                    errorStatus = signupViewModel.registrationUIState.value.usernameError
-                )
-
-                MyTextFieldComponent(
-                    labelValue = stringResource(id = R.string.first_name),
-                    painterResource(id=R.drawable.ic_person_24),
-                    onTextSelected = {
-                        signupViewModel.onEvent(SignupUIEvent.FirstNameChanged(it))
-                    },
-                    errorStatus = signupViewModel.registrationUIState.value.firstNameError
-                )
-                MyTextFieldComponent(
-                    labelValue = stringResource(id = R.string.last_name),
-                    painterResource(id=R.drawable.ic_person_24),
-                    onTextSelected = {
-                        signupViewModel.onEvent(SignupUIEvent.LastNameChanged(it))
-                    },
-                    errorStatus = signupViewModel.registrationUIState.value.lastNameError
-                )
-
-                MyTextFieldComponent(
-                    labelValue = stringResource(id = R.string.email),
-                    painterResource(id=R.drawable.ic_mail_24),
-                    onTextSelected = {
-                        signupViewModel.onEvent(SignupUIEvent.EmailChanged(it))
-                    },
-                    errorStatus = signupViewModel.registrationUIState.value.emailError
-                )
-
-                PasswordFieldComponent(
-                    labelValue = stringResource(id = R.string.password),
-                    painterResource(id=R.drawable.ic_lock_24),
-                    onTextSelected = {
-                        signupViewModel.onEvent(SignupUIEvent.PasswordChanged(it))
-                    },
-                    errorStatus = signupViewModel.registrationUIState.value.passwordError
-                )
+                //privremeno zakomentarisano
+//                MyTextFieldComponent(
+//                    labelValue = stringResource(id = R.string.username),
+//                    painterResource(id=R.drawable.ic_person_24),
+//                    onTextSelected = {
+//                        signupViewModel.onEvent(SignupUIEvent.UsernameChanged(it))
+//                    },
+//                    errorStatus = signupViewModel.registrationUIState.value.usernameError
+//                )
+//
+//                MyTextFieldComponent(
+//                    labelValue = stringResource(id = R.string.first_name),
+//                    painterResource(id=R.drawable.ic_person_24),
+//                    onTextSelected = {
+//                        signupViewModel.onEvent(SignupUIEvent.FirstNameChanged(it))
+//                    },
+//                    errorStatus = signupViewModel.registrationUIState.value.firstNameError
+//                )
+//                MyTextFieldComponent(
+//                    labelValue = stringResource(id = R.string.last_name),
+//                    painterResource(id=R.drawable.ic_person_24),
+//                    onTextSelected = {
+//                        signupViewModel.onEvent(SignupUIEvent.LastNameChanged(it))
+//                    },
+//                    errorStatus = signupViewModel.registrationUIState.value.lastNameError
+//                )
+//
+//                MyTextFieldComponent(
+//                    labelValue = stringResource(id = R.string.email),
+//                    painterResource(id=R.drawable.ic_mail_24),
+//                    onTextSelected = {
+//                        signupViewModel.onEvent(SignupUIEvent.EmailChanged(it))
+//                    },
+//                    errorStatus = signupViewModel.registrationUIState.value.emailError
+//                )
+//
+//                PasswordFieldComponent(
+//                    labelValue = stringResource(id = R.string.password),
+//                    painterResource(id=R.drawable.ic_lock_24),
+//                    onTextSelected = {
+//                        signupViewModel.onEvent(SignupUIEvent.PasswordChanged(it))
+//                    },
+//                    errorStatus = signupViewModel.registrationUIState.value.passwordError
+//                )
 
 //                CheckboxComponent(value = stringResource(id = R.string.terms_and_conditions),
 //                    onTextSelected = {

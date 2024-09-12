@@ -85,7 +85,8 @@ dependencies {
     implementation("com.google.firebase:firebase-auth-ktx")
     implementation(libs.firebase.firestore)
 //    implementation(libs.firebase.auth.ktx)
-    implementation("com.google.firebase:firebase-storage-ktx")//naknadno sam dodao
+    implementation("com.google.firebase:firebase-storage-ktx")
+    implementation(libs.androidx.navigation.compose)//naknadno sam dodao
 //    implementation(libs.firebase.storage.ktx)
 
     testImplementation(libs.junit)

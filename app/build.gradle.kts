@@ -86,7 +86,9 @@ dependencies {
     implementation(libs.firebase.firestore)
 //    implementation(libs.firebase.auth.ktx)
     implementation("com.google.firebase:firebase-storage-ktx")
-    implementation(libs.androidx.navigation.compose)//naknadno sam dodao
+    implementation(libs.androidx.navigation.compose)
+    implementation(libs.firebase.storage)
+    implementation(libs.play.services.cast.framework)//naknadno sam dodao
 //    implementation(libs.firebase.storage.ktx)
 
     testImplementation(libs.junit)
@@ -101,4 +103,8 @@ dependencies {
     implementation("com.google.maps.android:maps-compose:4.4.1")
     implementation ("com.google.android.gms:play-services-maps:18.2.0")
     implementation ("com.google.android.gms:play-services-location:21.2.0")
+
+    //implementation (libs.coil.compose)
+    implementation("io.coil-kt:coil-compose:2.4.0")
+
 }

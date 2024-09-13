@@ -12,9 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.routeexplorer2.data.home.HomeViewModel
-import com.example.routeexplorer2.data.login.LoginViewModel
-import com.example.routeexplorer2.data.login.LoginViewModelFactory
+import com.example.routeexplorer2.viewModels.LoginViewModel
+import com.example.routeexplorer2.viewModels.LoginViewModelFactory
+import com.example.routeexplorer2.viewModels.SignupViewModel
 import com.example.routeexplorer2.ui.theme.RouteExplorer2Theme
+import com.example.routeexplorer2.viewModels.RegisterViewModelFactory
 import com.example.routeexplorer2.viewModels.UserViewModel
 import com.example.routeexplorer2.viewModels.UserViewModelFactory
 
@@ -35,6 +37,11 @@ class MainActivity : ComponentActivity() {
             userRepository = (application as LoginFlowApp).container.userRepository
         )
     }
+    private val signupViewModel: SignupViewModel by viewModels{
+        RegisterViewModelFactory(
+            userRepository = (application as LoginFlowApp).container.userRepository
+        )
+    }
     //private val homeViewModel:HomeViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +56,8 @@ class MainActivity : ComponentActivity() {
                     RouteExplorer(
                         homeViewModel,
                         userViewModel,
-                        loginViewModel
+                        loginViewModel,
+                        signupViewModel
                     )
                 }
             }

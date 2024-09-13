@@ -1,5 +1,6 @@
 package com.example.routeexplorer2.components
 
+import android.net.Uri
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -99,43 +100,6 @@ fun HeadingTextComponent(value: String){
     )
 }
 
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//fun MyTextFieldComponent(labelValue:String, painterResource: Painter,
-//                         onTextSelected: (String) -> Unit,
-//                         errorStatus:Boolean=false
-//                         ){
-//
-//    val textValue =remember{
-//        mutableStateOf("")
-//    }
-//
-//    OutlinedTextField(
-//        modifier = Modifier.fillMaxWidth(),//.clip(componentShapes.small),
-//        label = {Text(text=labelValue)},
-//
-//        colors=TextFieldDefaults.outlinedTextFieldColors(
-//            focusedBorderColor = LightBlue,//Pink80,
-//            focusedLabelColor= LightBlue,//Pink80,
-//            cursorColor= LightBlue,//Pink80,
-////            backgroundColor= TextColor //nece kod mene
-//        ),
-//        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Next),// ima u tastaturi dugme kojim se prelazi u novi red
-//        singleLine=true,
-//        maxLines=1,
-//        value=textValue.value,
-//        onValueChange={
-//            textValue.value = it
-//            onTextSelected(it)
-//        },
-//        leadingIcon={
-//            Icon(painter = painterResource,contentDescription="")
-//        },
-//        isError =!errorStatus
-//
-//    )
-//}
-
 //modifikovana verzija
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -167,79 +131,6 @@ fun MyTextFieldComponent(
         isError = !errorStatus
     )
 }
-
-
-//@OptIn(ExperimentalMaterial3Api::class)
-//@Composable
-//
-//fun PasswordFieldComponent(labelValue:String, painterResource: Painter,
-//                           onTextSelected: (String) -> Unit,
-//                           errorStatus: Boolean=false
-//){
-//
-//    val localFocusManager = LocalFocusManager.current
-//    val password =remember{
-//        mutableStateOf("")
-//    }
-//
-//    val passwordVisible = remember {
-//        mutableStateOf(false)
-//    }
-//
-//    OutlinedTextField(
-//        modifier = Modifier.fillMaxWidth(),//.clip(componentShapes.small),
-//        label = {Text(text=labelValue)},
-//
-//        colors=TextFieldDefaults.outlinedTextFieldColors(
-//            focusedBorderColor = LightBlue,
-//            focusedLabelColor= LightBlue,
-//            cursorColor= LightBlue,
-////            backgroundColor= Blue //nece kod mene
-//        ),
-//        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
-//        singleLine=true,
-//        maxLines=1,
-//        value=password.value,
-//        keyboardActions = KeyboardActions{
-//            localFocusManager.clearFocus()
-//        },
-//        onValueChange={
-//            password.value = it
-//            onTextSelected(it)
-//        },
-//        leadingIcon={
-//            Icon(painter = painterResource,contentDescription="")
-//        },
-//        trailingIcon = {
-//            val iconImage =if(passwordVisible.value){
-//                Icons.Filled.Visibility
-//            }else{
-//                Icons.Filled.VisibilityOff
-//            }
-//
-//            var description =if(passwordVisible.value){
-////                "Hide password"
-//                stringResource(id=R.string.hide_password)
-//            } else{
-////                "Show password"
-//                stringResource(id=R.string.show_password)
-//            }
-//
-//            IconButton(onClick = { passwordVisible.value = !passwordVisible.value }) {
-//                Icon(imageVector=iconImage, contentDescription = description)
-//            }
-//        },
-//
-//        visualTransformation =
-//        if(passwordVisible.value)
-//            VisualTransformation.None
-//        else
-//            PasswordVisualTransformation()
-//        ,
-//        isError =!errorStatus
-//
-//    )
-//}
 
 //modifikovana verzija
 @OptIn(ExperimentalMaterial3Api::class)
@@ -301,6 +192,38 @@ fun PasswordFieldComponent(
     )
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun NumberFieldComponent(
+    labelValue: String,
+    painterResource: Painter,
+    textValue: String,
+    onTextSelected: (String) -> Unit,
+    errorStatus: Boolean = false
+) {
+    OutlinedTextField(
+        modifier = Modifier.fillMaxWidth(),
+        label = { Text(text = labelValue) },
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            focusedBorderColor = LightBlue,
+            focusedLabelColor = LightBlue,
+            cursorColor = LightBlue
+        ),
+        keyboardOptions = KeyboardOptions.Default.copy(
+            keyboardType = KeyboardType.Phone,
+            imeAction = ImeAction.Next),
+        singleLine = true,
+        maxLines = 1,
+        value = textValue,
+        onValueChange = {
+            onTextSelected(it)
+        },
+        leadingIcon = {
+            Icon(painter = painterResource, contentDescription = "")
+        },
+        isError = !errorStatus
+    )
+}
 
 @Composable
 fun CheckboxComponent(value:String, onTextSelected:(String) -> Unit){
@@ -423,6 +346,8 @@ fun ClickableLoginTextComponent(tryingToLogin:Boolean=true,onTextSelected: (Stri
     })
 }
 
+
+
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppToolbar(toolbarTitle:String, logoutButtonClicked:() ->Unit,
@@ -480,10 +405,27 @@ fun NavigationDrawerHeader(value:String?){
 
 
 @Composable
-fun NavigationDrawerBody(navigationDrawerItems:List<NavigationItem>,
-                         onNavigationItemClicked: (NavigationItem) -> Unit){
+fun NavigationDrawerBody(
+    navigationDrawerItems:List<NavigationItem>,
+   // imageUrl: Uri?, // Dodaj parametar za sliku
+    //onImageChange: (Uri) -> Unit, // Callback za promenu slike
+    onNavigationItemClicked: (NavigationItem) -> Unit
+){
     LazyColumn(modifier=Modifier.fillMaxWidth()){
 
+        item {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                contentAlignment = Alignment.Center
+            ) {
+//                ImagePicker(
+//                    //imageUrl = imageUrl,
+//                    //onGalleryChange = onImageChange
+//                )
+            }
+        }
         items(navigationDrawerItems){
             NavigationItemRow(item = it, onNavigationItemClicked)
         }

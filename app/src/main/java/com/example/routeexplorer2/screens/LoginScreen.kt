@@ -23,9 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.routeexplorer2.R
 import com.example.routeexplorer2.Screens
@@ -35,10 +33,7 @@ import com.example.routeexplorer2.components.HeadingTextComponent
 import com.example.routeexplorer2.components.MyTextFieldComponent
 import com.example.routeexplorer2.components.NormalTextComponent
 import com.example.routeexplorer2.components.PasswordFieldComponent
-import com.example.routeexplorer2.data.login.LoginUIEvent
-import com.example.routeexplorer2.data.login.LoginViewModel
-import com.example.routeexplorer2.navigation.RouterExplorerAppRouter
-import com.example.routeexplorer2.navigation.Screen
+import com.example.routeexplorer2.viewModels.LoginViewModel
 
 @Composable
 fun LoginScreen(
@@ -68,24 +63,6 @@ fun LoginScreen(
 
                 Spacer(modifier =Modifier.height(20.dp))
 
-//                MyTextFieldComponent(labelValue = stringResource(id = R.string.email),
-//                    painterResource(id =R.drawable.ic_mail_24 ),
-//                    onTextSelected = {
-//                        loginViewModel.onEvent(LoginUIEvent.EmailChanged(it))
-//                    },
-//                    errorStatus = loginViewModel.loginUiState.value.emailError
-//                )
-//
-//
-//                PasswordFieldComponent(labelValue = stringResource(id = R.string.password),
-//                    painterResource(id =R.drawable.ic_lock_24 ),
-//                    onTextSelected = {
-//                        loginViewModel.onEvent(LoginUIEvent.PasswordChanged(it))
-//                    },
-//                    errorStatus = loginViewModel.loginUiState.value.passwordError
-//
-//                )
-
                 //modifikovana verzija mejla i passworda
                 MyTextFieldComponent(
                     labelValue = stringResource(id = R.string.email),
@@ -112,7 +89,9 @@ fun LoginScreen(
                 Spacer(modifier =Modifier.height(40.dp))
 
                 ClickableLoginTextComponent(tryingToLogin = false, onTextSelected = {
-                    RouterExplorerAppRouter.navigateTo(Screen.SignUpScreen)
+                    //RouterExplorerAppRouter.navigateTo(Screen.SignUpScreen)
+
+                    navController.navigate(Screens.Register.route)
                 })
 
                 Spacer(modifier =Modifier.height(40.dp))
@@ -129,7 +108,7 @@ fun LoginScreen(
                                 navController.navigate(Screens.GoogleMap.route)
                                // RouterExplorerAppRouter.navigateTo(Screen.HomeScreen)
                                 Log.d(TAG,"Logovao sam se")
-                               // loginViewModel.resetState()
+                                loginViewModel.resetState()
                             } else {
                                 Toast.makeText(context, "Login failed", Toast.LENGTH_SHORT).show()
                             }

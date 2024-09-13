@@ -2,14 +2,14 @@ package com.example.routeexplorer2.data.home
 
 import android.util.Log
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Leaderboard
 import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.Route
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
+import com.example.routeexplorer2.Screens
 import com.example.routeexplorer2.data.NavigationItem
-import com.example.routeexplorer2.data.signup.SignupViewModel
 import com.example.routeexplorer2.navigation.RouterExplorerAppRouter
 import com.example.routeexplorer2.navigation.Screen
 import com.google.firebase.auth.FirebaseAuth
@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth
 //ovo je zapravo za drawer
 class HomeViewModel: ViewModel() {
     private val TAG = HomeViewModel::class.simpleName
+    val isLoading = MutableLiveData(true)  // Initialize as loading
 
     val navigationItemsList = listOf<NavigationItem>(
         NavigationItem(
@@ -56,21 +57,33 @@ class HomeViewModel: ViewModel() {
         firebaseAuth.addAuthStateListener (authStateListener)
     }
 
-    fun checkForActiveSession(){
+    fun checkForActiveSession(navController: NavController){
+        isLoading.value = true
         if(FirebaseAuth.getInstance().currentUser != null){
             Log.d(TAG,"Valid session")
 
             //dodao sam ja
             isUserLoggedIn.value = true
-            RouterExplorerAppRouter.navigateTo(Screen.HomeScreen)
+            navController.navigate(Screens.GoogleMap.route) {
+
+                popUpTo(navController.graph.startDestinationId) { inclusive = true }
+
+            }
+           // RouterExplorerAppRouter.navigateTo(Screen.HomeScreen)
         }
         else{
             Log.d(TAG,"User is not logged in")
             isUserLoggedIn.value=false
 
             //dodao sam ja
-            RouterExplorerAppRouter.navigateTo(Screen.SignUpScreen)
+           // RouterExplorerAppRouter.navigateTo(Screen.SignUpScreen)
+            navController.navigate(Screens.Login.route) {
+                // Optional: Clear the back stack if needed
+                popUpTo(navController.graph.startDestinationId) { inclusive = true }
+               // popUpTo(0)
+            }
         }
+        isLoading.value = false
     }
 
     val emailId:MutableLiveData<String> = MutableLiveData()

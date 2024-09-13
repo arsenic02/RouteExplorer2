@@ -1,11 +1,7 @@
 package com.example.routeexplorer2.screens
 
-import android.Manifest
-import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -17,8 +13,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -27,22 +21,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.core.app.ActivityCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import com.example.routeexplorer2.MainActivity
+import com.example.routeexplorer2.Screens
 import com.example.routeexplorer2.components.AppToolbar
 import com.example.routeexplorer2.components.NavigationDrawerBody
 import com.example.routeexplorer2.components.NavigationDrawerHeader
 import com.example.routeexplorer2.data.home.HomeViewModel
-import com.example.routeexplorer2.data.login.LoginViewModel
-import com.example.routeexplorer2.navigation.RouterExplorerAppRouter
-import com.example.routeexplorer2.navigation.Screen
+import com.example.routeexplorer2.viewModels.LoginViewModel
 import com.example.routeexplorer2.viewModels.UserViewModel
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
-import com.google.android.gms.maps.model.MarkerOptions
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
@@ -82,6 +71,8 @@ fun HomeScreen(
 
     var markers by remember { mutableStateOf(listOf<LatLng>()) }
 
+    //moram da resim
+   // val imageUrl = userViewModel.currentUser?.photoPath
     ModalNavigationDrawer(
         drawerState = drawerState,
         gesturesEnabled=drawerState.isOpen,
@@ -102,10 +93,10 @@ fun HomeScreen(
                     logoutButtonClicked = {
                         loginViewModel.signOut { success ->
                             if (success) {
-                                RouterExplorerAppRouter.navigateTo(Screen.LoginScreen)
-//                                navController.navigate(Screens.Login.name) {
-//                                    popUpTo(Screens.GoogleMap.name) { inclusive = true }
-//                                }
+                                //RouterExplorerAppRouter.navigateTo(Screen.LoginScreen)
+                         navController.navigate(Screens.Login.route) {
+                                    popUpTo(Screens.GoogleMap.route) { inclusive = true }
+                              }
                                 //removeFilter()
                                 Toast.makeText(context, "Successfully signed out", Toast.LENGTH_SHORT)
                                     .show()

@@ -6,11 +6,12 @@ data class RegistrationUIState (
     var lastName:String="",
     var email:String="",
     var password: String="",
+    var phone:String="",
 
     var usernameError:Boolean=false,
     var firstNameError: Boolean=false,
     var lastNameError: Boolean=false,
     var emailError:Boolean=false,
-    var passwordError:Boolean=false
-
+    var passwordError:Boolean=false,
+    var phoneError:Boolean=false
 )

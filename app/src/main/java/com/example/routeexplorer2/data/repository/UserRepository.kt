@@ -15,7 +15,7 @@ class UserRepository (
 
     private val auth: FirebaseAuth,
     private val firestore: FirebaseFirestore,
-//    private val storage: FirebaseStorage
+   // private val storage: FirebaseStorage
 ){
     private val _currentUser = MutableStateFlow<User?>(null)
     val currentUser: StateFlow<User?> = _currentUser
@@ -83,13 +83,13 @@ class UserRepository (
                 "username" to username,
                 "firstName" to firstName,
                 "lastName" to lastName,
-                "phoneNumber" to phoneNumber,
+               "phoneNumber" to phoneNumber,
                 "score" to 0,
                 "likedReviews" to mutableListOf<String>(),
                 "photoPath" to ""
             )
 
-//            firestore.collection("users").document(userId).set(user).await()
+         // firestore.collection("users").document(userId).set(user).await()
 //
 //            imageUri?.let {
 //                val profilePicRef = storage.getReference("profile_pictures/$userId")

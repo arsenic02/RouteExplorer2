@@ -19,6 +19,8 @@ import com.example.routeexplorer2.ui.theme.RouteExplorer2Theme
 import com.example.routeexplorer2.viewModels.RegisterViewModelFactory
 import com.example.routeexplorer2.viewModels.UserViewModel
 import com.example.routeexplorer2.viewModels.UserViewModelFactory
+import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
 
 //import com.example.routeexplorer2.utils.checkLocationPermission
 
@@ -43,8 +45,16 @@ class MainActivity : ComponentActivity() {
         )
     }
     //private val homeViewModel:HomeViewModel
+
+//    private lateinit var mapView: MapView
+//    private var googleMap: GoogleMap? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+//        mapView = MapView(this)
+//        mapView.onCreate(savedInstanceState)
+
         setContent {
             RouteExplorer2Theme {
                 // A surface container using the 'background' color from the theme
@@ -58,12 +68,33 @@ class MainActivity : ComponentActivity() {
                         userViewModel,
                         loginViewModel,
                         signupViewModel
+//                        mapView
                     )
                 }
             }
 //            checkLocationPermission();
         }
     }
+
+//    override fun onResume() {
+//        super.onResume()
+//        mapView.onResume()
+//    }
+//
+//    override fun onPause() {
+//        super.onPause()
+//        mapView.onPause()
+//    }
+//
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        mapView.onDestroy()
+//    }
+//
+//    override fun onLowMemory() {
+//        super.onLowMemory()
+//        mapView.onLowMemory()
+//    }
 }
 
 @Composable

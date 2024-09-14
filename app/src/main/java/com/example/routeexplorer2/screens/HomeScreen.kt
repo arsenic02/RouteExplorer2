@@ -1,6 +1,7 @@
 package com.example.routeexplorer2.screens
 
 import android.Manifest
+import android.content.ContentValues.TAG
 import android.content.Context
 import android.net.Uri
 import android.util.Log
@@ -69,15 +70,18 @@ import com.example.routeexplorer2.components.NavigationDrawerHeader
 import com.example.routeexplorer2.data.home.HomeViewModel
 import com.example.routeexplorer2.data.model.LocationData
 import com.example.routeexplorer2.data.model.User
+import com.example.routeexplorer2.utils.drawRoute
 import com.example.routeexplorer2.viewModels.LoginViewModel
 import com.example.routeexplorer2.viewModels.UserViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
+import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
+import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
@@ -102,11 +106,14 @@ fun HomeScreen(
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
+
     homeViewModel.getUserData()
     val currentUser by userViewModel.currentUser.collectAsState(initial = null)
     val currentUserLocation by userViewModel.currentUserLocation.collectAsState()
+
     var isServiceDialogOpen by remember { mutableStateOf(false) }
     var isServiceRunning by remember { mutableStateOf(getServiceRunningState(context)) } // Load state
+
     val currentPosition = currentUserLocation ?: LocationData(43.321445, 21.896104)//LocationData iz klase LocationData
 //    val nisCenter = LatLng(43.321445, 21.896104)
 
@@ -116,11 +123,9 @@ fun HomeScreen(
             if (permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true &&
                 permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true
             ) {
-
                 userViewModel.updateLocation()
             } else {
                 handlePermissionRationale(context, permissions)
-
             }
         }
     )
@@ -171,6 +176,7 @@ fun HomeScreen(
 
     var markerCounter by remember { mutableStateOf(0) }
     var markerList by remember { mutableStateOf(listOf<LatLng>()) }
+    var googleMap by remember { mutableStateOf<GoogleMap?>(null) }
 
     val imageUrl: Uri? = currentUser?.photoPath?.let { Uri.parse(it) }
     val firstName=currentUser?.firstName
@@ -221,8 +227,6 @@ fun HomeScreen(
                        // Spacer(modifier = Modifier.height(16.dp))
                     }
                 }
-              //  Spacer(modifier = Modifier.height(16.dp)) // Space between profile image and user info
-
                 Box(
                     modifier = Modifier
                         .background(Color.Blue) // Background color for user info section
@@ -238,12 +242,6 @@ fun HomeScreen(
                         username = username
                     )
                 }
-
-                //Spacer(modifier = Modifier.height(32.dp)) // Space between user info and navigation items
-
-               // Divider(modifier = Modifier.padding(vertical = 8.dp))
-
-                // Background color below the divider
                 Box(
                     modifier = Modifier
                         .fillMaxSize()
@@ -301,12 +299,44 @@ fun HomeScreen(
                             cameraPositionState = cameraPositionState,
                             properties = properties,
                             uiSettings = uiSettings,
+
+//                            onMapReady = { map ->
+//                                googleMap = map
+//                            },
+                            //ovo samo za jedinstveni marker
 //                            onMapLongClick = { latLng ->
 //                                // Add clicked location to markers list
 //                                markers = markers + latLng
 //                                Log.d("MapClick", "Location: ${latLng.latitude}, ${latLng.longitude}")
 //                            }
-                            //ovo samo za jedinstveni marker
+                            onMapLongClick = { latLng ->
+                                if(markerCounter<2){
+
+                                    markerList = markerList + latLng
+                                    markerCounter++
+                                    Log.d("MapClick", "Marker added at: ${latLng.latitude}, ${latLng.longitude}")
+                                     Log.d("Broj markera je","${markerCounter}" )
+                                    Log.d("markerList:"," ${markerList}")
+                                }
+
+                                if (markerCounter == 2) {
+                                    // Draw the route between the two markers
+                                    val startMarker  = markerList[0]
+                                    val endMarker  = markerList[1]
+                                    googleMap?.let { map ->
+                                        drawRoute(/*context=*/context,/*map=*/map, /*start=*/startMarker,/*end=*/ endMarker)
+                                    }
+                                    //drawRoute(context, GoogleMap?, startMarker, endMarker)
+                                    // Call the function to draw the shortest route (implement this function)
+                                   // drawRoute(/*ovde prosledi mapu */,startMarker, endMarker)
+
+                                    // Reset the marker counter and list for further route drawing
+                                    markerCounter = 0
+                                    markerList = markerList+latLng//emptyList()//listOf()
+                                    Log.d("markerList:"," ${markerList}")
+                                }
+                            }
+
                         ) {
                             currentUserLocation?.let {
                                 Marker(
@@ -318,8 +348,16 @@ fun HomeScreen(
 
                             }
 
-                            markers.forEach { markerLocation ->
+//                            markers.forEach { markerLocation ->
+//                                Marker(
+//                                    state = MarkerState(position = LatLng(markerLocation.latitude, markerLocation.longitude)),
+//                                    title = "Marker at (${markerLocation.latitude}, ${markerLocation.longitude})"
+//                                )
+//                            }
+
+                            markerList.forEach { markerLocation ->
                                 Marker(
+//                                    state = MarkerState(position = markerLocation),
                                     state = MarkerState(position = LatLng(markerLocation.latitude, markerLocation.longitude)),
                                     title = "Marker at (${markerLocation.latitude}, ${markerLocation.longitude})"
                                 )
@@ -436,3 +474,4 @@ fun handlePermissionRationale(context: Context, permissions: Map<String, Boolean
         ).show()
     }
 }
+

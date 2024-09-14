@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -56,6 +57,7 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.ImeAction
@@ -385,30 +387,50 @@ fun AppToolbar(toolbarTitle:String, logoutButtonClicked:() ->Unit,
 
         },
         colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = LightBlue // Ovde setuješ boju pozadine
+            containerColor = colorResource(id = R.color.higherDrawerColor)//LightBlue // Ovde setuješ boju pozadine
+
         )
     )
 }
 
-@Composable
-fun NavigationDrawerHeader(value:String?){
-    Box(modifier= Modifier
-        .fillMaxWidth()
-        .padding(32.dp)
-    ){
-        NavigationDrawerText(title = value?:stringResource(R.string.navigation_header)
-            ,28.sp)
+//@Composable
+//fun NavigationDrawerHeader(value:String?){
+//    Box(modifier= Modifier
+//        .fillMaxWidth()
+//        .padding(32.dp)
+//    ){
+//        NavigationDrawerText(title = value?:stringResource(R.string.navigation_header)
+//            ,28.sp)
+//
+//      //  HeadingTextComponent(value = stringResource(R.string.navigation_header))
+//    }
+//}
 
-      //  HeadingTextComponent(value = stringResource(R.string.navigation_header))
+@Composable
+fun NavigationDrawerHeader(firstName: String?, lastName: String?, email: String?, username: String?, phone: String?) {
+    Column(modifier = Modifier.padding(16.dp)) {
+        firstName?.let {
+            NavigationDrawerText(title = "First Name: $firstName", textUnit = 18.sp)
+        }
+        lastName?.let {
+            NavigationDrawerText(title = "Last Name: $lastName", textUnit = 18.sp)
+        }
+        email?.let {
+            NavigationDrawerText(title = "Email: $email", textUnit = 18.sp)
+        }
+        username?.let {
+            NavigationDrawerText(title = "Username: $username", textUnit = 18.sp)
+        }
+        phone?.let {
+            NavigationDrawerText(title = "Phone: $phone", textUnit = 18.sp)
+        }
     }
 }
-
-
 @Composable
 fun NavigationDrawerBody(
     navigationDrawerItems:List<NavigationItem>,
-   // imageUrl: Uri?, // Dodaj parametar za sliku
-    //onImageChange: (Uri) -> Unit, // Callback za promenu slike
+    imageUrl: Uri?, // Dodaj parametar za sliku
+   onImageChange: (Uri) -> Unit, // Callback za promenu slike
     onNavigationItemClicked: (NavigationItem) -> Unit
 ){
     LazyColumn(modifier=Modifier.fillMaxWidth()){
@@ -421,9 +443,10 @@ fun NavigationDrawerBody(
                 contentAlignment = Alignment.Center
             ) {
 //                ImagePicker(
-//                    //imageUrl = imageUrl,
-//                    //onGalleryChange = onImageChange
+//                    imageUrl = imageUrl,
+//                    onGalleryChange = onImageChange
 //                )
+
             }
         }
         items(navigationDrawerItems){
@@ -463,13 +486,13 @@ fun NavigationDrawerText(title:String,textUnit:TextUnit){
     val shadowOffset = Offset(4f,6f)
     Text(
         text=title,style= TextStyle(
-            color= Color.Blue,
+            color= Color.White,
             fontSize=textUnit,
             fontStyle=FontStyle.Normal,
-            shadow= Shadow(
-                color=Color.White,
-                offset=shadowOffset,2f
-            )
+//            shadow= Shadow(
+//                color=Color.White,
+//                offset=shadowOffset,2f
+//            )
         )
     )
 }

@@ -36,7 +36,7 @@ class DefaultAppContainer(context:Context) {
 //    }
 
     val userRepository: UserRepository by lazy {
-        UserRepository(auth, firestore/*, storage*/)
+        UserRepository(auth, firestore, storage)
     }
 
 //    val markerRepository: MarkerRepository by lazy {

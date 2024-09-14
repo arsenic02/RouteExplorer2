@@ -174,7 +174,7 @@ fun SignUpScreen (
 
         }
 
-        if(signupViewModel.signUpInProgress.value){ //NZM ZASTO je CRASHOVALA APLIKACIJA  KADA SE KLIKNE REGISTER
+        if(signupViewModel.signUpInProgress.value){
             CircularProgressIndicator()
         }
 

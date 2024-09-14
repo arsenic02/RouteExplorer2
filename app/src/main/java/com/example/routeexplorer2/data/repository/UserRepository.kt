@@ -15,7 +15,7 @@ class UserRepository (
 
     private val auth: FirebaseAuth,
     private val firestore: FirebaseFirestore,
-   // private val storage: FirebaseStorage
+    private val storage: FirebaseStorage
 ){
     private val _currentUser = MutableStateFlow<User?>(null)
     val currentUser: StateFlow<User?> = _currentUser
@@ -89,15 +89,15 @@ class UserRepository (
                 "photoPath" to ""
             )
 
-         // firestore.collection("users").document(userId).set(user).await()
-//
-//            imageUri?.let {
-//                val profilePicRef = storage.getReference("profile_pictures/$userId")
-//                profilePicRef.putFile(it).await()
-//                val downloadUri = profilePicRef.downloadUrl.await()
-//                firestore.collection("users").document(userId)
-//                    .update("photoPath", downloadUri.toString()).await()
-//            }
+          firestore.collection("users").document(userId).set(user).await()
+
+            imageUri?.let {
+                val profilePicRef = storage.getReference("profile_pictures/$userId")
+                profilePicRef.putFile(it).await()
+                val downloadUri = profilePicRef.downloadUrl.await()
+                firestore.collection("users").document(userId)
+                    .update("photoPath", downloadUri.toString()).await()
+            }
 
             callback(true)
         } catch (e: Exception) {

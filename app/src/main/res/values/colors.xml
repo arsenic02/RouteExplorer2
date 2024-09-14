@@ -9,4 +9,6 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="colorText">#FF1D1617</color>
+    <color name="higherDrawerColor">#FF2c66d3</color>
+    <color name="lowerDrawerColor">#FF4c68b3</color>
 </resources>

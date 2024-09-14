@@ -1,8 +1,12 @@
 package com.example.routeexplorer2.screens
 
+import android.Manifest
+import android.content.Context
 import android.net.Uri
 import android.util.Log
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
@@ -25,12 +29,15 @@ import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -48,19 +55,23 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.app.ActivityCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import com.example.routeexplorer2.MainActivity
 import com.example.routeexplorer2.R
 import com.example.routeexplorer2.Screens
 import com.example.routeexplorer2.components.AppToolbar
 import com.example.routeexplorer2.components.NavigationDrawerBody
 import com.example.routeexplorer2.components.NavigationDrawerHeader
 import com.example.routeexplorer2.data.home.HomeViewModel
+import com.example.routeexplorer2.data.model.LocationData
 import com.example.routeexplorer2.data.model.User
 import com.example.routeexplorer2.viewModels.LoginViewModel
 import com.example.routeexplorer2.viewModels.UserViewModel
+import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.rememberCameraPositionState
@@ -70,6 +81,7 @@ import com.google.maps.android.compose.MapType
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
+import hasLocationPermissions
 //import kotlinx.coroutines.flow.internal.NoOpContinuation.context
 import kotlinx.coroutines.launch
 import java.net.URL
@@ -92,17 +104,73 @@ fun HomeScreen(
     val context = LocalContext.current
     homeViewModel.getUserData()
     val currentUser by userViewModel.currentUser.collectAsState(initial = null)
+    val currentUserLocation by userViewModel.currentUserLocation.collectAsState()
+    var isServiceDialogOpen by remember { mutableStateOf(false) }
+    var isServiceRunning by remember { mutableStateOf(getServiceRunningState(context)) } // Load state
+    val currentPosition = currentUserLocation ?: LocationData(43.321445, 21.896104)//LocationData iz klase LocationData
+//    val nisCenter = LatLng(43.321445, 21.896104)
 
+    val requestPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestMultiplePermissions(),
+        onResult = { permissions ->
+            if (permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true &&
+                permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true
+            ) {
 
-    val nisCenter = LatLng(43.321445, 21.896104)
+                userViewModel.updateLocation()
+            } else {
+                handlePermissionRationale(context, permissions)
+
+            }
+        }
+    )
+
+    // Request permission and start location updates if permissions are granted
+    LaunchedEffect(Unit) {
+        if (hasLocationPermissions(context)) {
+
+            userViewModel.updateLocation()
+
+        } else {
+            requestPermissionLauncher.launch(
+                arrayOf(
+                    Manifest.permission.ACCESS_COARSE_LOCATION,
+                    Manifest.permission.ACCESS_FINE_LOCATION
+                )
+            )
+        }
+    }
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(nisCenter, 20f)
+        position = CameraPosition.fromLatLngZoom(
+            //nisCenter, 20f)
+            LatLng(
+                currentPosition.latitude,
+                currentPosition.longitude
+            ),14f
+        )
+    }
+    LaunchedEffect(currentUserLocation) {
+        currentUserLocation.let {
+            if (it != null) {
+                cameraPositionState.animate(
+                    CameraUpdateFactory.newLatLngZoom(
+                        LatLng(
+                            it.latitude,
+                            it.longitude
+                        ), 15f // Adjust zoom level as needed
+                    )
+                )
+            }
+        }
     }
 
     var uiSettings by remember { mutableStateOf(MapUiSettings(zoomControlsEnabled = true)) }//vrv moze i bez zoomControlsEnabled
     var properties by remember { mutableStateOf(MapProperties(mapType = MapType.NORMAL)) }
 
     var markers by remember { mutableStateOf(listOf<LatLng>()) }
+
+    var markerCounter by remember { mutableStateOf(0) }
+    var markerList by remember { mutableStateOf(listOf<LatLng>()) }
 
     val imageUrl: Uri? = currentUser?.photoPath?.let { Uri.parse(it) }
     val firstName=currentUser?.firstName
@@ -233,16 +301,48 @@ fun HomeScreen(
                             cameraPositionState = cameraPositionState,
                             properties = properties,
                             uiSettings = uiSettings,
-                            onMapLongClick = { latLng ->
-                                // Add clicked location to markers list
-                                markers = markers + latLng
-                                Log.d("MapClick", "Location: ${latLng.latitude}, ${latLng.longitude}")
-                            }
+//                            onMapLongClick = { latLng ->
+//                                // Add clicked location to markers list
+//                                markers = markers + latLng
+//                                Log.d("MapClick", "Location: ${latLng.latitude}, ${latLng.longitude}")
+//                            }
+                            //ovo samo za jedinstveni marker
                         ) {
+                            currentUserLocation?.let {
+                                Marker(
+                                    state = MarkerState(
+                                        position = LatLng(it.latitude, it.longitude)
+                                    ),
+                                    title = "You are here",
+                                )
+
+                            }
+
                             markers.forEach { markerLocation ->
                                 Marker(
                                     state = MarkerState(position = LatLng(markerLocation.latitude, markerLocation.longitude)),
                                     title = "Marker at (${markerLocation.latitude}, ${markerLocation.longitude})"
+                                )
+                            }
+                        }
+
+                        // Da bih pokrenuo lokaction service, prethodno mora da bude odobreni fine i coarse location
+                        // Na osnovu currentUserLocation pratim da li je korisnik odobrio lokaciju ili ne
+                        currentUserLocation?.let {
+                            IconButton(
+                                onClick = { isServiceDialogOpen = true },
+                                modifier = Modifier
+                                    .align(Alignment.TopEnd)
+                                    .padding(12.dp) // Adjust padding as needed
+                                    .size(40.dp) // Larger size for the button
+                            ) {
+                                Icon(
+                                    painter = if (isServiceRunning) painterResource(id = R.drawable.notifications_active_24) else painterResource(
+                                        id = R.drawable.notifications_24
+                                    ),
+                                    contentDescription = if (isServiceRunning) "Notifications" else "Notifications Off",
+                                    tint = MaterialTheme.colorScheme.primary, // Adjust icon color if needed
+                                    modifier = Modifier.size(32.dp)
                                 )
                             }
                         }
@@ -302,9 +402,37 @@ fun UserInfoRow(iconId: Int, label: String?) {
         Text(text = label ?: "Unknown")
     }
 }
+
+
+fun getServiceRunningState(context: Context): Boolean {
+    val sharedPreferences = context.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
+    return sharedPreferences.getBoolean("isServiceRunning", false)
+}
 @Preview
 @Composable
 fun HomeScreenPreview(){
     //HomeScreen()
 }
 
+fun handlePermissionRationale(context: Context, permissions: Map<String, Boolean>) {
+    val rationalRequired = ActivityCompat.shouldShowRequestPermissionRationale(
+        context as MainActivity,
+        Manifest.permission.ACCESS_FINE_LOCATION
+    ) || ActivityCompat.shouldShowRequestPermissionRationale(
+        context as MainActivity,
+        Manifest.permission.ACCESS_COARSE_LOCATION
+    )
+    if (rationalRequired) {
+        Toast.makeText(
+            context,
+            "Location Permission is required for this feature to work",
+            Toast.LENGTH_LONG
+        ).show()
+    } else {
+        Toast.makeText(
+            context,
+            "Location Permission is required, please enable it in the Android Settings",
+            Toast.LENGTH_LONG
+        ).show()
+    }
+}

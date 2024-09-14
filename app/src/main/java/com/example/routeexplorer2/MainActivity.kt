@@ -27,7 +27,7 @@ class MainActivity : ComponentActivity() {
     private val userViewModel: UserViewModel by viewModels {
         UserViewModelFactory(
             userRepository = (application as LoginFlowApp).container.userRepository,
-            //locationClient = (application as MainApplication).container.locationClient
+            locationClient = (application as LoginFlowApp).container.locationClient
         )
     }
     private val homeViewModel: HomeViewModel by viewModels()

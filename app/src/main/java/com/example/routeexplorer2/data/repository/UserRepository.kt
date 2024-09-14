@@ -2,6 +2,7 @@ package com.example.routeexplorer2.data.repository
 
 import android.net.Uri
 import android.util.Log
+import com.example.routeexplorer2.data.model.LocationData
 import com.example.routeexplorer2.data.model.User
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
@@ -28,12 +29,12 @@ class UserRepository (
 
     private var allUserslistenerRegistration: ListenerRegistration? = null
 
-//    private val _currentUserLocation = MutableStateFlow<LocationData?>(null)
-//    val currentUserLocation: StateFlow<LocationData?> = _currentUserLocation
+    private val _currentUserLocation = MutableStateFlow<LocationData?>(null)
+    val currentUserLocation: StateFlow<LocationData?> = _currentUserLocation
 
-//    fun updateLocationData(locationData: LocationData) {
-//        _currentUserLocation.value = locationData
-//    }
+    fun updateLocationData(locationData: LocationData) {
+        _currentUserLocation.value = locationData
+    }
 
 
     suspend fun loginWithEmailAndPassword(

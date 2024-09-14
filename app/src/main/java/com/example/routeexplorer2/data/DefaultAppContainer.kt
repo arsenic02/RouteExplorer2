@@ -6,6 +6,8 @@ import android.content.Context
 import android.os.Build
 import com.example.routeexplorer2.data.repository.MarkerRepository
 import com.example.routeexplorer2.data.repository.UserRepository
+import com.example.routeexplorer2.utils.DefaultLocationClient
+import com.example.routeexplorer2.utils.LocationClient
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -47,7 +49,7 @@ class DefaultAppContainer(context:Context) {
 //        FieldRepository(auth, firestore)
 //    }
 //
-//    val locationClient: LocationClient by lazy {
-//        DefaultLocationClient(context.applicationContext)
-//    }
+    val locationClient: LocationClient by lazy {
+        DefaultLocationClient(context.applicationContext)
+    }
 }

@@ -3,13 +3,21 @@ package com.example.routeexplorer2.utils
 import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.example.routeexplorer2.R
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.LatLng
+import com.google.android.gms.maps.model.MarkerOptions
 import com.google.android.gms.maps.model.PolylineOptions
+import com.google.maps.android.ktx.awaitMap
 //import com.google.api.Context
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -186,4 +194,61 @@ fun decodePolyline(encoded: String): List<LatLng> {
         poly.add(point)
     }
     return poly
+}
+
+
+
+@Composable
+fun GoogleMapScreen(onMapReady: (GoogleMap) -> Unit) {
+    val context = LocalContext.current
+    val mapView = remember { MapView(context) }
+    val coroutineScope = rememberCoroutineScope()
+
+    // Manage the MapView lifecycle
+    DisposableEffect(key1 = mapView) {
+        mapView.onCreate(null)
+        mapView.onResume()
+        onDispose {
+            mapView.onPause()
+            mapView.onDestroy()
+        }
+    }
+
+    // Display the MapView inside Compose
+//    AndroidView(factory = { mapView }) { mapView ->
+//        LaunchedEffect(mapView) {
+//            val googleMap = mapView.awaitMap()  // Await the map to be ready
+//            googleMap.setOnMapLoadedCallback {
+//                Log.d("MapReady", "GoogleMap is fully loaded and ready")
+//                // You can add markers, configure settings, etc. here
+//            }
+//
+//            // Example of setting a marker
+//            googleMap.addMarker(
+//                MarkerOptions()
+//                    .position(LatLng(37.7749, -122.4194)) // San Francisco
+//                    .title("Marker in San Francisco")
+//            )
+//        }
+//    }
+    AndroidView(
+        factory = { mapView },
+        update = { mapView ->
+            coroutineScope.launch {
+                val googleMap = mapView.awaitMap()  // Wait for the map to load
+//                googleMap.setOnMapLoadedCallback {
+//                    Log.d("MapReady", "GoogleMap is fully loaded and ready")
+//                    // You can add markers, configure settings, etc. here
+//                }
+                onMapReady(googleMap)
+
+                // Example of adding a marker
+                googleMap.addMarker(
+                    MarkerOptions()
+                        .position(LatLng(37.7749, -122.4194)) // San Francisco
+                        .title("Marker in San Francisco")
+                )
+            }
+        }
+    )
 }

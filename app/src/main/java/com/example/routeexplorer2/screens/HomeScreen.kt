@@ -56,6 +56,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -70,11 +71,15 @@ import com.example.routeexplorer2.components.NavigationDrawerHeader
 import com.example.routeexplorer2.data.home.HomeViewModel
 import com.example.routeexplorer2.data.model.LocationData
 import com.example.routeexplorer2.data.model.User
+import com.example.routeexplorer2.utils.GoogleMapScreen
+import com.example.routeexplorer2.utils.MapUtils
 import com.example.routeexplorer2.utils.drawRoute
 import com.example.routeexplorer2.viewModels.LoginViewModel
+import com.example.routeexplorer2.viewModels.MapViewModel
 import com.example.routeexplorer2.viewModels.UserViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
+import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.rememberCameraPositionState
@@ -82,12 +87,15 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
 import com.google.android.gms.maps.OnMapReadyCallback
+import com.google.android.gms.maps.model.MarkerOptions
+import com.google.maps.android.compose.GoogleMapFactory
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import hasLocationPermissions
 //import kotlinx.coroutines.flow.internal.NoOpContinuation.context
 import kotlinx.coroutines.launch
+import rememberMapViewWithLifecycle
 import java.net.URL
 
 //import kotlin.coroutines.jvm.internal.CompletedContinuation.context
@@ -99,10 +107,13 @@ fun HomeScreen(
     navController: NavController,
     homeViewModel: HomeViewModel = viewModel(),
     loginViewModel: LoginViewModel,
-    userViewModel: UserViewModel
+    userViewModel: UserViewModel,
+    mapViewModel: MapViewModel= viewModel()
 
 
 ) {
+
+//    GoogleMapScreen()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -177,6 +188,22 @@ fun HomeScreen(
     var markerCounter by remember { mutableStateOf(0) }
     var markerList by remember { mutableStateOf(listOf<LatLng>()) }
     var googleMap by remember { mutableStateOf<GoogleMap?>(null) }
+
+    val mapView = rememberMapViewWithLifecycle()
+
+//    AndroidView({ mapView }) { mapView ->
+//        mapView.getMapAsync { map ->
+//            // Inicijalizuj mapu
+//            mapViewModel.setGoogleMap(map)
+//
+//            // Postavi marker na long press
+//            map.setOnMapLongClickListener { latLng ->
+//                mapViewModel.addMarker(latLng)
+//            }
+//        }
+//    }
+
+
 
     val imageUrl: Uri? = currentUser?.photoPath?.let { Uri.parse(it) }
     val firstName=currentUser?.firstName
@@ -294,11 +321,26 @@ fun HomeScreen(
                             .fillMaxSize()
                             .weight(1f)
                     ) {
+
+                        GoogleMapScreen(onMapReady = { map ->
+                            googleMap = map
+
+                            // Example: Add a marker when the map is ready
+                            map.addMarker(
+                                MarkerOptions()
+                                    .position(LatLng(37.7749, -122.4194)) // Example: San Francisco
+                                    .title("Marker in San Francisco")
+                            )
+                        })
+
                         GoogleMap(
                             modifier = Modifier.fillMaxSize(),
                             cameraPositionState = cameraPositionState,
                             properties = properties,
                             uiSettings = uiSettings,
+//                            onMapLoaded = {
+//                                googleMap=it
+//                            },
 
 //                            onMapReady = { map ->
 //                                googleMap = map
@@ -318,24 +360,41 @@ fun HomeScreen(
                                      Log.d("Broj markera je","${markerCounter}" )
                                     Log.d("markerList:"," ${markerList}")
                                 }
-
-                                if (markerCounter == 2) {
-                                    // Draw the route between the two markers
-                                    val startMarker  = markerList[0]
-                                    val endMarker  = markerList[1]
-                                    googleMap?.let { map ->
-                                        drawRoute(/*context=*/context,/*map=*/map, /*start=*/startMarker,/*end=*/ endMarker)
-                                    }
-                                    //drawRoute(context, GoogleMap?, startMarker, endMarker)
-                                    // Call the function to draw the shortest route (implement this function)
-                                   // drawRoute(/*ovde prosledi mapu */,startMarker, endMarker)
-
-                                    // Reset the marker counter and list for further route drawing
-                                    markerCounter = 0
-                                    markerList = markerList+latLng//emptyList()//listOf()
-                                    Log.d("markerList:"," ${markerList}")
+                                if (markerCounter == 2 && googleMap != null) {
+                                    // Draw the polyline once two markers are added
+                                    Log.d("Instanca mape:"," ${googleMap}")
+                                    drawRoute(/*context=*/context,/*map=*/googleMap, /*start=*/markerList[0],/*end=*/ markerList[1])
+                                   // MapUtils.addPolyline(googleMap!!, markerList, "A")
+                                    markerCounter = 0 // Reset after drawing
+                                    markerList = markerList+latLng//listOf() // Clear markers
                                 }
-                            }
+
+                                //ovako je bilo pre
+//                                if (markerCounter == 2) {
+//                                    // Draw the route between the two markers
+//                                    val startMarker  = markerList[0]
+//                                    val endMarker  = markerList[1]
+//                                    googleMap?.let { map ->
+//                                        drawRoute(/*context=*/context,/*map=*/map, /*start=*/startMarker,/*end=*/ endMarker)
+//                                    }
+//                                    //drawRoute(context, GoogleMap?, startMarker, endMarker)
+//                                    // Call the function to draw the shortest route (implement this function)
+//                                   // drawRoute(/*ovde prosledi mapu */,startMarker, endMarker)
+//
+//                                    // Reset the marker counter and list for further route drawing
+//                                    markerCounter = 0
+//                                    markerList = markerList+latLng//emptyList()//listOf()
+//                                    Log.d("markerList:"," ${markerList}")
+//                                }
+                            },
+//                            onMapLoaded = {
+//                                googleMap = it
+//                            },
+//                            onMapReady = { map ->
+//                                // This is called when the map is ready to be used.
+//                                googleMap = map // This is where you can access the GoogleMap instance.
+//                                Log.d("MapReady", "GoogleMap instance is ready")
+//                            }
 
                         ) {
                             currentUserLocation?.let {

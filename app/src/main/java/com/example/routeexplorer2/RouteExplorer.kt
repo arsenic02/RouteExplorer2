@@ -1,8 +1,5 @@
 package com.example.routeexplorer2
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
 import androidx.navigation.compose.NavHost
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -12,21 +9,18 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.routeexplorer2.data.home.HomeViewModel
 import com.example.routeexplorer2.viewModels.LoginViewModel
 import com.example.routeexplorer2.viewModels.SignupViewModel
-import com.example.routeexplorer2.screens.HomeScreen
+import com.example.routeexplorer2.screens.mapScreen.HomeScreen
 import com.example.routeexplorer2.screens.LoginScreen
 //import com.example.routeexplorer2.screens.RegisterScreen
 import com.example.routeexplorer2.screens.SignUpScreen
+import com.example.routeexplorer2.viewModels.MarkerViewModel
 import com.example.routeexplorer2.viewModels.UserViewModel
-import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 
 enum class Screens(val route: String) {
@@ -43,6 +37,7 @@ fun RouteExplorer(
     userViewModel: UserViewModel,
     loginViewModel: LoginViewModel,
     signupViewModel: SignupViewModel,
+    markerViewModel: MarkerViewModel
    // mapView:MapView
 ) {
     val TAG = HomeViewModel::class.simpleName
@@ -88,7 +83,8 @@ fun RouteExplorer(
                 navController = navController,
                 homeViewModel = homeViewModel,
                 loginViewModel = loginViewModel,
-                userViewModel = userViewModel
+                userViewModel = userViewModel,
+                markerViewModel=markerViewModel
             )
         }
         composable(Screens.Register.route) {

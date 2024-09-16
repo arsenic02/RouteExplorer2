@@ -17,6 +17,22 @@ class DefaultAppContainer(context:Context) {
     private val firestore: FirebaseFirestore = FirebaseFirestore.getInstance()
     private val storage: FirebaseStorage = FirebaseStorage.getInstance()
 
+    val userRepository: UserRepository by lazy {
+        UserRepository(auth, firestore, storage)
+    }
+
+    val markerRepository: MarkerRepository by lazy {
+        MarkerRepository(firestore, storage)
+    }
+
+    //    val fieldRepository: FieldRepository by lazy {
+//        FieldRepository(auth, firestore)
+//    }
+//
+    val locationClient: LocationClient by lazy {
+        DefaultLocationClient(context.applicationContext)
+    }
+
 //    init {
 //        createNotificationChannel(context)
 //    }
@@ -37,19 +53,5 @@ class DefaultAppContainer(context:Context) {
 //
 //    }
 
-    val userRepository: UserRepository by lazy {
-        UserRepository(auth, firestore, storage)
-    }
 
-//    val markerRepository: MarkerRepository by lazy {
-//        MarkerRepository(auth, firestore/*, storage*/)
-//    }
-
-//    val fieldRepository: FieldRepository by lazy {
-//        FieldRepository(auth, firestore)
-//    }
-//
-    val locationClient: LocationClient by lazy {
-        DefaultLocationClient(context.applicationContext)
-    }
 }

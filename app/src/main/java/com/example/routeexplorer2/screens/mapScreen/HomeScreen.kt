@@ -1,7 +1,6 @@
-package com.example.routeexplorer2.screens
+package com.example.routeexplorer2.screens.mapScreen
 
 import android.Manifest
-import android.content.ContentValues.TAG
 import android.content.Context
 import android.net.Uri
 import android.util.Log
@@ -9,24 +8,18 @@ import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
-import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material3.Divider
 import androidx.compose.material3.DrawerValue
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -56,7 +49,6 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
@@ -67,36 +59,26 @@ import com.example.routeexplorer2.R
 import com.example.routeexplorer2.Screens
 import com.example.routeexplorer2.components.AppToolbar
 import com.example.routeexplorer2.components.NavigationDrawerBody
-import com.example.routeexplorer2.components.NavigationDrawerHeader
 import com.example.routeexplorer2.data.home.HomeViewModel
 import com.example.routeexplorer2.data.model.LocationData
-import com.example.routeexplorer2.data.model.User
-import com.example.routeexplorer2.utils.GoogleMapScreen
-import com.example.routeexplorer2.utils.MapUtils
-import com.example.routeexplorer2.utils.drawRoute
+import com.example.routeexplorer2.screens.bitmapDescriptorFromVector
 import com.example.routeexplorer2.viewModels.LoginViewModel
 import com.example.routeexplorer2.viewModels.MapViewModel
+import com.example.routeexplorer2.viewModels.MarkerViewModel
 import com.example.routeexplorer2.viewModels.UserViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapProperties
 import com.google.maps.android.compose.MapType
-import com.google.android.gms.maps.OnMapReadyCallback
-import com.google.android.gms.maps.model.MarkerOptions
-import com.google.maps.android.compose.GoogleMapFactory
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import hasLocationPermissions
 //import kotlinx.coroutines.flow.internal.NoOpContinuation.context
 import kotlinx.coroutines.launch
-import rememberMapViewWithLifecycle
-import java.net.URL
 
 //import kotlin.coroutines.jvm.internal.CompletedContinuation.context
 
@@ -108,6 +90,7 @@ fun HomeScreen(
     homeViewModel: HomeViewModel = viewModel(),
     loginViewModel: LoginViewModel,
     userViewModel: UserViewModel,
+    markerViewModel:MarkerViewModel,
     mapViewModel: MapViewModel= viewModel()
 
 
@@ -122,6 +105,7 @@ fun HomeScreen(
     val currentUser by userViewModel.currentUser.collectAsState(initial = null)
     val currentUserLocation by userViewModel.currentUserLocation.collectAsState()
 
+    var isAddPlaceModalOpen by remember { mutableStateOf(false) }
     var isServiceDialogOpen by remember { mutableStateOf(false) }
     var isServiceRunning by remember { mutableStateOf(getServiceRunningState(context)) } // Load state
 
@@ -180,30 +164,23 @@ fun HomeScreen(
         }
     }
 
+    LaunchedEffect(Unit) {
+        markerViewModel.fetchMarkers()
+    }
+
+    // Loading the custom icon
+
+
     var uiSettings by remember { mutableStateOf(MapUiSettings(zoomControlsEnabled = true)) }//vrv moze i bez zoomControlsEnabled
     var properties by remember { mutableStateOf(MapProperties(mapType = MapType.NORMAL)) }
 
-    var markers by remember { mutableStateOf(listOf<LatLng>()) }
+    //var markers by remember { mutableStateOf(listOf<LatLng>()) }
+    val markers by markerViewModel.markers.collectAsState()
+//   val markers by markerViewModel.markers.collectAsState() //ovako bi trebalo iz viewModela
 
-    var markerCounter by remember { mutableStateOf(0) }
-    var markerList by remember { mutableStateOf(listOf<LatLng>()) }
-    var googleMap by remember { mutableStateOf<GoogleMap?>(null) }
-
-    val mapView = rememberMapViewWithLifecycle()
-
-//    AndroidView({ mapView }) { mapView ->
-//        mapView.getMapAsync { map ->
-//            // Inicijalizuj mapu
-//            mapViewModel.setGoogleMap(map)
-//
-//            // Postavi marker na long press
-//            map.setOnMapLongClickListener { latLng ->
-//                mapViewModel.addMarker(latLng)
-//            }
-//        }
-//    }
-
-
+//    var markerCounter by remember { mutableStateOf(0) }
+//    var markerList by remember { mutableStateOf(listOf<LatLng>()) }
+//    var googleMap by remember { mutableStateOf<GoogleMap?>(null) }
 
     val imageUrl: Uri? = currentUser?.photoPath?.let { Uri.parse(it) }
     val firstName=currentUser?.firstName
@@ -321,82 +298,55 @@ fun HomeScreen(
                             .fillMaxSize()
                             .weight(1f)
                     ) {
-
-                        GoogleMapScreen(onMapReady = { map ->
-                            googleMap = map
-
-                            // Example: Add a marker when the map is ready
-                            map.addMarker(
-                                MarkerOptions()
-                                    .position(LatLng(37.7749, -122.4194)) // Example: San Francisco
-                                    .title("Marker in San Francisco")
-                            )
-                        })
-
                         GoogleMap(
                             modifier = Modifier.fillMaxSize(),
                             cameraPositionState = cameraPositionState,
                             properties = properties,
                             uiSettings = uiSettings,
-//                            onMapLoaded = {
-//                                googleMap=it
-//                            },
+                            onMapLongClick = { latLng ->
 
-//                            onMapReady = { map ->
-//                                googleMap = map
-//                            },
-                            //ovo samo za jedinstveni marker
+                                isAddPlaceModalOpen=true
+                                markerViewModel.setLatLng(latLng)
+                                markerViewModel.createMarker { success, message ->
+                                    if (success) {
+                                        Toast.makeText(context, "Marker added!", Toast.LENGTH_SHORT).show()
+                                    } else {
+                                        Toast.makeText(context, "Error: $message", Toast.LENGTH_SHORT).show()
+                                    }
+                                }
+                            }
+                            //nije ni ovo lose, samo ne moze da se plamti u bazi
 //                            onMapLongClick = { latLng ->
-//                                // Add clicked location to markers list
 //                                markers = markers + latLng
 //                                Log.d("MapClick", "Location: ${latLng.latitude}, ${latLng.longitude}")
 //                            }
-                            onMapLongClick = { latLng ->
-                                if(markerCounter<2){
-
-                                    markerList = markerList + latLng
-                                    markerCounter++
-                                    Log.d("MapClick", "Marker added at: ${latLng.latitude}, ${latLng.longitude}")
-                                     Log.d("Broj markera je","${markerCounter}" )
-                                    Log.d("markerList:"," ${markerList}")
-                                }
-                                if (markerCounter == 2 && googleMap != null) {
-                                    // Draw the polyline once two markers are added
-                                    Log.d("Instanca mape:"," ${googleMap}")
-                                    drawRoute(/*context=*/context,/*map=*/googleMap, /*start=*/markerList[0],/*end=*/ markerList[1])
-                                   // MapUtils.addPolyline(googleMap!!, markerList, "A")
-                                    markerCounter = 0 // Reset after drawing
-                                    markerList = markerList+latLng//listOf() // Clear markers
-                                }
-
-                                //ovako je bilo pre
-//                                if (markerCounter == 2) {
-//                                    // Draw the route between the two markers
-//                                    val startMarker  = markerList[0]
-//                                    val endMarker  = markerList[1]
-//                                    googleMap?.let { map ->
-//                                        drawRoute(/*context=*/context,/*map=*/map, /*start=*/startMarker,/*end=*/ endMarker)
-//                                    }
-//                                    //drawRoute(context, GoogleMap?, startMarker, endMarker)
-//                                    // Call the function to draw the shortest route (implement this function)
-//                                   // drawRoute(/*ovde prosledi mapu */,startMarker, endMarker)
-//
-//                                    // Reset the marker counter and list for further route drawing
-//                                    markerCounter = 0
-//                                    markerList = markerList+latLng//emptyList()//listOf()
-//                                    Log.d("markerList:"," ${markerList}")
-//                                }
-                            },
-//                            onMapLoaded = {
-//                                googleMap = it
-//                            },
-//                            onMapReady = { map ->
-//                                // This is called when the map is ready to be used.
-//                                googleMap = map // This is where you can access the GoogleMap instance.
-//                                Log.d("MapReady", "GoogleMap instance is ready")
+//                            ovako kod Darka, kod mene nece
+//                            onMapLongClick = {
+//                                isAddFieldDialogOpen = true
+//                                markerViewModel.setLatLng(it)
+//                                markerViewModel.setNewAddress(reverseGeocodeLocation(context = context, it))
 //                            }
 
                         ) {
+                            //Darkov kod, nece kod mene nesto
+                            //val markersToDisplay =
+                                /*if (filteredMarkers.isNotEmpty()) filteredMarkers else*/ markers
+//                            markersToDisplay.forEach { marker ->
+//                                MapMarker(
+//                                    context = context,
+//                                    position = LatLng(marker.latitude, marker.longitude),
+//                                    title = marker.name,
+//                                    snippet = "Marker in ${marker.name}",
+//                                    iconResourceId = R.drawable.ic_route_24//treba ikonica za vidikovac
+//                                ) {
+//                                    // Handle marker click
+//                                    //selectField(marker)
+//                                  //  navController.navigate(Screens.Field.name)
+//                                    Log.d("Kliknuto na mapi",": dodaje se marker")
+//                                    true // Return true to indicate that the click event is consumed
+//                                }
+//
+//                            }
                             currentUserLocation?.let {
                                 Marker(
                                     state = MarkerState(
@@ -406,25 +356,28 @@ fun HomeScreen(
                                 )
 
                             }
-
-//                            markers.forEach { markerLocation ->
-//                                Marker(
-//                                    state = MarkerState(position = LatLng(markerLocation.latitude, markerLocation.longitude)),
-//                                    title = "Marker at (${markerLocation.latitude}, ${markerLocation.longitude})"
-//                                )
-//                            }
-
-                            markerList.forEach { markerLocation ->
+//
+                            markers.forEach { markerLocation ->
+                                val icon = bitmapDescriptorFromVector(context, R.drawable.ic_preview_24)
                                 Marker(
-//                                    state = MarkerState(position = markerLocation),
                                     state = MarkerState(position = LatLng(markerLocation.latitude, markerLocation.longitude)),
-                                    title = "Marker at (${markerLocation.latitude}, ${markerLocation.longitude})"
+                                    title = "Marker at (${markerLocation.latitude}, ${markerLocation.longitude})",
+                                    icon = icon
                                 )
                             }
                         }
 
                         // Da bih pokrenuo lokaction service, prethodno mora da bude odobreni fine i coarse location
                         // Na osnovu currentUserLocation pratim da li je korisnik odobrio lokaciju ili ne
+
+                        if (isAddPlaceModalOpen) {
+                            AddPlaceModal(
+                                context,
+                                markerViewModel,
+                                onDismiss = { isAddPlaceModalOpen = false }
+                            )
+                        }
+
                         currentUserLocation?.let {
                             IconButton(
                                 onClick = { isServiceDialogOpen = true },
@@ -449,7 +402,6 @@ fun HomeScreen(
         }
     }
 }
-
 
 @Composable
 fun UserInfoSection(

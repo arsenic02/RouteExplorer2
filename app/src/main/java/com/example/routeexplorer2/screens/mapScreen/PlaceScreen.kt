@@ -49,6 +49,7 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.routeexplorer2.data.model.Review
 import com.example.routeexplorer2.utils.extractAddressPart
@@ -62,12 +63,15 @@ import com.example.routeexplorer2.viewModels.UserViewModel
 fun PlaceScreen (
     userViewModel: UserViewModel,
     placeViewModel: PlaceViewModel,
+    //navController: NavController,
     modifier: Modifier = Modifier
 ) {
 
     // Pratite stanje iz ViewModel-a
     val selectedPlaceState = placeViewModel.selectedPlaceState
 
+   // val placeId = navController.currentBackStackEntry?.arguments?.getString("placeId") ?: ""
+//dodato placeId
 
     // Observe the state
     val selectedPlace by placeViewModel.selectedPlace.collectAsState()
@@ -77,11 +81,17 @@ fun PlaceScreen (
     Log.d("SelectedPlace=","$selectedPlace")//loguje null
     Log.d("currentUser=","$currentUser")//ovde loguje okej
 
+    //privremeno zakomentarisano
     LaunchedEffect(selectedPlaceState) {
         Log.d("PlaceScreen", "Loading place with ID: ${selectedPlaceState.id}")
         placeViewModel.loadPlace(selectedPlaceState.id)
     }
 
+//    LaunchedEffect(placeId) {
+//        if (placeId.isNotEmpty()) {
+//            placeViewModel.loadPlace(placeId)
+//        }
+//    }
 
     var isReviewDialogOpen by remember { mutableStateOf(false) }
 

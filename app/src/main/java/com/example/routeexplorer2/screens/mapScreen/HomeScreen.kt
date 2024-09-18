@@ -67,6 +67,7 @@ import com.example.routeexplorer2.screens.bitmapDescriptorFromVector
 import com.example.routeexplorer2.viewModels.LoginViewModel
 import com.example.routeexplorer2.viewModels.MapViewModel
 import com.example.routeexplorer2.viewModels.MarkerViewModel
+import com.example.routeexplorer2.viewModels.PlaceViewModel
 import com.example.routeexplorer2.viewModels.UserViewModel
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
@@ -94,11 +95,26 @@ fun HomeScreen(
     userViewModel: UserViewModel,
     markerViewModel:MarkerViewModel,
     selectPlace:(Place)->Unit,
+    placeViewModel: PlaceViewModel,
     mapViewModel: MapViewModel= viewModel()
 
 
 ) {
 
+//    val selectPlace: (Place) -> Unit = { place ->
+//        place.id?.let { placeId ->
+//            placeViewModel.setCurrentPlaceState(place) // Set current place
+//
+//            //privremeno zakomentarisano
+//           // navController.navigate("place_screen/${placeId}") // Navigate to place_screen
+//
+//            navController.navigate("place_screen/$placeId") {
+//                popUpTo(navController.graph.startDestinationId)
+//                launchSingleTop = true
+//            }
+//
+//        }
+//    }
 //    GoogleMapScreen()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
@@ -324,12 +340,7 @@ fun HomeScreen(
 //                                markers = markers + latLng
 //                                Log.d("MapClick", "Location: ${latLng.latitude}, ${latLng.longitude}")
 //                            }
-//                            ovako kod Darka, kod mene nece
-//                            onMapLongClick = {
-//                                isAddFieldDialogOpen = true
-//                                markerViewModel.setLatLng(it)
-//                                markerViewModel.setNewAddress(reverseGeocodeLocation(context = context, it))
-//                            }
+
 
                         ) {
 
@@ -367,6 +378,7 @@ fun HomeScreen(
                                     iconResourceId = iconResId
                                 ) {
                                     selectPlace(markerLocation)
+                                    Log.d("selectPlace","$markerLocation")
                                     navController.navigate(Screens.Place.route)
                                     true // Return true to indicate that the click event is consumed
                                 }

@@ -41,11 +41,11 @@ class PlaceRepository(
 
 
     fun addPlaceSnapshotListener(placeId: String) {
-        if (placeId.isBlank()) {
+        if (placeId.isBlank()) {//dodato da ne bi crashovala aplikacija
             Log.e("PlaceRepository", "Invalid placeId: $placeId")
             return
         }
-        val documentReference = firestore.collection("markers").document(placeId)//ovde izbija exception
+        val documentReference = firestore.collection("markers").document(placeId)//da  nije dodat if ovde bi izbio exception
         selectedPlaceListenerRegistration =
             documentReference.addSnapshotListener { snapshot, exception ->
                 if (exception != null) {

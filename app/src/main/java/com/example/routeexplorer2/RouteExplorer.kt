@@ -89,6 +89,7 @@ fun RouteExplorer(
                 loginViewModel = loginViewModel,
                 userViewModel = userViewModel,
                 markerViewModel=markerViewModel,
+                placeViewModel=placeViewModel,
                 selectPlace={placeViewModel.setCurrentPlaceState(it)}
             )
         }
@@ -98,12 +99,25 @@ fun RouteExplorer(
                 navController = navController
             )
         }
+//        composable("place_screen/{placeId}") { backStackEntry ->
+//            val placeId = backStackEntry.arguments?.getString("placeId")
+//            if (placeId != null) {
+//                PlaceScreen(
+//                    userViewModel = userViewModel,
+//                    placeViewModel = placeViewModel,
+//                    navController = navController
+//                )
+//            }
+//        }
+
+
+        //privremeno zakomentarisano
         composable(Screens.Place.route) {
             PlaceScreen(
                 //signupViewModel = signupViewModel,
                 userViewModel=userViewModel,
                 placeViewModel = placeViewModel,
-                //navController = navController
+                //navController = navController//privremeno
             )
         }
     }

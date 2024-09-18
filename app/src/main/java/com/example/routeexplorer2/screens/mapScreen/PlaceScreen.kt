@@ -73,8 +73,10 @@ fun PlaceScreen (
     val selectedPlace by placeViewModel.selectedPlace.collectAsState()
     val currentUser by userViewModel.currentUser.collectAsState()
 
+    Log.d("SelectedPlaceState=","$selectedPlaceState") // loguje Place(id=, name=Beba, type=, address=, longitude=21.255626678466797, latitude=44.58344373799986, selectedOption=Bike, icon=0, reviews=[], avgRating=0.0, reviewCount=0, photo=, timeCreated=Timestamp(seconds=1726619295, nanoseconds=65000000), author=)
+    Log.d("SelectedPlace=","$selectedPlace")//loguje null
+    Log.d("currentUser=","$currentUser")//ovde loguje okej
 
-//ovde greska, kad se zakomentarise onda se otvara prazan ekran
     LaunchedEffect(selectedPlaceState) {
         Log.d("PlaceScreen", "Loading place with ID: ${selectedPlaceState.id}")
         placeViewModel.loadPlace(selectedPlaceState.id)

@@ -51,12 +51,15 @@ class PlaceRepository(
                 if (exception != null) {
 
                     // Handle error
+                    Log.e("PlaceRepository", "SnapshotListener error: ${exception.message}")
                     _selectedPlace.value = null
                     return@addSnapshotListener
                 }
                 if (snapshot != null && snapshot.exists()) {
+                    Log.d("PlaceRepository", "Document data: ${snapshot.data}")
                     _selectedPlace.value = snapshot.toObject(Place::class.java)
                 } else {
+                    Log.d("PlaceRepository", "No such document")
                     _selectedPlace.value = null
                 }
             }

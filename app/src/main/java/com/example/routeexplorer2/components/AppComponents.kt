@@ -22,6 +22,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Logout
 import androidx.compose.material.icons.filled.Menu
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -352,8 +353,12 @@ fun ClickableLoginTextComponent(tryingToLogin:Boolean=true,onTextSelected: (Stri
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AppToolbar(toolbarTitle:String, logoutButtonClicked:() ->Unit,
-               onMenuClicked:() -> Unit){
+fun AppToolbar(
+    toolbarTitle:String,
+    logoutButtonClicked:() ->Unit,
+    onMenuClicked:() -> Unit,
+    onSearchClicked: () -> Unit
+){
     TopAppBar(
         //backgroundColor= LightBlue, ne moze ovako u ovoj verziji
         title = {
@@ -376,6 +381,13 @@ fun AppToolbar(toolbarTitle:String, logoutButtonClicked:() ->Unit,
 
         },
         actions = {
+            IconButton(onClick = { onSearchClicked.invoke() }) {
+                Icon(
+                    imageVector = Icons.Filled.Search,  // Search Icon
+                    contentDescription = "Search",
+                    tint = Color.White
+                )
+            }
             IconButton(onClick={
                 logoutButtonClicked.invoke()
             }){

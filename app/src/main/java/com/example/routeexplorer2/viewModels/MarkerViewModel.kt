@@ -28,12 +28,15 @@ class MarkerViewModel(private val markerRepository: MarkerRepository) : ViewMode
     var address: String by mutableStateOf("")
     var imageUri by mutableStateOf<Uri?>(null)
 
-    var filteredRadius by mutableStateOf<Int?>(null)
-    var dateRange by mutableStateOf("")
     var selectedOption by mutableStateOf("Run")
     val markers: StateFlow<List<Place>> = markerRepository.markers
 
-   // val filteredMarkers: StateFlow<List<Place>> = markerRepository.filteredMarkers
+    var filteredName by mutableStateOf("")
+    var filteredSelectedOption by mutableStateOf("Any Type")
+    var filteredRadius by mutableStateOf<Int?>(null)
+    var dateRange by mutableStateOf("")
+
+    val filteredMarkers: StateFlow<List<Place>> = markerRepository.filteredMarkers
 
     // Function to create a marker and save it to Firestore
     fun createMarker(callback: (Boolean, String) -> Unit) {
@@ -78,9 +81,6 @@ class MarkerViewModel(private val markerRepository: MarkerRepository) : ViewMode
         lng = latLng.longitude
     }
 
-
-
-
     fun resetState() {
         name = ""
         selectedOption="Run"
@@ -91,7 +91,23 @@ class MarkerViewModel(private val markerRepository: MarkerRepository) : ViewMode
     }
 
     fun resetFilter(){
+        filteredName = ""
+        filteredSelectedOption = "Any Type"
+        filteredRadius = 0
+        dateRange = ""
+    }
 
+    fun applyFilters(currentUserLocationData: LocationData?, cb: (Boolean) -> Unit) {
+
+        viewModelScope.launch {
+            markerRepository.applyFilters(callback = cb,filteredName, filteredSelectedOption, dateRange, filteredRadius, currentUserLocationData)
+        }
+    }
+
+    fun removeFilters() {
+        viewModelScope.launch {
+            markerRepository.removeFilters()
+        }
     }
 
     fun isValidName(name: String): Boolean = name.isNotBlank()

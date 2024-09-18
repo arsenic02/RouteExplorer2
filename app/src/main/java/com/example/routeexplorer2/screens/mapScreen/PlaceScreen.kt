@@ -49,7 +49,6 @@ import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
 import coil.compose.rememberImagePainter
 import com.example.routeexplorer2.data.model.Review
 import com.example.routeexplorer2.utils.extractAddressPart
@@ -214,12 +213,12 @@ fun PlaceScreen (
     }
     if (isReviewDialogOpen) {
         selectedPlace?.let {
-            //to posle da se otvori reviewDialog
-//            ReviewDialog(
-//                onDismissRequest = { isReviewDialogOpen = false },
-//                fieldViewModel = placeViewModel,
-//                fieldId = it.id
-//            )
+           // to posle da se otvori reviewDialog
+            ReviewDialog(
+                onDismissRequest = { isReviewDialogOpen = false },
+                placeViewModel = placeViewModel,
+                placeId = it.id
+            )
         }
     }
 

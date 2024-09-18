@@ -63,7 +63,6 @@ import com.example.routeexplorer2.data.home.HomeViewModel
 import com.example.routeexplorer2.data.model.LocationData
 import com.example.routeexplorer2.data.model.Place
 import com.example.routeexplorer2.screens.MapMarker
-import com.example.routeexplorer2.screens.bitmapDescriptorFromVector
 import com.example.routeexplorer2.viewModels.LoginViewModel
 import com.example.routeexplorer2.viewModels.MapViewModel
 import com.example.routeexplorer2.viewModels.MarkerViewModel
@@ -101,21 +100,6 @@ fun HomeScreen(
 
 ) {
 
-//    val selectPlace: (Place) -> Unit = { place ->
-//        place.id?.let { placeId ->
-//            placeViewModel.setCurrentPlaceState(place) // Set current place
-//
-//            //privremeno zakomentarisano
-//           // navController.navigate("place_screen/${placeId}") // Navigate to place_screen
-//
-//            navController.navigate("place_screen/$placeId") {
-//                popUpTo(navController.graph.startDestinationId)
-//                launchSingleTop = true
-//            }
-//
-//        }
-//    }
-//    GoogleMapScreen()
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -123,6 +107,7 @@ fun HomeScreen(
     homeViewModel.getUserData()
     val currentUser by userViewModel.currentUser.collectAsState(initial = null)
     val currentUserLocation by userViewModel.currentUserLocation.collectAsState()
+    val filteredMarkers by markerViewModel.filteredMarkers.collectAsState()
 
     var isAddPlaceModalOpen by remember { mutableStateOf(false) }
     var isServiceDialogOpen by remember { mutableStateOf(false) }
@@ -207,6 +192,8 @@ fun HomeScreen(
     val username=currentUser?.username
     val mail=currentUser?.email
 
+
+    var showFilterDialog by remember { mutableStateOf(false) }
 
     ModalNavigationDrawer(
         drawerState = drawerState,
@@ -301,6 +288,9 @@ fun HomeScreen(
                     },
                     onMenuClicked = {
                         scope.launch { drawerState.open() } // Opens the drawer
+                    },
+                    onSearchClicked = {
+                        showFilterDialog = true  // Show the filter dialog when search is clicked
                     }
                 )
             }
@@ -353,8 +343,11 @@ fun HomeScreen(
                                 )
 
                             }
-//
-                            markers.forEach { markerLocation ->
+////ovde filteredMarkers ubaci
+                            //markers.forEach
+                            val markersToDisplay =
+                                if (filteredMarkers.isNotEmpty()) filteredMarkers else markers
+                            markersToDisplay.forEach { markerLocation ->
                                 val type = markerLocation.selectedOption
                                 //Log.d("Type=", type)
                                 val iconResId = when (type) {
@@ -391,6 +384,36 @@ fun HomeScreen(
                                 markerViewModel,
                                 onDismiss = { isAddPlaceModalOpen = false }
                             )
+                        }
+
+                        if (showFilterDialog) {
+                            FilterPlaceModal(
+                                context = context,
+                                currentUserLocation = currentUserLocation,
+                                markerViewModel = markerViewModel,
+                                onDismiss = { showFilterDialog = false }  // Close the dialog
+                            )
+                        }
+
+                        if (filteredMarkers.isNotEmpty()) {
+                            IconButton(
+                                onClick = { markerViewModel.removeFilters() },
+                                modifier = Modifier
+                                    .align(Alignment.BottomCenter)
+                                    .padding(
+                                        top = 16.dp,
+                                        bottom = 24.dp,
+                                        start = 130.dp
+                                    ) // Adjust padding as needed
+                                    .size(40.dp) // Larger size for the button
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_search_off_24),
+                                    contentDescription = "Remove filters",
+                                    tint = MaterialTheme.colorScheme.primary, // Adjust icon color if needed
+                                    modifier = Modifier.size(32.dp)
+                                )
+                            }
                         }
 
                         currentUserLocation?.let {

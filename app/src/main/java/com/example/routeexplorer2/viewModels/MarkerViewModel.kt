@@ -60,6 +60,7 @@ class MarkerViewModel(private val markerRepository: MarkerRepository) : ViewMode
                 callback = callback,
                 currentTime =  Timestamp.now()
             )
+//            callback(true, "Successfully added marker") //mislim da nije od znacaja za id
             Log.d("MarkerViewModel", "Marker creation process finished")
 //            resetState()
         }

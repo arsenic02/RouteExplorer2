@@ -9,6 +9,7 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import com.google.maps.android.compose.Marker
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.tasks.await
@@ -34,7 +35,15 @@ suspend fun addMarker(
     callback: (Boolean, String) -> Unit,
     currentTime: Timestamp
 ) {
+    val userId = auth.currentUser!!.uid//dodato
     try {
+
+        //dodato userRef i user
+        val userRef = firestore.collection("users").document(userId).get().await()
+        val user = userRef.toObject(User::class.java)
+            ?: User() // Ako ne postoji korisnik, koristi praznog User-a
+
+        //ovako je bilo
         val markerData = hashMapOf(
             "name" to name,
             "lat" to lat,
@@ -44,6 +53,23 @@ suspend fun addMarker(
             "selectedOption" to selectedOption,
             "timestamp" to currentTime // Use provided currentTime
         )
+
+//        val markerData = Place(
+//            "",
+//            name,
+//            selectedOption,
+//            "",
+//            lng,
+//            lat,
+//            selectedOption,
+//            iconResId,
+//            mutableListOf(),
+//            0.0,
+//            0,
+//            "",
+//            currentTime,
+//            user.username
+//        )
 
         // Save marker data to Firestore and get a reference to the newly added document
         val documentRef = firestore.collection("markers").add(markerData).await()
@@ -59,7 +85,8 @@ suspend fun addMarker(
             // Update Firestore document with photo URL
             documentRef.update(
                 mapOf(
-                    "photo" to downloadUri.toString()
+                    "photo" to downloadUri.toString(),
+                    "id" to placeId
                 )
             ).await()
         }

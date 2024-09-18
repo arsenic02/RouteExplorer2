@@ -91,7 +91,20 @@ class PlaceRepository(
         }
     }
 
-
+    // Fetch user from firestore with user id (uuid)
+    private suspend fun getUser(userId: String): User? {
+        return try {
+            val documentSnapshot = firestore
+                .collection("users")
+                .document(userId)
+                .get()
+                .await()
+            documentSnapshot.toObject(User::class.java)
+        } catch (e: Exception) {
+            // Obrada grešaka
+            null
+        }
+    }
     suspend fun addReview(placeId: String, text: String, rating: Int) {
 
         val user = getUser(auth.currentUser!!.uid)
@@ -318,20 +331,7 @@ class PlaceRepository(
         }
     }
 
-    // Fetch user from firestore with user id (uuid)
-    private suspend fun getUser(userId: String): User? {
-        return try {
-            val documentSnapshot = firestore
-                .collection("users")
-                .document(userId)
-                .get()
-                .await()
-            documentSnapshot.toObject(User::class.java)
-        } catch (e: Exception) {
-            // Obrada grešaka
-            null
-        }
-    }
+
 
 
 }

@@ -4,12 +4,14 @@ package com.example.routeexplorer2.viewModels
 //import com.google.android.gms.maps.model.LatLng
 
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.example.routeexplorer2.R
 import com.example.routeexplorer2.data.model.LocationData
 import com.example.routeexplorer2.data.model.Place
 import com.example.routeexplorer2.data.repository.MarkerRepository
@@ -28,8 +30,10 @@ class MarkerViewModel(private val markerRepository: MarkerRepository) : ViewMode
 
     var filteredRadius by mutableStateOf<Int?>(null)
     var dateRange by mutableStateOf("")
-
+    var selectedOption by mutableStateOf("Run")
     val markers: StateFlow<List<Place>> = markerRepository.markers
+
+   // val filteredMarkers: StateFlow<List<Place>> = markerRepository.filteredMarkers
 
     // Function to create a marker and save it to Firestore
     fun createMarker(callback: (Boolean, String) -> Unit) {
@@ -37,7 +41,13 @@ class MarkerViewModel(private val markerRepository: MarkerRepository) : ViewMode
             callback(false, "Name cannot be empty")
             return
         }
-
+        Log.d("MarkerViewModel", "Starting marker creation")
+        val iconResId = when (selectedOption) {
+            "Run" -> R.drawable.ic_run_24   //ic_car_24 opet on crta sam run ikonu
+            "Bike" -> R.drawable.baseline_directions_bike_24
+            "Car" -> R.drawable.ic_car_24
+            else -> R.drawable.ic_car_24 // A default marker icon if needed
+        }
         viewModelScope.launch {
             markerRepository.addMarker(
                 name = name,
@@ -45,9 +55,13 @@ class MarkerViewModel(private val markerRepository: MarkerRepository) : ViewMode
                 lng = lng,
                 address = address,
                 photo = imageUri,
-                callback = callback
+                selectedOption=selectedOption,
+                iconResId=iconResId,//dodato
+                callback = callback,
+                currentTime =  Timestamp.now()
             )
-            resetState()
+            Log.d("MarkerViewModel", "Marker creation process finished")
+//            resetState()
         }
     }
 
@@ -63,8 +77,12 @@ class MarkerViewModel(private val markerRepository: MarkerRepository) : ViewMode
         lng = latLng.longitude
     }
 
+
+
+
     fun resetState() {
         name = ""
+        selectedOption="Run"
         lat = 0.0
         lng = 0.0
         address = ""

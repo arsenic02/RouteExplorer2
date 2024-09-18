@@ -5,6 +5,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import com.example.routeexplorer2.data.repository.MarkerRepository
+import com.example.routeexplorer2.data.repository.PlaceRepository
 import com.example.routeexplorer2.data.repository.UserRepository
 import com.example.routeexplorer2.utils.DefaultLocationClient
 import com.example.routeexplorer2.utils.LocationClient
@@ -22,12 +23,12 @@ class DefaultAppContainer(context:Context) {
     }
 
     val markerRepository: MarkerRepository by lazy {
-        MarkerRepository(firestore, storage)
+        MarkerRepository(auth,firestore, storage)
     }
 
-    //    val fieldRepository: FieldRepository by lazy {
-//        FieldRepository(auth, firestore)
-//    }
+        val placeRepository: PlaceRepository by lazy {
+        PlaceRepository(auth, firestore)
+    }
 //
     val locationClient: LocationClient by lazy {
         DefaultLocationClient(context.applicationContext)

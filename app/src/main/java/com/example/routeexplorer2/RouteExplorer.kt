@@ -19,7 +19,9 @@ import com.example.routeexplorer2.screens.mapScreen.HomeScreen
 import com.example.routeexplorer2.screens.LoginScreen
 //import com.example.routeexplorer2.screens.RegisterScreen
 import com.example.routeexplorer2.screens.SignUpScreen
+import com.example.routeexplorer2.screens.mapScreen.PlaceScreen
 import com.example.routeexplorer2.viewModels.MarkerViewModel
+import com.example.routeexplorer2.viewModels.PlaceViewModel
 import com.example.routeexplorer2.viewModels.UserViewModel
 import com.google.android.gms.maps.OnMapReadyCallback
 
@@ -29,7 +31,8 @@ enum class Screens(val route: String) {
     GoogleMap("google_map"),
     Leaderboard("leaderboard"),
     Fields("fields"),
-    Field("field")
+    Field("field"),
+    Place("place")
 }
 @Composable
 fun RouteExplorer(
@@ -37,7 +40,8 @@ fun RouteExplorer(
     userViewModel: UserViewModel,
     loginViewModel: LoginViewModel,
     signupViewModel: SignupViewModel,
-    markerViewModel: MarkerViewModel
+    markerViewModel: MarkerViewModel,
+    placeViewModel: PlaceViewModel
    // mapView:MapView
 ) {
     val TAG = HomeViewModel::class.simpleName
@@ -84,13 +88,22 @@ fun RouteExplorer(
                 homeViewModel = homeViewModel,
                 loginViewModel = loginViewModel,
                 userViewModel = userViewModel,
-                markerViewModel=markerViewModel
+                markerViewModel=markerViewModel,
+                selectPlace={placeViewModel.setCurrentPlaceState(it)}
             )
         }
         composable(Screens.Register.route) {
             SignUpScreen(
                 signupViewModel = signupViewModel,
                 navController = navController
+            )
+        }
+        composable(Screens.Place.route) {
+            PlaceScreen(
+                //signupViewModel = signupViewModel,
+                userViewModel=userViewModel,
+                placeViewModel = placeViewModel,
+                //navController = navController
             )
         }
     }

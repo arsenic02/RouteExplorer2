@@ -1,6 +1,7 @@
 package com.example.routeexplorer2.screens.mapScreen
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -43,21 +44,18 @@ fun AddPlaceModal(
     var expanded by remember { mutableStateOf(false) }
 
     val options = listOf(
-        "Gradska Liga",
-        "Okruzna Liga",
-        "Zona Zapad",
-        "Zona Istok",
-        "Sprska Liga Istok",
-        "Prva Liga"
+       "Run",
+        "Bike",
+        "Car"
     )
 
 
     AlertDialog(
         onDismissRequest = {
             onDismiss()
-            //markerViewModel.resetState()
+            markerViewModel.resetState()
         },
-        title = { Text("Add field") },
+        title = { Text("Add interesting place") },
         text = {
             Column(
                 modifier = Modifier.padding(16.dp),
@@ -93,9 +91,9 @@ fun AddPlaceModal(
                     onExpandedChange = { expanded = it }
                 ) {
                     OutlinedTextField(
-                        value = markerViewModel.name,//selectedOption,
-                        onValueChange = { /* No-op */ },
-                        //label = { Text("Select Option") },
+                        value = markerViewModel.selectedOption,//selectedOption,
+                        onValueChange = { markerViewModel.name = it },
+                        label = { Text("Enter name") },
                         readOnly = true,
                         trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
                         singleLine = true,
@@ -112,7 +110,7 @@ fun AddPlaceModal(
                         options.forEach { option ->
                             DropdownMenuItem(
                                 onClick = {
-                                  //  markerViewModel.selectedOption = option
+                                   markerViewModel.selectedOption = option
                                     expanded = false
                                 },
                                 text = {
@@ -137,11 +135,12 @@ fun AddPlaceModal(
                 markerViewModel.createMarker { success, toastMsg ->
                     isLoading = false
                     if (success) {
-                        //markerViewModel.resetState()
                         onDismiss()
                         Toast.makeText(context, toastMsg, Toast.LENGTH_SHORT).show()
+                        //markerViewModel.resetState()
                     } else {
                         Toast.makeText(context, toastMsg, Toast.LENGTH_SHORT).show()
+                        Log.d("AddPlaceModal","Neuspesno dodavanje markera")
                     }
 
                 }
@@ -153,7 +152,7 @@ fun AddPlaceModal(
         dismissButton = {
             Button(onClick = {
                 onDismiss()
-                //markerViewModel.resetState()
+                markerViewModel.resetState()
             }) {
                 Text("Cancel")
             }

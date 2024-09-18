@@ -61,6 +61,8 @@ import com.example.routeexplorer2.components.AppToolbar
 import com.example.routeexplorer2.components.NavigationDrawerBody
 import com.example.routeexplorer2.data.home.HomeViewModel
 import com.example.routeexplorer2.data.model.LocationData
+import com.example.routeexplorer2.data.model.Place
+import com.example.routeexplorer2.screens.MapMarker
 import com.example.routeexplorer2.screens.bitmapDescriptorFromVector
 import com.example.routeexplorer2.viewModels.LoginViewModel
 import com.example.routeexplorer2.viewModels.MapViewModel
@@ -91,6 +93,7 @@ fun HomeScreen(
     loginViewModel: LoginViewModel,
     userViewModel: UserViewModel,
     markerViewModel:MarkerViewModel,
+    selectPlace:(Place)->Unit,
     mapViewModel: MapViewModel= viewModel()
 
 
@@ -176,7 +179,6 @@ fun HomeScreen(
 
     //var markers by remember { mutableStateOf(listOf<LatLng>()) }
     val markers by markerViewModel.markers.collectAsState()
-//   val markers by markerViewModel.markers.collectAsState() //ovako bi trebalo iz viewModela
 
 //    var markerCounter by remember { mutableStateOf(0) }
 //    var markerList by remember { mutableStateOf(listOf<LatLng>()) }
@@ -307,13 +309,15 @@ fun HomeScreen(
 
                                 isAddPlaceModalOpen=true
                                 markerViewModel.setLatLng(latLng)
-                                markerViewModel.createMarker { success, message ->
-                                    if (success) {
-                                        Toast.makeText(context, "Marker added!", Toast.LENGTH_SHORT).show()
-                                    } else {
-                                        Toast.makeText(context, "Error: $message", Toast.LENGTH_SHORT).show()
-                                    }
-                                }
+                               // markerViewModel.setNewAddress(reverseGeocodeLocation(context = context, it))
+                                //uklonio sam ovo, mislim da je suvisno
+//                                markerViewModel.createMarker { success, message ->
+//                                    if (success) {
+//                                        Toast.makeText(context, "Marker added!", Toast.LENGTH_SHORT).show()
+//                                    } else {
+//                                        Toast.makeText(context, "Error: $message", Toast.LENGTH_SHORT).show()
+//                                    }
+//                                }
                             }
                             //nije ni ovo lose, samo ne moze da se plamti u bazi
 //                            onMapLongClick = { latLng ->
@@ -328,25 +332,7 @@ fun HomeScreen(
 //                            }
 
                         ) {
-                            //Darkov kod, nece kod mene nesto
-                            //val markersToDisplay =
-                                /*if (filteredMarkers.isNotEmpty()) filteredMarkers else*/ markers
-//                            markersToDisplay.forEach { marker ->
-//                                MapMarker(
-//                                    context = context,
-//                                    position = LatLng(marker.latitude, marker.longitude),
-//                                    title = marker.name,
-//                                    snippet = "Marker in ${marker.name}",
-//                                    iconResourceId = R.drawable.ic_route_24//treba ikonica za vidikovac
-//                                ) {
-//                                    // Handle marker click
-//                                    //selectField(marker)
-//                                  //  navController.navigate(Screens.Field.name)
-//                                    Log.d("Kliknuto na mapi",": dodaje se marker")
-//                                    true // Return true to indicate that the click event is consumed
-//                                }
-//
-//                            }
+
                             currentUserLocation?.let {
                                 Marker(
                                     state = MarkerState(
@@ -358,17 +344,34 @@ fun HomeScreen(
                             }
 //
                             markers.forEach { markerLocation ->
-                                val icon = bitmapDescriptorFromVector(context, R.drawable.ic_preview_24)
-                                Marker(
-                                    state = MarkerState(position = LatLng(markerLocation.latitude, markerLocation.longitude)),
-                                    title = "Marker at (${markerLocation.latitude}, ${markerLocation.longitude})",
-                                    icon = icon
-                                )
+                                val type = markerLocation.selectedOption
+                                //Log.d("Type=", type)
+                                val iconResId = when (type) {
+                                    "Run" -> R.drawable.ic_run_24
+                                    "Bike" -> R.drawable.baseline_directions_bike_24
+                                    "Car" -> R.drawable.ic_car_24
+                                    else -> R.drawable.ic_car_24 // A default marker icon if needed
+                                }
+                                //zasad zakomentarisano
+                                //val icon = bitmapDescriptorFromVector(context, iconResId) // iconResId from Firestore or wherever markers are fetched
+//                                Marker(
+//                                    state = MarkerState(position = LatLng(markerLocation.latitude, markerLocation.longitude)),
+//                                    title = "Marker at (${markerLocation.latitude}, ${markerLocation.longitude})",
+//                                    icon = icon
+//                                )
+                                MapMarker(
+                                    context = context,
+                                    position = LatLng(markerLocation.latitude, markerLocation.longitude),
+                                    title = markerLocation.name,
+                                    snippet = "Marker in ${markerLocation.name}",
+                                    iconResourceId = iconResId
+                                ) {
+                                    selectPlace(markerLocation)
+                                    navController.navigate(Screens.Place.route)
+                                    true // Return true to indicate that the click event is consumed
+                                }
                             }
                         }
-
-                        // Da bih pokrenuo lokaction service, prethodno mora da bude odobreni fine i coarse location
-                        // Na osnovu currentUserLocation pratim da li je korisnik odobrio lokaciju ili ne
 
                         if (isAddPlaceModalOpen) {
                             AddPlaceModal(

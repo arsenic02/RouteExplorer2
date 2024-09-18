@@ -25,6 +25,10 @@ fun hasLocationPermissions(context: Context): Boolean {
             ) == PackageManager.PERMISSION_GRANTED
 }
 
+
+fun typeIcon(){
+
+}
 fun reverseGeocodeLocation(context: Context, coordinate: LatLng) : String {
     val geocoder = Geocoder(context, Locale.getDefault())
     // it can be multiple addresses that fir to certain location, zato je stavlja u listu

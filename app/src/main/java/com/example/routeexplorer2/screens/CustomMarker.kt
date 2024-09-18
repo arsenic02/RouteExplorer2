@@ -30,6 +30,27 @@ fun bitmapDescriptorFromVector(context: Context, @DrawableRes vectorResId: Int):
     return null
 }
 
+@Composable
+fun MapMarker(
+    context: Context,
+    position: LatLng,
+    title: String,
+    snippet: String,
+    @DrawableRes iconResourceId: Int,
+    onMapClick: (marker: Marker) -> Boolean,
+) {
+    val icon = bitmapDescriptor(//bitmapDescriptorFromVector
+        context, iconResourceId
+    )
+    Marker(
+        state = MarkerState(position = position),
+        title = title,
+        snippet = snippet,
+        icon = icon,
+        onClick = { onMapClick(it) }
+
+    )
+}
 
 //baca exception
 //@Composable
@@ -70,22 +91,23 @@ fun bitmapDescriptorFromVector(context: Context, @DrawableRes vectorResId: Int):
 //    )
 //}
 
-//fun bitmapDescriptor(
-//    context: Context,
-//    vectorResId: Int
-//): BitmapDescriptor? {
-//
-//    // retrieve the actual drawable
-//    val drawable = ContextCompat.getDrawable(context, vectorResId) ?: return null
-//    drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
-//    val bm = Bitmap.createBitmap(
-//        drawable.intrinsicWidth,
-//        drawable.intrinsicHeight,
-//        Bitmap.Config.ARGB_8888
-//    )
-//
-//    // draw it onto the bitmap
-//    val canvas = android.graphics.Canvas(bm)
-//    drawable.draw(canvas)
-//    return BitmapDescriptorFactory.fromBitmap(bm)
-//}
+//Darkova fja
+fun bitmapDescriptor(
+    context: Context,
+    vectorResId: Int
+): BitmapDescriptor? {
+
+    // retrieve the actual drawable
+    val drawable = ContextCompat.getDrawable(context, vectorResId) ?: return null
+    drawable.setBounds(0, 0, drawable.intrinsicWidth, drawable.intrinsicHeight)
+    val bm = Bitmap.createBitmap(
+        drawable.intrinsicWidth,
+        drawable.intrinsicHeight,
+        Bitmap.Config.ARGB_8888
+    )
+
+    // draw it onto the bitmap
+    val canvas = android.graphics.Canvas(bm)
+    drawable.draw(canvas)
+    return BitmapDescriptorFactory.fromBitmap(bm)
+}

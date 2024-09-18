@@ -18,12 +18,12 @@ import com.example.routeexplorer2.viewModels.SignupViewModel
 import com.example.routeexplorer2.ui.theme.RouteExplorer2Theme
 import com.example.routeexplorer2.viewModels.MarkerViewModel
 import com.example.routeexplorer2.viewModels.MarkerViewModelFactory
+import com.example.routeexplorer2.viewModels.PlaceViewModel
+import com.example.routeexplorer2.viewModels.PlaceViewModelFactory
 //import com.example.routeexplorer2.viewModels.MarkerViewModelFactory
 import com.example.routeexplorer2.viewModels.RegisterViewModelFactory
 import com.example.routeexplorer2.viewModels.UserViewModel
 import com.example.routeexplorer2.viewModels.UserViewModelFactory
-import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapView
 
 //import com.example.routeexplorer2.utils.checkLocationPermission
 
@@ -50,6 +50,10 @@ class MainActivity : ComponentActivity() {
     private val markerViewModel: MarkerViewModel by viewModels {
         MarkerViewModelFactory((application as LoginFlowApp).container.markerRepository)
     }
+
+    private val placeViewModel: PlaceViewModel by viewModels {
+        PlaceViewModelFactory(placeRepository = (application as LoginFlowApp).container.placeRepository)
+    }
    // private val markerViewModel:MarkerViewModel by viewModels()
     //private val homeViewModel:HomeViewModel
 
@@ -75,7 +79,8 @@ class MainActivity : ComponentActivity() {
                         userViewModel,
                         loginViewModel,
                         signupViewModel,
-                        markerViewModel
+                        markerViewModel,
+                        placeViewModel
 //                        mapView
                     )
                 }

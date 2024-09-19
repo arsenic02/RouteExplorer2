@@ -1,9 +1,12 @@
 package com.example.routeexplorer2
 
+import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -11,7 +14,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.routeexplorer2.data.home.HomeViewModel
+import com.example.routeexplorer2.viewModels.HomeViewModel
+import com.example.routeexplorer2.data.services.NearbyPlacesDetection
+import com.example.routeexplorer2.data.services.NearbyPlacesDetectionController
 import com.example.routeexplorer2.viewModels.LoginViewModel
 import com.example.routeexplorer2.viewModels.LoginViewModelFactory
 import com.example.routeexplorer2.viewModels.SignupViewModel
@@ -54,18 +59,33 @@ class MainActivity : ComponentActivity() {
     private val placeViewModel: PlaceViewModel by viewModels {
         PlaceViewModelFactory(placeRepository = (application as LoginFlowApp).container.placeRepository)
     }
+
+
    // private val markerViewModel:MarkerViewModel by viewModels()
     //private val homeViewModel:HomeViewModel
 
 //    private lateinit var mapView: MapView
 //    private var googleMap: GoogleMap? = null
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-//        mapView = MapView(this)
-//        mapView.onCreate(savedInstanceState)
+        val defaultNearbyPlacesController = object : NearbyPlacesDetectionController {
+            override fun startNearbyPlacesDetectionService() {
+                Intent(applicationContext, NearbyPlacesDetection::class.java).apply {
+                    action = NearbyPlacesDetection.ACTION_START
+                    startService(this)
+                }
+            }
 
+            override fun stopNearbyPlacesDetectionService() {
+                Intent(applicationContext, NearbyPlacesDetection::class.java).apply {
+                    action = NearbyPlacesDetection.ACTION_STOP
+                    startService(this)
+                }
+            }
+        }
         setContent {
             RouteExplorer2Theme {
                 // A surface container using the 'background' color from the theme
@@ -80,7 +100,8 @@ class MainActivity : ComponentActivity() {
                         loginViewModel,
                         signupViewModel,
                         markerViewModel,
-                        placeViewModel
+                        placeViewModel,
+                        defaultNearbyPlacesController
 //                        mapView
                     )
                 }

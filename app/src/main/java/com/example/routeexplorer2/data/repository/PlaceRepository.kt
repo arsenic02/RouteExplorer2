@@ -21,7 +21,7 @@ import java.text.DecimalFormatSymbols
 import java.util.Locale
 import java.util.UUID
 
-object FieldConstants {
+object PlaceConstants {
     const val POINTS_FOR_ADDING_REVIEW = 10
     const val POINTS_FOR_LIKING_REVIEW = 5
 }
@@ -132,7 +132,7 @@ class PlaceRepository(
             updateFieldStats(reviewCount, reviews)
 
             // Ažurirajte score korisnika
-            changeAuthorScore(FieldConstants.POINTS_FOR_ADDING_REVIEW, true)
+            changeAuthorScore(PlaceConstants.POINTS_FOR_ADDING_REVIEW, true)
 
 
         } catch (e: Exception) {
@@ -214,7 +214,7 @@ class PlaceRepository(
 
         updateUserLikedReviews(currUserId, isLiked, review.id)
 
-        changeAuthorScore(FieldConstants.POINTS_FOR_LIKING_REVIEW, isLiked)
+        changeAuthorScore(PlaceConstants.POINTS_FOR_LIKING_REVIEW, isLiked)
 
     }
 
@@ -331,6 +331,14 @@ class PlaceRepository(
         }
     }
 
+    suspend fun getAllPlaces(): List<Place> {
+        return try {
+            val snapshot = firestore.collection("markers").get().await()
+            snapshot.toObjects(Place::class.java)
+        } catch (e: Exception) {
+            emptyList() // Return empty list on failure
+        }
+    }
 
 
 

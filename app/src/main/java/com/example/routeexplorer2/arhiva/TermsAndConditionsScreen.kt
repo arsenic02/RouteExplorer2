@@ -1,4 +1,4 @@
-package com.example.routeexplorer2.screens
+package com.example.routeexplorer2.arhiva
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
@@ -12,7 +12,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.routeexplorer2.R
 import com.example.routeexplorer2.components.HeadingTextComponent
-import com.example.routeexplorer2.components.NormalTextComponent
 
 @Composable
 fun TermsAndConditionsScreen(){

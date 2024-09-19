@@ -3,10 +3,12 @@ package com.example.routeexplorer2.screens.mapScreen
 import android.Manifest
 import android.content.Context
 import android.net.Uri
+import android.os.Build
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -59,9 +61,10 @@ import com.example.routeexplorer2.R
 import com.example.routeexplorer2.Screens
 import com.example.routeexplorer2.components.AppToolbar
 import com.example.routeexplorer2.components.NavigationDrawerBody
-import com.example.routeexplorer2.data.home.HomeViewModel
+import com.example.routeexplorer2.viewModels.HomeViewModel
 import com.example.routeexplorer2.data.model.LocationData
 import com.example.routeexplorer2.data.model.Place
+import com.example.routeexplorer2.data.services.NearbyPlacesDetectionController
 import com.example.routeexplorer2.screens.MapMarker
 import com.example.routeexplorer2.viewModels.LoginViewModel
 import com.example.routeexplorer2.viewModels.MapViewModel
@@ -86,6 +89,7 @@ import kotlinx.coroutines.launch
 
 
 @OptIn(ExperimentalMaterial3Api::class)
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun HomeScreen(
     navController: NavController,
@@ -94,6 +98,7 @@ fun HomeScreen(
     userViewModel: UserViewModel,
     markerViewModel:MarkerViewModel,
     selectPlace:(Place)->Unit,
+    defaultNearbyPlaceController: NearbyPlacesDetectionController,
     placeViewModel: PlaceViewModel,
     mapViewModel: MapViewModel= viewModel()
 
@@ -181,17 +186,12 @@ fun HomeScreen(
     //var markers by remember { mutableStateOf(listOf<LatLng>()) }
     val markers by markerViewModel.markers.collectAsState()
 
-//    var markerCounter by remember { mutableStateOf(0) }
-//    var markerList by remember { mutableStateOf(listOf<LatLng>()) }
-//    var googleMap by remember { mutableStateOf<GoogleMap?>(null) }
-
     val imageUrl: Uri? = currentUser?.photoPath?.let { Uri.parse(it) }
     val firstName=currentUser?.firstName
     val lastName=currentUser?.lastName
     val phone=currentUser?.phoneNumber
     val username=currentUser?.username
     val mail=currentUser?.email
-
 
     var showFilterDialog by remember { mutableStateOf(false) }
 
@@ -262,9 +262,31 @@ fun HomeScreen(
                         navigationDrawerItems = homeViewModel.navigationItemsList,
                         imageUrl = imageUrl,
                         onImageChange = { uri -> /* Handle image change here if needed */ },
-                        onNavigationItemClicked = {
-                            Log.d("Navigation", "${it.itemId} ${it.title}")
+
+                        onNavigationItemClicked = { item ->
+                            when (item.itemId) {
+                                "routes" -> {
+                                    navController.navigate(Screens.Places.route) {
+                                        //popUpTo(Screens.GoogleMap.route) { inclusive = true } //suvisno
+
+                                    }
+                                }
+                                "leaderboards" -> {
+                                    navController.navigate(Screens.Leaderboard.route) {
+                                        //popUpTo(Screens.GoogleMap.route) { inclusive = true }
+                                    }
+                                }
+                                else -> {
+                                    Log.d("Navigation", "Unknown navigation item clicked")
+                                }
+                            }
                         }
+
+                        //ovako je bilo
+//                        onNavigationItemClicked = {
+//                            Log.d("Navigation", "${it.itemId} ${it.title}")
+//                            navController.navigate(Screens.Leaderboard.route)
+//                        } //ovako je bilo
                     )
                 }
             }
@@ -434,11 +456,35 @@ fun HomeScreen(
                                 )
                             }
                         }
+
+                        if (isServiceDialogOpen) {
+                            ServiceControllDialog(
+                                isServiceRunning = isServiceRunning,
+                                onConfirm = {
+                                    isServiceRunning = !isServiceRunning
+                                    saveServiceRunningState(context, isServiceRunning) // Save the new state
+                                    if (isServiceRunning) {
+                                        defaultNearbyPlaceController.startNearbyPlacesDetectionService()
+                                    } else {
+                                        defaultNearbyPlaceController.stopNearbyPlacesDetectionService()
+                                    }
+                                },
+                                onDismiss = {
+                                    isServiceDialogOpen = false
+                                },
+                            )
+                        }
                     }
                 }
             }
         }
     }
+}
+fun saveServiceRunningState(context: Context, isRunning: Boolean) {
+    val sharedPreferences = context.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
+    val editor = sharedPreferences.edit()
+    editor.putBoolean("isServiceRunning", isRunning)
+    editor.apply()
 }
 
 @Composable

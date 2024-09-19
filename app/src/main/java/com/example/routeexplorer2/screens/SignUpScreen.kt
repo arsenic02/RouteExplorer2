@@ -26,6 +26,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.example.routeexplorer2.R
 import com.example.routeexplorer2.Screens
@@ -46,7 +47,7 @@ import com.example.routeexplorer2.navigation.Screen
 
 @Composable
 fun SignUpScreen (
-    signupViewModel: SignupViewModel /*=viewModel()*/,
+    signupViewModel: SignupViewModel =viewModel(),//viewModel je bio zakomentarisan
     navController:NavController
 ){
     var isLoading by remember { mutableStateOf(false) }

@@ -12,11 +12,14 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.routeexplorer2.data.home.HomeViewModel
+import com.example.routeexplorer2.viewModels.HomeViewModel
+import com.example.routeexplorer2.data.services.NearbyPlacesDetectionController
+import com.example.routeexplorer2.screens.LeaderboardScreen
 import com.example.routeexplorer2.viewModels.LoginViewModel
 import com.example.routeexplorer2.viewModels.SignupViewModel
 import com.example.routeexplorer2.screens.mapScreen.HomeScreen
 import com.example.routeexplorer2.screens.LoginScreen
+import com.example.routeexplorer2.screens.PlacesScreen
 //import com.example.routeexplorer2.screens.RegisterScreen
 import com.example.routeexplorer2.screens.SignUpScreen
 import com.example.routeexplorer2.screens.mapScreen.PlaceScreen
@@ -30,8 +33,7 @@ enum class Screens(val route: String) {
     Register("register"),
     GoogleMap("google_map"),
     Leaderboard("leaderboard"),
-    Fields("fields"),
-    Field("field"),
+    Places("places"),
     Place("place")
 }
 @Composable
@@ -41,7 +43,8 @@ fun RouteExplorer(
     loginViewModel: LoginViewModel,
     signupViewModel: SignupViewModel,
     markerViewModel: MarkerViewModel,
-    placeViewModel: PlaceViewModel
+    placeViewModel: PlaceViewModel,
+    defaultNearbyPlaceController: NearbyPlacesDetectionController
    // mapView:MapView
 ) {
     val TAG = HomeViewModel::class.simpleName
@@ -70,19 +73,6 @@ fun RouteExplorer(
             )
         }
         composable(Screens.GoogleMap.route) {
-//            Column(modifier = Modifier.fillMaxSize()) {
-//                AndroidView(
-//                    factory = { mapView },
-//                    modifier = Modifier
-//                        .fillMaxSize()
-//                        .padding(16.dp),
-//                    update = { mapView ->
-//                        mapView.getMapAsync { googleMap ->
-//                            mapCallback.value.onMapReady(googleMap)
-//                        }
-//                    }
-//                )
-//            }
             HomeScreen(
                 navController = navController,
                 homeViewModel = homeViewModel,
@@ -90,7 +80,8 @@ fun RouteExplorer(
                 userViewModel = userViewModel,
                 markerViewModel=markerViewModel,
                 placeViewModel=placeViewModel,
-                selectPlace={placeViewModel.setCurrentPlaceState(it)}
+                selectPlace={placeViewModel.setCurrentPlaceState(it)},
+                defaultNearbyPlaceController = defaultNearbyPlaceController
             )
         }
         composable(Screens.Register.route) {
@@ -99,25 +90,27 @@ fun RouteExplorer(
                 navController = navController
             )
         }
-//        composable("place_screen/{placeId}") { backStackEntry ->
-//            val placeId = backStackEntry.arguments?.getString("placeId")
-//            if (placeId != null) {
-//                PlaceScreen(
-//                    userViewModel = userViewModel,
-//                    placeViewModel = placeViewModel,
-//                    navController = navController
-//                )
-//            }
-//        }
 
-
-        //privremeno zakomentarisano
         composable(Screens.Place.route) {
             PlaceScreen(
                 //signupViewModel = signupViewModel,
                 userViewModel=userViewModel,
                 placeViewModel = placeViewModel,
                 //navController = navController//privremeno
+            )
+        }
+        composable(Screens.Leaderboard.name) {
+            LeaderboardScreen(
+                userViewModel = userViewModel
+            )
+        }
+        composable(Screens.Places.name) {
+            PlacesScreen(
+                navController = navController,
+                userViewModel = userViewModel,
+                markerViewModel = markerViewModel,
+                placeViewModel=placeViewModel,
+                selectPlace = { placeViewModel.setCurrentPlaceState(it)}//.setCurrentFieldState(it)}
             )
         }
     }

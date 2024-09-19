@@ -4,6 +4,7 @@ import android.net.Uri
 import android.util.Log
 import com.example.routeexplorer2.data.model.LocationData
 import com.example.routeexplorer2.data.model.Place
+import com.example.routeexplorer2.data.model.Review
 import com.example.routeexplorer2.data.model.User
 import com.google.firebase.Timestamp
 import com.google.firebase.auth.FirebaseAuth
@@ -249,7 +250,13 @@ suspend fun addMarker(
                             longitude = document.getDouble("lng") ?: 0.0,
                             address = document.getString("address") ?: "",
                             selectedOption = document.getString("selectedOption")?:"Run",
-                            //icon=document.getDouble("iconResId")?:0//zasto nece
+                            reviews = (document.get("reviews") as? List<Review> ?: emptyList()).toMutableList(),// as MutableList<Review>,
+                            avgRating = document.getDouble("avgRating") ?: 0.0,
+
+//                            reviewCount = (document.get("reviewCount") ?: 0) as Int,//baca exception
+                            reviewCount = (document.get("reviewCount") as? Number)?.toInt() ?: 0,
+                            photo = document.getString("photo") ?: "",
+                            author = document.getString("author") ?: ""
                         )
                     }
                     _markers.value = markerList

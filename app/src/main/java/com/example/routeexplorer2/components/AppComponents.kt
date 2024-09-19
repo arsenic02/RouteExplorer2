@@ -461,8 +461,14 @@ fun NavigationDrawerBody(
 
             }
         }
-        items(navigationDrawerItems){
-            NavigationItemRow(item = it, onNavigationItemClicked)
+        //items(navigationDrawerItems){//bilo je ovako
+//            NavigationItemRow(item = it, onNavigationItemClicked) //bilo je ovako
+        //}
+
+        items(navigationDrawerItems) { item ->
+            NavigationItemRow(item = item, onNavigationItemClicked = { clickedItem ->
+                onNavigationItemClicked(clickedItem)
+            })
         }
 
     }

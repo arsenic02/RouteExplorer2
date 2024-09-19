@@ -1,9 +1,8 @@
-package com.example.routeexplorer2.data.home
+package com.example.routeexplorer2.viewModels
 
 import android.util.Log
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Leaderboard
-import androidx.compose.material.icons.filled.Map
 import androidx.compose.material.icons.filled.Route
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -20,14 +19,14 @@ class HomeViewModel: ViewModel() {
     val isLoading = MutableLiveData(true)  // Initialize as loading
 
     val navigationItemsList = listOf<NavigationItem>(
+//        NavigationItem(
+//            title="Home",
+//            icon=Icons.Default.Map,
+//            description = "Home Screen",
+//            itemId = "homeScreen"
+//        ),
         NavigationItem(
-            title="Home",
-            icon=Icons.Default.Map,
-            description = "Home Screen",
-            itemId = "homeScreen"
-        ),
-        NavigationItem(
-            title="Routes",
+            title="Places",
             icon=Icons.Default.Route,//neka ikonica treba za rute
             description = "Routes",
             itemId = "routes"

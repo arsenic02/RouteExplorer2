@@ -9,6 +9,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.routeexplorer2.data.model.Place
 import com.example.routeexplorer2.data.model.Review
 import com.example.routeexplorer2.data.repository.PlaceRepository
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
@@ -29,6 +30,7 @@ class PlaceViewModel(
     val selectedPlace: StateFlow<Place?> get() = placeRepository.selectedPlace
 
 
+    val places = MutableStateFlow<List<Place>>(emptyList()) //ja sam dodao
     fun loadPlace(placeId: String) {
         viewModelScope.launch {
             placeRepository.addPlaceSnapshotListener(placeId)//ovde se poziva PlaceRepository i onda tamo exception
@@ -64,6 +66,12 @@ class PlaceViewModel(
     override fun onCleared() {
         super.onCleared()
         placeRepository.stopListening()
+    }
+
+    private fun loadPlaces() {
+        viewModelScope.launch {
+            places.value = placeRepository.getAllPlaces() // Get all places from repository
+        }
     }
 
 

@@ -76,9 +76,15 @@ fun PlaceScreen (
     val selectedPlace by placeViewModel.selectedPlace.collectAsState()
     val currentUser by userViewModel.currentUser.collectAsState()
 
-    Log.d("SelectedPlaceState=","$selectedPlaceState") // loguje Place(id=, name=Beba, type=, address=, longitude=21.255626678466797, latitude=44.58344373799986, selectedOption=Bike, icon=0, reviews=[], avgRating=0.0, reviewCount=0, photo=, timeCreated=Timestamp(seconds=1726619295, nanoseconds=65000000), author=)
-    Log.d("SelectedPlace=","$selectedPlace")//loguje null
-    Log.d("currentUser=","$currentUser")//ovde loguje okej
+    Log.d("SelectedPlaceState=","$selectedPlaceState")
+    Log.d("SelectedPlace=","$selectedPlace")//ovo dobro loguje
+    Log.d("currentUser=","$currentUser")
+
+    /*
+    SelectedPlaceState=     com.example.routeexplorer2           D  Place(id=9VFb9MHs1pnzlmRIqgw9, name=Palanka, type=, address=, longitude=22.29458637535572, latitude=43.23669847107124, selectedOption=Car, icon=0, reviews=[], avgRating=0.0, reviewCount=0, photo=, timeCreated=Timestamp(seconds=1726744795, nanoseconds=939000000), author=)
+2024-09-19 13:20:10.791 26619-26619 SelectedPlace=          com.example.routeexplorer2           D  Place(id=9VFb9MHs1pnzlmRIqgw9, name=Palanka, type=, address=, longitude=0.0, latitude=0.0, selectedOption=Car, icon=0, reviews=[Review(id=4cdf2084-9e4d-4300-ac13-0bba0ce4bcf5, user=Miljan1, rating=4, text=Lepa staza za voznju automobila, likes=2, markerId=9VFb9MHs1pnzlmRIqgw9), Review(id=a7916873-dec1-40cc-ab0e-c187ad09e83d, user=Nikolaa, rating=2, text=Ne svidja mi se staza, likes=0, markerId=9VFb9MHs1pnzlmRIqgw9)], avgRating=3.0, reviewCount=2, photo=https://firebasestorage.googleapis.com/v0/b/routeexplorer2-2e4c5.appspot.com/o/place_pictures%2F9VFb9MHs1pnzlmRIqgw9?alt=media&token=07d0441e-3c7c-4eb2-8547-4ac5ef0cfbba, timeCreated=Timestamp(seconds=1726744810, nanoseconds=179000000), author=Miljan1)
+2024-09-19 13:20:10.791 26619-26619 currentUser=            com.example.routeexplorer2           D  User(id=8hLyQnIBnEdHRaWvSwWojKoyXEw2, email=nenad@gmail.com, username=Nenad12, firstName=Nenad, lastName=Nenadović, phoneNumber=06485723465, score=0, likedReviews=[], photoPath=https://firebasestorage.googleapis.com/v0/b/routeexplorer2-2e4c5.appspot.com/o/profile_pictures%2F8hLyQnIBnEdHRaWvSwWojKoyXEw2?alt=media&token=8909572f-c4c4-4daf-b430-92fbd3e8dd44)
+     */
 
     //privremeno zakomentarisano
     LaunchedEffect(selectedPlaceState) {
@@ -103,7 +109,6 @@ fun PlaceScreen (
             .padding(8.dp)
     ) {
         Column {
-            // Box with image and rating overlay
             Box(
                 modifier = Modifier
                     .clip(RoundedCornerShape(8.dp))

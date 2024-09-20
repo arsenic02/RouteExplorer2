@@ -2,6 +2,7 @@ package com.example.routeexplorer2.screens.mapScreen
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Build
 import android.util.Log
@@ -52,6 +53,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
@@ -67,7 +69,8 @@ import com.example.routeexplorer2.data.model.Place
 import com.example.routeexplorer2.data.services.NearbyPlacesDetectionController
 import com.example.routeexplorer2.screens.MapMarker
 import com.example.routeexplorer2.viewModels.LoginViewModel
-import com.example.routeexplorer2.viewModels.MapViewModel
+import com.example.routeexplorer2.arhiva.MapViewModel
+import com.example.routeexplorer2.data.services.LocationTrackingService
 import com.example.routeexplorer2.viewModels.MarkerViewModel
 import com.example.routeexplorer2.viewModels.PlaceViewModel
 import com.example.routeexplorer2.viewModels.UserViewModel
@@ -100,7 +103,7 @@ fun HomeScreen(
     selectPlace:(Place)->Unit,
     defaultNearbyPlaceController: NearbyPlacesDetectionController,
     placeViewModel: PlaceViewModel,
-    mapViewModel: MapViewModel= viewModel()
+    mapViewModel: MapViewModel = viewModel()
 
 
 ) {
@@ -464,9 +467,11 @@ fun HomeScreen(
                                     isServiceRunning = !isServiceRunning
                                     saveServiceRunningState(context, isServiceRunning) // Save the new state
                                     if (isServiceRunning) {
-                                        defaultNearbyPlaceController.startNearbyPlacesDetectionService()
+//                                        startLocationService(context)//implementacija pracenja lokacije direktno preko servisa, ne radi
+                                        defaultNearbyPlaceController.startNearbyPlacesDetectionService()//prvobitna implementacija
                                     } else {
-                                        defaultNearbyPlaceController.stopNearbyPlacesDetectionService()
+//                                        stopLocationService(context)//implementacija pracenja lokacije direktno preko servisa, ne radi
+                                        defaultNearbyPlaceController.stopNearbyPlacesDetectionService()//prvobitna implementacija
                                     }
                                 },
                                 onDismiss = {
@@ -480,6 +485,20 @@ fun HomeScreen(
         }
     }
 }
+
+//implementacija pracenja lokacije direktno preko servisa, ne radi
+fun startLocationService(context: Context) {
+    val intent = Intent(context, LocationTrackingService::class.java)
+    ContextCompat.startForegroundService(context, intent)
+}
+
+//implementacija pracenja lokacije direktno preko servisa, ne radi
+fun stopLocationService(context: Context) {
+    val intent = Intent(context, LocationTrackingService::class.java)
+    context.stopService(intent)
+}
+//
+
 fun saveServiceRunningState(context: Context, isRunning: Boolean) {
     val sharedPreferences = context.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
     val editor = sharedPreferences.edit()

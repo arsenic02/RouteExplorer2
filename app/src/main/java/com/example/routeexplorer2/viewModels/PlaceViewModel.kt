@@ -79,7 +79,7 @@ class PlaceViewModel(
 
 
 class PlaceViewModelFactory(
-    private val placeRepository: PlaceRepository // Dodano polje za FieldRepository
+    private val placeRepository: PlaceRepository
 ) : ViewModelProvider.Factory {
 
     @Suppress("UNCHECKED_CAST")

@@ -1,4 +1,4 @@
-package com.example.routeexplorer2.viewModels
+package com.example.routeexplorer2.arhiva
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel

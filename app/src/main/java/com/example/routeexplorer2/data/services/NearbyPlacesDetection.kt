@@ -84,10 +84,10 @@ class NearbyPlacesDetection : Service() {
             .setContentTitle("Searching nearby places")
             .setContentText("There isn't any place nearby")
             .setSmallIcon(R.drawable.ic_search_24)
-            .setStyle(
-                NotificationCompat.BigPictureStyle()
-                    .bigPicture(BitmapFactory.decodeResource(resources, R.drawable.cartoon_detective))
-            )
+//            .setStyle(
+//                NotificationCompat.BigPictureStyle()
+//                    .bigPicture(BitmapFactory.decodeResource(resources, R.drawable.cartoon_detective))
+//            )
             .setOngoing(true)
             .setContentIntent(pendingIntent)
             .setAutoCancel(true)
@@ -221,20 +221,20 @@ class NearbyPlacesDetection : Service() {
         notification: NotificationCompat.Builder,
         isNearbyPlaceFound: Boolean
     ) {
-        val pictureResId = if (isNearbyPlaceFound) {
-            R.drawable.found
-        } else {
-            R.drawable.cartoon_detective
-        }
+//        val pictureResId = if (isNearbyPlaceFound) {
+//            R.drawable.found
+//        } else {
+//            R.drawable.cartoon_detective
+//        }
 
         // Ažurirajte obaveštenje
         notification
             .setContentText(message)
             .setSmallIcon(R.drawable.ic_search_24)
-            .setStyle(
-                NotificationCompat.BigPictureStyle()
-                    .bigPicture(BitmapFactory.decodeResource(resources, pictureResId))
-            )
+//            .setStyle(
+//                NotificationCompat.BigPictureStyle()
+//                    .bigPicture(BitmapFactory.decodeResource(resources, pictureResId))
+//            )
             .setOngoing(true)
 
         val notificationManager =

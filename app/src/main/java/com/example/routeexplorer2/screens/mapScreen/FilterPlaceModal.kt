@@ -1,6 +1,7 @@
 package com.example.routeexplorer2.screens.mapScreen
 
 import android.content.Context
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -94,6 +95,7 @@ fun FilterPlaceModal(
                         options.forEach { option ->
                             DropdownMenuItem(
                                 onClick = {
+                                    Log.d("option: ","$option")
                                     markerViewModel.filteredSelectedOption = option
                                     expanded = false
                                 },

@@ -252,11 +252,13 @@ suspend fun addMarker(
                             selectedOption = document.getString("selectedOption")?:"Run",
                             reviews = (document.get("reviews") as? List<Review> ?: emptyList()).toMutableList(),// as MutableList<Review>,
                             avgRating = document.getDouble("avgRating") ?: 0.0,
-
+                            //type=document.getString("type")?: "",
+                            type = document.getString("selectedOption")?:"Run",
 //                            reviewCount = (document.get("reviewCount") ?: 0) as Int,//baca exception
                             reviewCount = (document.get("reviewCount") as? Number)?.toInt() ?: 0,
                             photo = document.getString("photo") ?: "",
-                            author = document.getString("author") ?: ""
+                            author = document.getString("author") ?: "",
+                            timeCreated = document.getTimestamp("timestamp")?: Timestamp.now()
                         )
                     }
                     _markers.value = markerList
@@ -277,9 +279,17 @@ suspend fun addMarker(
         Log.i("ApplyFilters", "Author: $author, Type: $type, Date: $date, Radius: $radius")
         val filteredList = _markers.value.filter { location ->
 
+            Log.d("place filter:location ","$location")
+
+
             var authorMatch = location.author.contains(author, ignoreCase = true)
             var typeMatch = location.type.contains(type, ignoreCase = true)
             val dateMatch = date.isEmpty() || isDateInRange(location.timeCreated.toDate(), date)
+
+            Log.d("authorMatch","$authorMatch")
+            Log.d("typeMatch","$typeMatch")
+            Log.d("authorMatch","$authorMatch")
+            Log.d("dateMatch","$dateMatch")
 
             if (author.isBlank()) {
                 authorMatch = true
@@ -313,6 +323,7 @@ suspend fun addMarker(
 
 
             authorMatch && typeMatch && dateMatch && withinRadius
+            //Log.d("authorMatch && typeMatch && dateMatch && withinRadius","${authorMatch && typeMatch && dateMatch && withinRadius}")
         }
 
 

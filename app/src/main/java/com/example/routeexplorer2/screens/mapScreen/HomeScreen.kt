@@ -1,6 +1,7 @@
 package com.example.routeexplorer2.screens.mapScreen
 
 import android.Manifest
+import android.app.NotificationManager
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
@@ -53,7 +54,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.app.ActivityCompat
+import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import coil.compose.AsyncImage
@@ -70,7 +73,8 @@ import com.example.routeexplorer2.data.services.NearbyPlacesDetectionController
 import com.example.routeexplorer2.screens.MapMarker
 import com.example.routeexplorer2.viewModels.LoginViewModel
 import com.example.routeexplorer2.arhiva.MapViewModel
-import com.example.routeexplorer2.data.services.LocationTrackingService
+//import com.example.routeexplorer2.data.services.LocationTrackerService
+import com.example.routeexplorer2.utils.LocationClient
 import com.example.routeexplorer2.viewModels.MarkerViewModel
 import com.example.routeexplorer2.viewModels.PlaceViewModel
 import com.example.routeexplorer2.viewModels.UserViewModel
@@ -85,6 +89,12 @@ import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import hasLocationPermissions
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.launchIn
+import kotlinx.coroutines.flow.onEach
 //import kotlinx.coroutines.flow.internal.NoOpContinuation.context
 import kotlinx.coroutines.launch
 
@@ -108,6 +118,9 @@ fun HomeScreen(
 
 ) {
 
+    lateinit var locationClient: LocationClient
+    val serviceScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
     val drawerState = rememberDrawerState(DrawerValue.Closed)
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
@@ -130,6 +143,7 @@ fun HomeScreen(
             if (permissions[Manifest.permission.ACCESS_COARSE_LOCATION] == true &&
                 permissions[Manifest.permission.ACCESS_FINE_LOCATION] == true
             ) {
+                //startLocationTrackingService(context)// dodato
                 userViewModel.updateLocation()
             } else {
                 handlePermissionRationale(context, permissions)
@@ -137,11 +151,58 @@ fun HomeScreen(
         }
     )
 
+    //servis bez viewModel
+//    LaunchedEffect(Unit) {
+//        if (hasLocationPermissions(context)) {
+//            // Start the service instead of calling viewModel updateLocation
+//            val serviceIntent = Intent(context, LocationTrackerService::class.java).apply {
+//                action = LocationTrackerService.ACTION_START
+//            }
+//            ContextCompat.startForegroundService(context, serviceIntent)
+//        } else {
+//            requestPermissionLauncher.launch(
+//                arrayOf(
+//                    Manifest.permission.ACCESS_COARSE_LOCATION,
+//                    Manifest.permission.ACCESS_FINE_LOCATION
+//                )
+//            )
+//        }
+//    }
+
     // Request permission and start location updates if permissions are granted
     LaunchedEffect(Unit) {
         if (hasLocationPermissions(context)) {
 
-            userViewModel.updateLocation()
+            //nista se ne desava
+//            val notification = NotificationCompat.Builder(this, "locationservicechannel")
+//                .setContentTitle("Tracking location...")
+//                .setContentText("Location: null")
+//                .setSmallIcon(R.drawable.ic_search_24)
+//                .setOngoing(true)
+//
+//            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+//
+//
+//            locationClient.getLocationUpdates(1000L)
+//                .catch { e -> e.printStackTrace() }
+//                .onEach { location ->
+//                    Log.d("SERVICE", location.toString())
+//                    val lat = location.latitude.toString()
+//                    val long = location.longitude.toString()
+//                    val updatedNotification = notification.setContentText(
+//                        "Location: ($lat, $long)"
+//                    )
+//                    notificationManager.notify(1, updatedNotification.build())
+//                }
+//                .launchIn(serviceScope)
+//
+//            Log.d("LOCATION SERVICE", "Service started.")
+//            startForeground(1, notification.build())
+
+
+
+            userViewModel.updateLocation() // bilo je odkomentarisano
+
 
         } else {
             requestPermissionLauncher.launch(
@@ -487,16 +548,16 @@ fun HomeScreen(
 }
 
 //implementacija pracenja lokacije direktno preko servisa, ne radi
-fun startLocationService(context: Context) {
-    val intent = Intent(context, LocationTrackingService::class.java)
-    ContextCompat.startForegroundService(context, intent)
-}
-
-//implementacija pracenja lokacije direktno preko servisa, ne radi
-fun stopLocationService(context: Context) {
-    val intent = Intent(context, LocationTrackingService::class.java)
-    context.stopService(intent)
-}
+//fun startLocationService(context: Context) {
+//    val intent = Intent(context, LocationTrackerService::class.java)
+//    ContextCompat.startForegroundService(context, intent)
+//}
+//
+////implementacija pracenja lokacije direktno preko servisa, ne radi
+//fun stopLocationService(context: Context) {
+//    val intent = Intent(context, LocationTrackerService::class.java)
+//    context.stopService(intent)
+//}
 //
 
 fun saveServiceRunningState(context: Context, isRunning: Boolean) {
@@ -565,6 +626,12 @@ fun getServiceRunningState(context: Context): Boolean {
 fun HomeScreenPreview(){
     //HomeScreen()
 }
+
+//fun startLocationTrackingService(context: Context) {
+//    // You could either start a location-tracking service or use a direct method to update the location
+//    val intent = Intent(context, LocationTrackerService::class.java)
+//    ContextCompat.startForegroundService(context, intent)
+//}
 
 fun handlePermissionRationale(context: Context, permissions: Map<String, Boolean>) {
     val rationalRequired = ActivityCompat.shouldShowRequestPermissionRationale(

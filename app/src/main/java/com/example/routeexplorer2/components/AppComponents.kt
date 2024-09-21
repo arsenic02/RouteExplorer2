@@ -131,7 +131,7 @@ fun MyTextFieldComponent(
         leadingIcon = {
             Icon(painter = painterResource, contentDescription = "")
         },
-        isError = !errorStatus
+//        isError = !errorStatus
     )
 }
 
@@ -191,7 +191,7 @@ fun PasswordFieldComponent(
         } else {
             PasswordVisualTransformation()
         },
-        isError = !errorStatus
+//        isError = !errorStatus
     )
 }
 
@@ -224,7 +224,7 @@ fun NumberFieldComponent(
         leadingIcon = {
             Icon(painter = painterResource, contentDescription = "")
         },
-        isError = !errorStatus
+        //isError = !errorStatus
     )
 }
 

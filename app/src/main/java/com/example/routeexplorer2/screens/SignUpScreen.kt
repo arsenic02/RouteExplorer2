@@ -78,7 +78,7 @@ fun SignUpScreen (
 //                        loginViewModel.onEvent(LoginUIEvent.EmailChanged(it))
                         signupViewModel.username=it
                     },
-                    errorStatus = signupViewModel.registrationUIState.value.usernameError//.value.emailError
+                    //errorStatus = signupViewModel.registrationUIState.value.usernameError//.value.emailError
                 )
 
                 MyTextFieldComponent(
@@ -89,7 +89,7 @@ fun SignUpScreen (
 //                        loginViewModel.onEvent(LoginUIEvent.EmailChanged(it))
                         signupViewModel.firstName=it
                     },
-                    errorStatus = signupViewModel.registrationUIState.value.firstNameError//.value.emailError
+                    //errorStatus = signupViewModel.registrationUIState.value.firstNameError//.value.emailError
                 )
 
                 MyTextFieldComponent(
@@ -100,7 +100,7 @@ fun SignUpScreen (
 //                        loginViewModel.onEvent(LoginUIEvent.EmailChanged(it))
                         signupViewModel.lastName=it
                     },
-                    errorStatus = signupViewModel.registrationUIState.value.lastNameError//.value.emailError
+                    //errorStatus = signupViewModel.registrationUIState.value.lastNameError//.value.emailError
                 )
 
                 NumberFieldComponent(
@@ -110,7 +110,7 @@ fun SignUpScreen (
                     onTextSelected = {
                         signupViewModel.phoneNumber=it
                     },
-                    errorStatus = signupViewModel.registrationUIState.value.phoneError
+                    //errorStatus = signupViewModel.registrationUIState.value.phoneError
                 )
                 MyTextFieldComponent(
                     labelValue = stringResource(id = R.string.email),
@@ -120,7 +120,7 @@ fun SignUpScreen (
 //                        loginViewModel.onEvent(LoginUIEvent.EmailChanged(it))
                         signupViewModel.email=it
                     },
-                    errorStatus = signupViewModel.registrationUIState.value.emailError//.value.emailError
+                   // errorStatus = signupViewModel.registrationUIState.value.emailError//.value.emailError
                 )
 
                 PasswordFieldComponent(
@@ -131,7 +131,7 @@ fun SignUpScreen (
 
                         signupViewModel.password=it
                     },
-                    errorStatus = signupViewModel.registrationUIState.value.passwordError
+                    //errorStatus = signupViewModel.registrationUIState.value.passwordError
                 )
                 Spacer(modifier=Modifier.height(40.dp))
 
@@ -156,8 +156,9 @@ fun SignUpScreen (
                         { success, toastMsg ->
                             //isLoading = false
                             if (success) {
-                                navController.navigate(Screens.GoogleMap.name)
-                                signupViewModel.resetState()
+                                navController.navigate(Screens.Login.route)
+//                                navController.navigate(Screens.GoogleMap.route)//sa route kaze, uspesno ste se registrovali
+                               // signupViewModel.resetState()
                                 Toast.makeText(context, toastMsg, Toast.LENGTH_SHORT).show()
                             } else {
                                 Toast.makeText(context, toastMsg, Toast.LENGTH_SHORT).show()

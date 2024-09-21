@@ -1,5 +1,7 @@
 package com.example.routeexplorer2
 
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.navigation.compose.NavHost
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -36,6 +38,7 @@ enum class Screens(val route: String) {
     Places("places"),
     Place("place")
 }
+@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun RouteExplorer(
     homeViewModel: HomeViewModel = viewModel(),
@@ -52,7 +55,7 @@ fun RouteExplorer(
     var isLoading by remember { mutableStateOf(true) }
     val navController = rememberNavController()
 
-    LaunchedEffect(/*key1 = currentUser*/navController) {//moze i sa key1=currentUser
+    LaunchedEffect(navController) {//moze i sa key1=currentUser
         //isLoading = true //dodato
         homeViewModel.checkForActiveSession(navController)
         //isLoading = false//dodato
@@ -114,42 +117,4 @@ fun RouteExplorer(
             )
         }
     }
-
-    // Ovo koristim da proverim da li je korisnik ulogovan kada opet otvori aplikaciju
-//    if (!userViewModel.isUserLoggedIn() || currentUser != null) {
-//        isLoading = false
-//        Log.d(TAG,"isLoading=${isLoading}")
-//    }
-//
-//    if (isLoading) {
-//        // Show a loading spinner while checking the session
-//        Box(
-//            modifier = Modifier.fillMaxSize(),
-//            contentAlignment = Alignment.Center
-//        ) {
-//            CircularProgressIndicator()
-//        }
-//    } else {
-//
-//        // Show the actual content after loading completes
-//        NavHost(
-//            navController = navController,
-//            startDestination = if (userViewModel.isUserLoggedIn()) Screens.GoogleMap.route else Screens.Login.route
-//        ) {
-//            composable(Screens.Login.route) {
-//                LoginScreen(
-//                    navController = navController,
-//                    loginViewModel = loginViewModel
-//                )
-//            }
-//            composable(Screens.GoogleMap.route) {
-//                HomeScreen(
-//                    navController = navController,
-//                    homeViewModel = homeViewModel,
-//                    loginViewModel = loginViewModel,
-//                    userViewModel = userViewModel
-//                )
-//            }
-//        }
-//    }
 }

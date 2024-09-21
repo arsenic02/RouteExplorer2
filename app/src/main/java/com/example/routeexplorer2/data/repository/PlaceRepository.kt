@@ -41,7 +41,7 @@ class PlaceRepository(
 
 
     fun addPlaceSnapshotListener(placeId: String) {
-        if (placeId.isBlank()) {//dodato da ne bi crashovala aplikacija
+        if (placeId.isBlank()) {
             Log.e("PlaceRepository", "Invalid placeId: $placeId")
             return
         }
@@ -129,7 +129,7 @@ class PlaceRepository(
 
             val reviewCount = selectedPlace.value!!.reviews.size
             val reviews = _selectedPlace.value!!.reviews
-            updateFieldStats(reviewCount, reviews)
+            updatePlacesStats(reviewCount, reviews)
 
             // Ažurirajte score korisnika
             changeAuthorScore(PlaceConstants.POINTS_FOR_ADDING_REVIEW, true)
@@ -148,7 +148,7 @@ class PlaceRepository(
     }
 
 
-    private suspend fun updateFieldStats(reviewCount: Int, reviews: MutableList<Review>) {
+    private suspend fun updatePlacesStats(reviewCount: Int, reviews: MutableList<Review>) {
         try {
             val symbols = DecimalFormatSymbols(Locale.US)
             val decimalFormat = DecimalFormat("#.00", symbols)

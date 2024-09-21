@@ -20,9 +20,9 @@ import kotlinx.coroutines.launch
 class SignupViewModel(private val userRepository: UserRepository): ViewModel() {
 
     private val TAG = SignupViewModel::class.simpleName
-    var registrationUIState= mutableStateOf(RegistrationUIState())//cuvaju se inputi za registraciju
+//    var registrationUIState= mutableStateOf(RegistrationUIState())//cuvaju se inputi za registraciju
 
-    var allValidationsPassed= mutableStateOf(false)
+//    var allValidationsPassed= mutableStateOf(false)
 
     var signUpInProgress = mutableStateOf(false) //onaj kruzic sto se vrti kada se ucitava
 
@@ -33,150 +33,18 @@ class SignupViewModel(private val userRepository: UserRepository): ViewModel() {
     var imageUri by  mutableStateOf<Uri?>(null)
     var email by mutableStateOf("")
     var password by mutableStateOf("")
-    var passwordVisible by mutableStateOf(false)
+//    var passwordVisible by mutableStateOf(false)
 
-    fun resetState() {
-        email = ""
-        password = ""
-        username = ""
-        firstName = ""
-        lastName = ""
-        phoneNumber = ""
-        imageUri = null
-        passwordVisible = false
-    }
-//    fun onEvent(event: SignupUIEvent){
-//        validateDataWithRules()
-//        when(event){
-//
-//            is SignupUIEvent.UsernameChanged -> {
-//                registrationUIState.value=registrationUIState.value.copy(
-//                    userName = event.username
-//                )
-////                validateDataWithRules()
-//                printState()
-//            }
-//            is SignupUIEvent.FirstNameChanged -> {
-//                registrationUIState.value=registrationUIState.value.copy(
-//                    firstName=event.firstName
-//                )
-////                validateDataWithRules()
-//                printState()
-//            }
-//            is SignupUIEvent.LastNameChanged -> {
-//                registrationUIState.value=registrationUIState.value.copy(
-//                    lastName = event.lastName
-//                )
-////                validateDataWithRules()
-//                printState()
-//            }
-//            is SignupUIEvent.EmailChanged -> {
-//                registrationUIState.value=registrationUIState.value.copy(
-//                    email=event.email
-//                )
-////                validateDataWithRules()
-//                printState()
-//            }
-//            is SignupUIEvent.PasswordChanged -> {
-//                registrationUIState.value=registrationUIState.value.copy(
-//                    password =event.password
-//                )
-////                validateDataWithRules()
-//                printState()
-//            }
-//
-//            is SignupUIEvent.RegisterButtonCLicked ->{
-//                signUp()
-//            }
-//        }
+//    fun resetState() {
+//        email = ""
+//        password = ""
+//        username = ""
+//        firstName = ""
+//        lastName = ""
+//        phoneNumber = ""
+//        imageUri = null
+//        passwordVisible = false
 //    }
-
-//    private fun signUp(){
-//        Log.d(TAG,"INside_signUp")
-//        printState()
-//
-//        createUserInFirebase(
-//            email=registrationUIState.value.email,
-//            password=registrationUIState.value.password
-//        )
-//        //validateDataWithRules()
-//
-//
-//    }
-
-    private fun validateDataWithRules(){
-
-        val uNameResult=Validator.validateUserName(
-            uName = registrationUIState.value.userName
-        )
-        val fNameResult= Validator.validateFirstName(
-            fName=registrationUIState.value.firstName
-        )
-
-        val lNameResult=Validator.validateLastName(
-            lName = registrationUIState.value.lastName
-        )
-
-        val emailResult=Validator.validateEmail(
-            email = registrationUIState.value.email
-        )
-
-        val passwordResult=Validator.validatePassword(
-            password = registrationUIState.value.password
-        )
-        Log.d(TAG,"Inside_printState")
-        Log.d(TAG,"uNameResult=$uNameResult")
-        Log.d(TAG,"fNameResult=$fNameResult")
-        Log.d(TAG,"lNameResult=$lNameResult")
-        Log.d(TAG,"emailResult=$emailResult")
-        Log.d(TAG,"passwordResult=$passwordResult")
-
-        registrationUIState.value=registrationUIState.value.copy(
-            usernameError =uNameResult.status ,
-            firstNameError = fNameResult.status,
-            lastNameError = lNameResult.status,
-            emailError = emailResult.status,
-            passwordError =passwordResult.status
-        )
-
-        allValidationsPassed.value=fNameResult.status && lNameResult.status && uNameResult.status &&
-                emailResult.status && passwordResult.status
-        //zakomentarisano je zapravo duzi zapis ovoga iznad
-//        if(fNameResult.status && lNameResult.status && uNameResult.status &&
-//            emailResult.status && passwordResult.status
-//            ){
-//            allValidationsPassed.value=true
-//        }
-//        else
-//            allValidationsPassed.value=false
-    }
-    private fun printState(){
-        Log.d(TAG,"Inside_printState")
-        Log.d(TAG,registrationUIState.value.toString())
-    }
-
-//    private fun createUserInFirebase(email:String,password:String){
-//
-//        signUpInProgress.value=true
-//
-//        FirebaseAuth.getInstance()
-//            .createUserWithEmailAndPassword(email,password)
-//            .addOnCompleteListener {
-//                Log.d(TAG,"Inside_OnCompleteListener")
-//                Log.d(TAG," isSuccessful = ${it.isSuccessful}")
-//
-//                signUpInProgress.value=false
-//                if(it.isSuccessful){
-//                    RouterExplorerAppRouter.navigateTo(Screen.HomeScreen)
-//                }
-//            }
-//            .addOnFailureListener{
-//                Log.d(TAG,"Inside_OnFailureListener")
-//                Log.d(TAG," Exception = ${it.message}")
-//                Log.d(TAG," Exception = ${it.localizedMessage}")
-//            }
-//    }
-
     fun registerUser(
         callback: (Boolean, String?) -> Unit
     ) {
@@ -186,34 +54,27 @@ class SignupViewModel(private val userRepository: UserRepository): ViewModel() {
         }
 
 //        if (!isValidPhoneNumber(phoneNumber)) {
-//            callback(false, "Broj telefona nije u validnom formatu")
+//            callback(false, " The phone number is not in a valid format.")
 //            return
 //        }
         // Proveri da li e-mail ima validan format
 //        if (!isValidEmail(email)) {
 //            // Obavestite korisnika o nevažećem e-mailu
-//            callback(false, "E-mail nije ispravan")
+//            callback(false, "The email is not valid.")
 //            return
 //        }
 
         // Proveri da li lozinka zadovoljava minimalne kriterijume
         if (!isValidPassword(password)) {
             // Obavestite korisnika o nevalidnoj lozinci
-            callback(false, "Sifra mora da sadrzi najmanje 6 karaktera" )
+            callback(false, "The password must contain at least 6 characters.")
             return
         }
-
-//        // Proveri da li lozinke odgovaraju
-//        if (!doPasswordsMatch(password, confirmPassword)) {
-//            // Obavestite korisnika o neusklađenim lozinkama
-//            callback(false, "Sifre se ne poklapaju")
-//            return
-//        }
 
         // Proveri da li je imageUri prisutan
 //        if (!isImageUriValid(imageUri)) {
 //            // Obavestite korisnika da nije odabrana slika
-//            callback(false, "Molimo unesite sliku")
+//            callback(false, "Please, upload an image.")
 //            return
 //        }
 
@@ -279,9 +140,6 @@ private fun isValidPassword(password: String): Boolean {
     return password.length >= minLength
 }
 
-private fun doPasswordsMatch(password: String, confirmPassword: String): Boolean {
-    return password == confirmPassword
-}
 private fun isImageUriValid(uri: Uri?): Boolean {
     return uri != null
 }

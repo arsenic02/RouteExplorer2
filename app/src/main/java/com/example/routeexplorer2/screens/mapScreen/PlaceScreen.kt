@@ -100,9 +100,10 @@ fun PlaceScreen (
 
     var isReviewDialogOpen by remember { mutableStateOf(false) }
 
-    val formattedDate = selectedPlace?.let { formatDate(it.timeCreated) }
-    val formattedAddress = selectedPlace?.let { extractAddressPart(it.address) }
-
+    //val formattedDate = selectedPlace?.let { formatDate(it.timeCreated) }//ovde mozda treba drugacije
+    val formattedDate = selectedPlaceState?.let { formatDate(it.timeCreated) }
+    Log.d("PlaceScreen", "Loading place: ${selectedPlaceState.timeCreated}")
+    Log.d("formattedData ","$formattedDate")
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -165,7 +166,7 @@ fun PlaceScreen (
             ) {
 
                 Text(
-                    text = "${selectedPlace?.name}, ${selectedPlace?.type} (${formattedAddress})",
+                    text = "${selectedPlace?.name}, ${selectedPlace?.type} ",
                 )
             }
 

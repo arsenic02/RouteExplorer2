@@ -9,6 +9,8 @@ import com.example.routeexplorer2.data.repository.PlaceRepository
 import com.example.routeexplorer2.data.repository.UserRepository
 import com.example.routeexplorer2.utils.DefaultLocationClient
 import com.example.routeexplorer2.utils.LocationClient
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
@@ -29,9 +31,14 @@ class DefaultAppContainer(context:Context) {
         val placeRepository: PlaceRepository by lazy {
         PlaceRepository(auth, firestore)
     }
-//
+
+    //dodato i ovo za pracenje mimo viewModela
+private val fusedLocationProviderClient: FusedLocationProviderClient by lazy {
+    LocationServices.getFusedLocationProviderClient(context.applicationContext)
+}
+
     val locationClient: LocationClient by lazy {
-        DefaultLocationClient(context.applicationContext)
+        DefaultLocationClient(context.applicationContext,fusedLocationProviderClient)
     }
 
 //    init {

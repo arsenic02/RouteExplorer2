@@ -1,5 +1,6 @@
 package com.example.routeexplorer2
 
+import android.Manifest
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -14,6 +15,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.app.ActivityCompat
+//import com.example.routeexplorer2.data.services.LocationTrackerService
 import com.example.routeexplorer2.viewModels.HomeViewModel
 import com.example.routeexplorer2.data.services.NearbyPlacesDetection
 import com.example.routeexplorer2.data.services.NearbyPlacesDetectionController
@@ -41,13 +44,14 @@ class MainActivity : ComponentActivity() {
         )
     }
     private val homeViewModel: HomeViewModel by viewModels()
-   // private val loginViewModel: LoginViewModel by viewModels()
+
+    // private val loginViewModel: LoginViewModel by viewModels()
     private val loginViewModel: LoginViewModel by viewModels {
         LoginViewModelFactory(
             userRepository = (application as LoginFlowApp).container.userRepository
         )
     }
-    private val signupViewModel: SignupViewModel by viewModels{
+    private val signupViewModel: SignupViewModel by viewModels {
         RegisterViewModelFactory(
             userRepository = (application as LoginFlowApp).container.userRepository
         )
@@ -61,15 +65,31 @@ class MainActivity : ComponentActivity() {
     }
 
 
-   // private val markerViewModel:MarkerViewModel by viewModels()
+    // private val markerViewModel:MarkerViewModel by viewModels()
     //private val homeViewModel:HomeViewModel
 
 //    private lateinit var mapView: MapView
 //    private var googleMap: GoogleMap? = null
 
+    var i: Intent? = null//dodato
+
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+
+        //dodato za servis da se prati van viewModela
+//        ActivityCompat.requestPermissions(
+//            this,
+//            arrayOf(
+//                Manifest.permission.ACCESS_COARSE_LOCATION,
+//                Manifest.permission.ACCESS_FINE_LOCATION,
+//            ),
+//            0
+//        )
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+//            requestBGLocationPermission()
+        // }//dodato za servis da se prati van viewModela
 
         val defaultNearbyPlacesController = object : NearbyPlacesDetectionController {
             override fun startNearbyPlacesDetectionService() {
@@ -106,47 +126,53 @@ class MainActivity : ComponentActivity() {
                     )
                 }
             }
+
 //            checkLocationPermission();
         }
     }
 
-//    override fun onResume() {
-//        super.onResume()
-//        mapView.onResume()
+    //dodato da se prati iz servisa
+//    @RequiresApi(Build.VERSION_CODES.O)
+//    override fun onStart() {
+//        super.onStart()
+//        i = Intent(applicationContext, LocationTrackerService::class.java)
+//        startForegroundService(i)
 //    }
 //
-//    override fun onPause() {
-//        super.onPause()
-//        mapView.onPause()
+//    override fun onStop() {
+//        super.onStop()
+//        stopService(i)
 //    }
-//
-//    override fun onDestroy() {
-//        super.onDestroy()
-//        mapView.onDestroy()
+//    @RequiresApi(Build.VERSION_CODES.Q)
+//    fun requestBGLocationPermission() {
+//        ActivityCompat.requestPermissions(
+//            this,
+//            arrayOf(
+//                Manifest.permission.ACCESS_BACKGROUND_LOCATION
+//            ),
+//            0
+//        )
 //    }
-//
-//    override fun onLowMemory() {
-//        super.onLowMemory()
-//        mapView.onLowMemory()
-//    }
-}
+//dodato da se prati iz servisa
+//}
 
-@Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    RouteExplorer2Theme {
-        Greeting("Android")
+    @Composable
+    fun Greeting(name: String, modifier: Modifier = Modifier) {
+        Text(
+            text = "Hello $name!",
+            modifier = modifier
+        )
+    }
+
+    @Preview(showBackground = true)
+    @Composable
+    fun GreetingPreview() {
+        RouteExplorer2Theme {
+            Greeting("Android")
+        }
     }
 }
-
 //@Preview
 //@Composable
 //fun DefaultPreview(){

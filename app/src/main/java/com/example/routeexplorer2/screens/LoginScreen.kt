@@ -72,7 +72,7 @@ fun LoginScreen(
 //                        loginViewModel.onEvent(LoginUIEvent.EmailChanged(it))
                                      loginViewModel.email=it
                     },
-                    errorStatus = loginViewModel.loginUiState.value.emailError
+                    //errorStatus = loginViewModel.loginUiState.value.emailError
                 )
 
                 PasswordFieldComponent(
@@ -83,7 +83,7 @@ fun LoginScreen(
 //                        loginViewModel.onEvent(LoginUIEvent.PasswordChanged(it))
                         loginViewModel.password=it
                     },
-                    errorStatus = loginViewModel.loginUiState.value.passwordError
+                   // errorStatus = loginViewModel.loginUiState.value.passwordError
                 )
 
                 Spacer(modifier =Modifier.height(40.dp))

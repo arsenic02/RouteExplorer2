@@ -24,8 +24,6 @@ class LoginViewModel(private val userRepository: UserRepository):ViewModel(){
 
     var loginUiState= mutableStateOf(LoginUIState())
 
-    var allValidationsPassed= mutableStateOf(false)
-
     var loginInProgress =mutableStateOf(false)
 
 //ova dodato
@@ -56,7 +54,6 @@ class LoginViewModel(private val userRepository: UserRepository):ViewModel(){
 
     }
 
-
     fun signOut(callback: (Boolean) -> Unit) {
         viewModelScope.launch {
             userRepository.signOut { success ->
@@ -69,89 +66,7 @@ class LoginViewModel(private val userRepository: UserRepository):ViewModel(){
             }
         }
     }
-
-    //////
-
-    fun onEvent(event: LoginUIEvent){
-        when(event){
-            is LoginUIEvent.EmailChanged ->{
-                loginUiState.value=loginUiState.value.copy(
-                    email=event.email
-                )
-            }
-            is LoginUIEvent.PasswordChanged ->{
-                loginUiState.value=loginUiState.value.copy(
-                    password = event.password
-                )
-            }
-            is LoginUIEvent.LoginButtonCLicked ->{
-                login()
-            }
-        }
-        validateDataWithRules()
-    }
-
-    private fun login() {
-        loginInProgress.value=true
-        val email=loginUiState.value.email
-        val password=loginUiState.value.password
-      FirebaseAuth
-          .getInstance()
-          .signInWithEmailAndPassword(email,password)
-          .addOnCompleteListener{
-
-              Log.d(TAG,"Inside login success")
-              Log.d(TAG,"${it.isSuccessful}")
-
-              if(it.isSuccessful){
-                  loginInProgress.value=false
-                  RouterExplorerAppRouter.navigateTo(Screen.HomeScreen)
-              }
-          }
-          .addOnFailureListener{
-              Log.d(TAG,"Inside failure listener")
-              Log.d(TAG,"${it.localizedMessage}")
-              loginInProgress.value=false
-          }
-    }
-
-     fun validateDataWithRules(){
-
-        val emailResult= Validator.validateEmail(
-            email = loginUiState.value.email
-        )
-
-        val passwordResult= Validator.validatePassword(
-            password = loginUiState.value.password
-        )
-
-        loginUiState.value=loginUiState.value.copy(
-            emailError = emailResult.status,
-            passwordError = passwordResult.status
-        )
-
-         allValidationsPassed.value=emailResult.status && passwordResult.status
-
-    }
-
-
-//    fun loginUserWithEmailAndPassword(
-//        email: String, password: String, callback: (Boolean) -> Unit
-//    ) {
-//        viewModelScope.launch {
-//            userRepository.loginWithEmailAndPassword(email, password) { success ->
-//                if (success) {
-//                    callback(true)
-//                } else {
-//                    callback(false)
-//                }
-//
-//            }
-//        }
-//
-//    }
 }
-
 
 //dodato
 class LoginViewModelFactory(private val userRepository: UserRepository) :

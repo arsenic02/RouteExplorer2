@@ -54,6 +54,7 @@ class NearbyPlacesDetection : Service() {
         return super.onStartCommand(intent, flags, startId)
     }
 
+    //ai implementacija radi
     private fun start() {
         val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
         val channelId = "location"
@@ -98,7 +99,9 @@ class NearbyPlacesDetection : Service() {
         observeLocationChanges()
         observeMarkerChanges()
     }
-//prvobitna implementacija
+//prvobitna implementacija ovaj kod iznad
+
+    //servis bez viewModela
 //    private fun start() {
 //        val intent = Intent(this, LoginFlowApp::class.java).apply {
 //            flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
@@ -114,13 +117,13 @@ class NearbyPlacesDetection : Service() {
 //            .setContentTitle("Searching nearby places")
 //            .setContentText("There isn't any place nearby")
 //            .setSmallIcon(R.drawable.ic_search_24)
-//            .setStyle(
-//                NotificationCompat
-//                    .BigPictureStyle()
-//                    .bigPicture(
-//                        BitmapFactory.decodeResource(resources, R.drawable.cartoon_detective)
-//                    )
-//            )
+////            .setStyle(
+////                NotificationCompat
+////                    .BigPictureStyle()
+////                    .bigPicture(
+////                        BitmapFactory.decodeResource(resources, R.drawable.cartoon_detective)
+////                    )
+////            )
 //            .setOngoing(true)
 //            .setContentIntent(pendingIntent)
 //            .setAutoCancel(true)
@@ -248,6 +251,6 @@ class NearbyPlacesDetection : Service() {
     companion object {
         const val ACTION_START = "ACTION_START"
         const val ACTION_STOP = "ACTION_STOP"
-        private const val TAG = "NearbyFieldsDetection"
+        private const val TAG = "NearbyPlacesDetection"
     }
 }

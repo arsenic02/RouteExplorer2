@@ -134,6 +134,7 @@ fun HomeScreen(
     var isServiceDialogOpen by remember { mutableStateOf(false) }
     var isServiceRunning by remember { mutableStateOf(getServiceRunningState(context)) } // Load state
 
+    Log.d("isServiceRunning","$isServiceRunning")
     val currentPosition = currentUserLocation ?: LocationData(43.321445, 21.896104)//LocationData iz klase LocationData
 //    val nisCenter = LatLng(43.321445, 21.896104)
 
@@ -151,58 +152,10 @@ fun HomeScreen(
         }
     )
 
-    //servis bez viewModel
-//    LaunchedEffect(Unit) {
-//        if (hasLocationPermissions(context)) {
-//            // Start the service instead of calling viewModel updateLocation
-//            val serviceIntent = Intent(context, LocationTrackerService::class.java).apply {
-//                action = LocationTrackerService.ACTION_START
-//            }
-//            ContextCompat.startForegroundService(context, serviceIntent)
-//        } else {
-//            requestPermissionLauncher.launch(
-//                arrayOf(
-//                    Manifest.permission.ACCESS_COARSE_LOCATION,
-//                    Manifest.permission.ACCESS_FINE_LOCATION
-//                )
-//            )
-//        }
-//    }
 
-    // Request permission and start location updates if permissions are granted
     LaunchedEffect(Unit) {
         if (hasLocationPermissions(context)) {
-
-            //nista se ne desava
-//            val notification = NotificationCompat.Builder(this, "locationservicechannel")
-//                .setContentTitle("Tracking location...")
-//                .setContentText("Location: null")
-//                .setSmallIcon(R.drawable.ic_search_24)
-//                .setOngoing(true)
-//
-//            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-//
-//
-//            locationClient.getLocationUpdates(1000L)
-//                .catch { e -> e.printStackTrace() }
-//                .onEach { location ->
-//                    Log.d("SERVICE", location.toString())
-//                    val lat = location.latitude.toString()
-//                    val long = location.longitude.toString()
-//                    val updatedNotification = notification.setContentText(
-//                        "Location: ($lat, $long)"
-//                    )
-//                    notificationManager.notify(1, updatedNotification.build())
-//                }
-//                .launchIn(serviceScope)
-//
-//            Log.d("LOCATION SERVICE", "Service started.")
-//            startForeground(1, notification.build())
-
-
-
-            userViewModel.updateLocation() // bilo je odkomentarisano
-
+            userViewModel.updateLocation()
 
         } else {
             requestPermissionLauncher.launch(
@@ -230,7 +183,7 @@ fun HomeScreen(
                         LatLng(
                             it.latitude,
                             it.longitude
-                        ), 15f // Adjust zoom level as needed
+                        ), 15f
                     )
                 )
             }
@@ -240,9 +193,6 @@ fun HomeScreen(
     LaunchedEffect(Unit) {
         markerViewModel.fetchMarkers()
     }
-
-    // Loading the custom icon
-
 
     var uiSettings by remember { mutableStateOf(MapUiSettings(zoomControlsEnabled = true)) }//vrv moze i bez zoomControlsEnabled
     var properties by remember { mutableStateOf(MapProperties(mapType = MapType.NORMAL)) }
@@ -265,17 +215,13 @@ fun HomeScreen(
         drawerContent = {
             Column(
                 modifier = Modifier
-                    //.fillMaxSize()
-                    // .fillMaxHeight()
                     .padding(16.dp)
-                    .width(280.dp) // Adjust drawer width here
+                    .width(280.dp)
             ) {
-                // Background color above the divider
-//                Spacer(modifier = Modifier.height(15.dp))
+
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-//                        .background(Color.Blue) // First shade of blue
                         .background(colorResource(id = R.color.higherDrawerColor))
                 )
                 {
@@ -290,22 +236,18 @@ fun HomeScreen(
                                 .size(140.dp)
                                 .clip(CircleShape)
                                 .align(Alignment.Center),
-                                //.padding(15.dp),
-                                //.align(Alignment.CenterHorizontally),
                             contentScale = ContentScale.Crop,
                             placeholder = rememberVectorPainter(image = Icons.Default.AccountCircle),
                             error = rememberVectorPainter(image = Icons.Default.AccountCircle),
                             contentDescription = null,
                         )
-                       // Spacer(modifier = Modifier.height(16.dp))
                     }
                 }
                 Box(
                     modifier = Modifier
-                        .background(Color.Blue) // Background color for user info section
+                        .background(Color.Blue)
                         .background(colorResource(id = R.color.higherDrawerColor))
                         .fillMaxWidth()
-                        //.padding(16.dp)
                 ) {
                     UserInfoSection(
                         firstName = firstName,
@@ -319,25 +261,20 @@ fun HomeScreen(
                     modifier = Modifier
                         .fillMaxSize()
                         .background(colorResource(id = R.color.lowerDrawerColor))
-                       // .background(Color.Green) // Second shade of blue
                 ) {
-                    // Navigation links (Home, Leaderboards, Routes)
                     NavigationDrawerBody(
                         navigationDrawerItems = homeViewModel.navigationItemsList,
                         imageUrl = imageUrl,
-                        onImageChange = { uri -> /* Handle image change here if needed */ },
+                        onImageChange = { uri ->  },
 
                         onNavigationItemClicked = { item ->
                             when (item.itemId) {
                                 "routes" -> {
                                     navController.navigate(Screens.Places.route) {
-                                        //popUpTo(Screens.GoogleMap.route) { inclusive = true } //suvisno
-
                                     }
                                 }
                                 "leaderboards" -> {
                                     navController.navigate(Screens.Leaderboard.route) {
-                                        //popUpTo(Screens.GoogleMap.route) { inclusive = true }
                                     }
                                 }
                                 else -> {
@@ -345,12 +282,6 @@ fun HomeScreen(
                                 }
                             }
                         }
-
-                        //ovako je bilo
-//                        onNavigationItemClicked = {
-//                            Log.d("Navigation", "${it.itemId} ${it.title}")
-//                            navController.navigate(Screens.Leaderboard.route)
-//                        } //ovako je bilo
                     )
                 }
             }
@@ -359,7 +290,7 @@ fun HomeScreen(
         Scaffold(
             topBar = {
                 AppToolbar(
-                    toolbarTitle = "RouteExplorer",
+                   toolbarTitle = "Map",//"RouteExplorer",
                     logoutButtonClicked = {
                         loginViewModel.signOut { success ->
                             if (success) {
@@ -373,11 +304,36 @@ fun HomeScreen(
                         }
                     },
                     onMenuClicked = {
-                        scope.launch { drawerState.open() } // Opens the drawer
+                        scope.launch { drawerState.open() } // otvara drawer
                     },
                     onSearchClicked = {
                         showFilterDialog = true  // Show the filter dialog when search is clicked
-                    }
+                    },
+                    userViewModel = userViewModel,
+                    markerViewModel = markerViewModel,
+                    onNotificationClicked = {
+                        if (isServiceRunning) {
+                            // If the service is running, stop it
+                            defaultNearbyPlaceController.stopNearbyPlacesDetectionService()
+                            isServiceRunning = false
+                            Toast.makeText(context, "Service stopped", Toast.LENGTH_SHORT).show()
+                        } else {
+                            // If the service is not running, start it
+                            defaultNearbyPlaceController.startNearbyPlacesDetectionService()
+                            isServiceRunning = true
+                            Toast.makeText(context, "Service started", Toast.LENGTH_SHORT).show()
+                        }
+                        // Save the new state (service running or not)
+                        saveServiceRunningState(context, isServiceRunning)
+                    },
+                    onRemoveFiltersClicked = {
+                        markerViewModel.removeFilters()
+                        Toast.makeText(context, "Filters removed", Toast.LENGTH_SHORT).show()
+
+                        // Optionally, hide the filter icon after removing filters
+                        showFilterDialog = false
+                    },
+                    defaultNearbyPlaceController =defaultNearbyPlaceController
                 )
             }
         ) { paddingValues ->
@@ -402,22 +358,7 @@ fun HomeScreen(
                                 isAddPlaceModalOpen=true
                                 markerViewModel.setLatLng(latLng)
                                // markerViewModel.setNewAddress(reverseGeocodeLocation(context = context, it))
-                                //uklonio sam ovo, mislim da je suvisno
-//                                markerViewModel.createMarker { success, message ->
-//                                    if (success) {
-//                                        Toast.makeText(context, "Marker added!", Toast.LENGTH_SHORT).show()
-//                                    } else {
-//                                        Toast.makeText(context, "Error: $message", Toast.LENGTH_SHORT).show()
-//                                    }
-//                                }
                             }
-                            //nije ni ovo lose, samo ne moze da se plamti u bazi
-//                            onMapLongClick = { latLng ->
-//                                markers = markers + latLng
-//                                Log.d("MapClick", "Location: ${latLng.latitude}, ${latLng.longitude}")
-//                            }
-
-
                         ) {
 
                             currentUserLocation?.let {
@@ -429,26 +370,16 @@ fun HomeScreen(
                                 )
 
                             }
-////ovde filteredMarkers ubaci
-                            //markers.forEach
                             val markersToDisplay =
                                 if (filteredMarkers.isNotEmpty()) filteredMarkers else markers
                             markersToDisplay.forEach { markerLocation ->
                                 val type = markerLocation.selectedOption
-                                //Log.d("Type=", type)
                                 val iconResId = when (type) {
                                     "Run" -> R.drawable.ic_run_24
                                     "Bike" -> R.drawable.baseline_directions_bike_24
                                     "Car" -> R.drawable.ic_car_24
-                                    else -> R.drawable.ic_car_24 // A default marker icon if needed
+                                    else -> R.drawable.ic_car_24
                                 }
-                                //zasad zakomentarisano
-                                //val icon = bitmapDescriptorFromVector(context, iconResId) // iconResId from Firestore or wherever markers are fetched
-//                                Marker(
-//                                    state = MarkerState(position = LatLng(markerLocation.latitude, markerLocation.longitude)),
-//                                    title = "Marker at (${markerLocation.latitude}, ${markerLocation.longitude})",
-//                                    icon = icon
-//                                )
                                 MapMarker(
                                     context = context,
                                     position = LatLng(markerLocation.latitude, markerLocation.longitude),
@@ -480,46 +411,86 @@ fun HomeScreen(
                                 onDismiss = { showFilterDialog = false }  // Close the dialog
                             )
                         }
-
-                        if (filteredMarkers.isNotEmpty()) {
-                            IconButton(
-                                onClick = { markerViewModel.removeFilters() },
-                                modifier = Modifier
-                                    .align(Alignment.BottomCenter)
-                                    .padding(
-                                        top = 16.dp,
-                                        bottom = 24.dp,
-                                        start = 130.dp
-                                    ) // Adjust padding as needed
-                                    .size(40.dp) // Larger size for the button
-                            ) {
-                                Icon(
-                                    painter = painterResource(id = R.drawable.ic_search_off_24),
-                                    contentDescription = "Remove filters",
-                                    tint = MaterialTheme.colorScheme.primary, // Adjust icon color if needed
-                                    modifier = Modifier.size(32.dp)
-                                )
-                            }
-                        }
-
                         currentUserLocation?.let {
-                            IconButton(
-                                onClick = { isServiceDialogOpen = true },
+                            Row(
                                 modifier = Modifier
                                     .align(Alignment.TopEnd)
-                                    .padding(12.dp) // Adjust padding as needed
-                                    .size(40.dp) // Larger size for the button
+                                    .padding(12.dp)
                             ) {
-                                Icon(
-                                    painter = if (isServiceRunning) painterResource(id = R.drawable.notifications_active_24) else painterResource(
-                                        id = R.drawable.notifications_24
-                                    ),
-                                    contentDescription = if (isServiceRunning) "Notifications" else "Notifications Off",
-                                    tint = MaterialTheme.colorScheme.primary, // Adjust icon color if needed
-                                    modifier = Modifier.size(32.dp)
-                                )
+
+//                                if (filteredMarkers.isNotEmpty()) {
+//                                    IconButton(
+//                                        onClick = { markerViewModel.removeFilters() },
+//                                        modifier = Modifier
+//                                            .padding(start = 8.dp)
+//                                            .size(40.dp)
+//                                    ) {
+//                                        Icon(
+//                                            painter = painterResource(id = R.drawable.ic_search_off_24),
+//                                            contentDescription = "Remove filters",
+//                                            tint = MaterialTheme.colorScheme.primary,
+//                                            modifier = Modifier.size(32.dp)
+//                                        )
+//                                    }
+//                                }
+                                //notifications dugme je bilo na mapi
+//                                IconButton(
+//                                    onClick = { isServiceDialogOpen = true },
+//                                    modifier = Modifier.size(40.dp)
+//                                ) {
+//                                    Icon(
+//                                        painter = if (isServiceRunning) painterResource(id = R.drawable.notifications_active_24) else painterResource(
+//                                            id = R.drawable.notifications_24
+//                                        ),
+//                                        contentDescription = if (isServiceRunning) "Notifications" else "Notifications Off",
+//                                        tint = MaterialTheme.colorScheme.primary,
+//                                        modifier = Modifier.size(32.dp)
+//                                    )
+//                                }
+
                             }
                         }
+
+//radi, samo lose poziciniranje
+//                        if (filteredMarkers.isNotEmpty()) {
+//                            IconButton(
+//                                onClick = { markerViewModel.removeFilters() },
+//                                modifier = Modifier
+//                                    .align(Alignment.BottomCenter)
+//                                    .padding(
+//                                        top = 16.dp,
+//                                        bottom = 24.dp,
+//                                        start = 130.dp
+//                                    )
+//                                    .size(40.dp)
+//                            ) {
+//                                Icon(
+//                                    painter = painterResource(id = R.drawable.ic_search_off_24),
+//                                    contentDescription = "Remove filters",
+//                                    tint = MaterialTheme.colorScheme.primary,
+//                                    modifier = Modifier.size(32.dp)
+//                                )
+//                            }
+//                        }
+//
+//                        currentUserLocation?.let {
+//                            IconButton(
+//                                onClick = { isServiceDialogOpen = true },
+//                                modifier = Modifier
+//                                    .align(Alignment.TopEnd)
+//                                    .padding(12.dp)
+//                                    .size(40.dp)
+//                            ) {
+//                                Icon(
+//                                    painter = if (isServiceRunning) painterResource(id = R.drawable.notifications_active_24) else painterResource(
+//                                        id = R.drawable.notifications_24
+//                                    ),
+//                                    contentDescription = if (isServiceRunning) "Notifications" else "Notifications Off",
+//                                    tint = MaterialTheme.colorScheme.primary, // Adjust icon color if needed
+//                                    modifier = Modifier.size(32.dp)
+//                                )
+//                            }
+//                        }
 
                         if (isServiceDialogOpen) {
                             ServiceControllDialog(
@@ -547,19 +518,6 @@ fun HomeScreen(
     }
 }
 
-//implementacija pracenja lokacije direktno preko servisa, ne radi
-//fun startLocationService(context: Context) {
-//    val intent = Intent(context, LocationTrackerService::class.java)
-//    ContextCompat.startForegroundService(context, intent)
-//}
-//
-////implementacija pracenja lokacije direktno preko servisa, ne radi
-//fun stopLocationService(context: Context) {
-//    val intent = Intent(context, LocationTrackerService::class.java)
-//    context.stopService(intent)
-//}
-//
-
 fun saveServiceRunningState(context: Context, isRunning: Boolean) {
     val sharedPreferences = context.getSharedPreferences("AppPreferences", Context.MODE_PRIVATE)
     val editor = sharedPreferences.edit()
@@ -576,22 +534,18 @@ fun UserInfoSection(
     username: String?
 ) {
     Column(modifier = Modifier.padding(16.dp)) {
-        // Icon for First Name and Last Name
         UserInfoRow(
             iconId = R.drawable.ic_person_24,
             label = "$firstName $lastName"
         )
-        // Icon for Email
         UserInfoRow(
             iconId = R.drawable.ic_mail_24,
             label = email
         )
-        // Icon for Username
         UserInfoRow(
             iconId = R.drawable.ic_person_24,
             label = username
         )
-        // Icon for Phone Number
         UserInfoRow(
             iconId = R.drawable.ic_phone_android_24,
             label = phone
@@ -624,14 +578,9 @@ fun getServiceRunningState(context: Context): Boolean {
 @Preview
 @Composable
 fun HomeScreenPreview(){
-    //HomeScreen()
 }
 
-//fun startLocationTrackingService(context: Context) {
-//    // You could either start a location-tracking service or use a direct method to update the location
-//    val intent = Intent(context, LocationTrackerService::class.java)
-//    ContextCompat.startForegroundService(context, intent)
-//}
+
 
 fun handlePermissionRationale(context: Context, permissions: Map<String, Boolean>) {
     val rationalRequired = ActivityCompat.shouldShowRequestPermissionRationale(

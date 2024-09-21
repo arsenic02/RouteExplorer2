@@ -38,7 +38,6 @@ class MarkerViewModel(private val markerRepository: MarkerRepository) : ViewMode
 
     val filteredMarkers: StateFlow<List<Place>> = markerRepository.filteredMarkers
 
-    // Function to create a marker and save it to Firestore
     fun createMarker(callback: (Boolean, String) -> Unit) {
         if (!isValidName(name)) {
             callback(false, "Name cannot be empty")
@@ -111,6 +110,7 @@ class MarkerViewModel(private val markerRepository: MarkerRepository) : ViewMode
     }
 
     fun isValidName(name: String): Boolean = name.isNotBlank()
+
 }
 
 class MarkerViewModelFactory(

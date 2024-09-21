@@ -69,15 +69,15 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
 //    implementation(libs.androidx.material3) //ovo se koristilo dok nisam ubacio ispod, ako nesto zeza, onda mozda koristiti ovaj
-    implementation("androidx.compose.material3:material3-android:1.2.0-rc01")//ovo da bi radio circularprogress indicator
+    implementation("androidx.compose.material3:material3-android:1.2.0-rc01")  //1.2.0-rc01   //ovo da bi radio circularprogress indicator
     implementation(libs.androidx.constraintlayout.compose)
 
-    implementation("androidx.compose.material:material-icons-extended:1.5.0")
+    implementation("androidx.compose.material:material-icons-extended:1.5.0")//1.5.0
 //    implementation (androidx.compose.material:material-icons-extended:$compose_ui_version) nece kod mene 26:00
 
     // Import the Firebase BoM
 //    implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
-    implementation(platform("com.google.firebase:firebase-bom:33.2.0"))
+    implementation(platform("com.google.firebase:firebase-bom:33.3.0"))//33.2.0
 
     // When using the BoM, you don't specify versions in Firebase library dependencies
 
@@ -99,12 +99,13 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
-    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.7.0")//2.7.0
     implementation("com.google.maps.android:maps-compose:4.4.1")
-    implementation ("com.google.android.gms:play-services-maps:18.2.0")
-    implementation ("com.google.android.gms:play-services-location:21.2.0")
+
+    implementation ("com.google.android.gms:play-services-maps:19.0.0") //18.2.0 je bilo
+    implementation ("com.google.android.gms:play-services-location:21.3.0")//21.2.0 je bilo
 
     //implementation (libs.coil.compose)
-    implementation("io.coil-kt:coil-compose:2.4.0")
+    implementation("io.coil-kt:coil-compose:2.4.0")//2.4.0
 
 }

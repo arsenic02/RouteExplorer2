@@ -67,8 +67,6 @@ class UserViewModel(
         userRepository.stopFetchAllUsers()
         userRepository.stopObservingUser()
     }
-
-
 }
 
 class UserViewModelFactory(

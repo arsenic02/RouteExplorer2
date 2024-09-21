@@ -38,7 +38,7 @@ private val fusedLocationProviderClient: FusedLocationProviderClient by lazy {
 }
 
     val locationClient: LocationClient by lazy {
-        DefaultLocationClient(context.applicationContext,fusedLocationProviderClient)
+        DefaultLocationClient(context.applicationContext/*,fusedLocationProviderClient*/)
     }
 
 //    init {

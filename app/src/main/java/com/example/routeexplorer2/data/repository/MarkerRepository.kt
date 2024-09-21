@@ -35,13 +35,12 @@ class MarkerRepository(
     private val _filteredMarkers = MutableStateFlow<List<Place>>(emptyList())
     val filteredMarkers: StateFlow<List<Place>> = _filteredMarkers.asStateFlow()
 
-//chatgpt
 suspend fun addMarker(
     name: String,
     lat: Double,
     lng: Double,
     address: String,
-    photo: Uri?, // The photo parameter
+    photo: Uri?,
     iconResId: Int,
     selectedOption: String,
     callback: (Boolean, String) -> Unit,
@@ -54,7 +53,7 @@ suspend fun addMarker(
         //dodato userRef i user
         val userRef = firestore.collection("users").document(userId).get().await()
         val user = userRef.toObject(User::class.java)
-            ?: User() // Ako ne postoji korisnik, koristi praznog User-a
+            ?: User()
 
         //Log.d("MarkerRepository", "Author: ${user.username}")
 
@@ -66,43 +65,23 @@ suspend fun addMarker(
             "address" to address,
             "iconResId" to iconResId,
             "selectedOption" to selectedOption,
-            "timestamp" to currentTime, // Use provided currentTime
+            "timestamp" to currentTime,
             "author" to user.username
         )
 
         Log.d("MarkerRepository", "Marker Data: $markerData")
         Log.d("MarkerRepository", "Author: ${user.username}")
 
-
-//        val markerData = Place(
-//            "",
-//            name,
-//            selectedOption,
-//            "",
-//            lng,
-//            lat,
-//            selectedOption,
-//            iconResId,
-//            mutableListOf(),
-//            0.0,
-//            0,
-//            "",
-//            currentTime,
-//            user.username
-//        )
-
-        // Save marker data to Firestore and get a reference to the newly added document
         val documentRef = firestore.collection("markers").add(markerData).await()
 
-        val placeId = documentRef.id // Get the document ID
+        val placeId = documentRef.id
 
         if (photo != null) {
-            // If there's a photo, upload it to Firebase Storage
             val storageRef = storage.getReference("place_pictures/$placeId")
-            storageRef.putFile(photo).await() // Upload the photo
-            val downloadUri = storageRef.downloadUrl.await() // Get the download URL
+            storageRef.putFile(photo).await()
+            val downloadUri = storageRef.downloadUrl.await()
 
-            // Update Firestore document with photo URL
+
             documentRef.update(
                 mapOf(
                     "photo" to downloadUri.toString(),
@@ -111,134 +90,11 @@ suspend fun addMarker(
                 )
             ).await()
         }
-        //pojavi se neko obavestenje bezveze, ali se kreira lepo
-//        val userDocRef = firestore.collection("users").document(userId)//dodato
-//        userDocRef.update("score", FieldValue.increment(20)).await()//dodato
-
         callback(true, "Marker added successfully with ID: $placeId")
     } catch (e: Exception) {
         callback(false, "Exception: ${e.message}")
     }
 }
-
-
-
-    //moja metoda, dodaje ikonice u bazu i prikazuje odgovarajuce ikonice,
-    //jedino ne pamti slike i id dokumenta
-//    suspend fun addMarker(
-//        name: String,
-//        lat: Double,
-//        lng: Double,
-//        address: String,
-//        photo: Uri?,
-//        iconResId:Int,//dodato
-//        selectedOption: String,
-//        callback: (Boolean, String) -> Unit,
-//        currentTime: Timestamp
-//    ) {
-//
-//            try {
-//
-//                val markerData = hashMapOf(
-//                    "name" to name,
-//                    "lat" to lat,
-//                    "lng" to lng,
-//                    "address" to address,
-//                    "iconResId" to iconResId,
-//                    "selectedOption" to selectedOption,
-//                    "timestamp" to Timestamp.now()
-//                )
-//
-//                // Save marker data to Firestore,
-//                firestore.collection("markers").add(markerData)
-//                    .addOnSuccessListener {
-//                        callback(true, "Marker added successfully")
-//                    }
-//                    .addOnFailureListener {
-//                        callback(false, "Failed to add marker: ${it.message}")
-//                    }
-//
-//
-//            } catch (e: Exception) {
-//                callback(false, "Exception: ${e.message}")
-//            }
-//        }
-
-    //Darkova logika, ne dodaje se marker, jedino se slika u bazu dodaje
-//        suspend fun addMarker(
-//            name: String,
-//            lat: Double,
-//            lng: Double,
-//            address: String,
-//            photo: Uri?,
-//           iconResId:Int,//dodato
-//            selectedOption: String,
-//            callback: (Boolean, String) -> Unit,
-//            currentTime: Timestamp
-//        ) {
-
-//            val userId = auth.currentUser!!.uid
-//
-//            try {
-//                Log.d("MarkerRepository", "Fetching user data for userId: $userId")
-//                val userRef = firestore.collection("users").document(userId).get().await()
-//                val user = userRef.toObject(User::class.java)
-//                    ?: User() // Ako ne postoji korisnik, koristi praznog User-a
-//
-//                val placeData = Place(
-//                    "",
-//                    name,
-//                    "",
-//                    address,
-//                    lng,
-//                    lat,
-//                   selectedOption,
-//                    iconResId,
-//                    mutableListOf(),
-//                    0.0,
-//                    0,
-//                    "",
-//                   currentTime,
-//                    user.username,
-//                )
-//                Log.d("MarkerRepository", "Adding marker to Firestore")
-//                // Dodaj dokument i automatski generiši ID
-//                val documentRef = firestore.collection("markers").add(placeData).await()
-//
-//                // Uzmi generisani ID
-//                val placeId = documentRef.id
-//
-//                // Ako postoji slika, sačuvaj je u Firebase Storage
-//                if (photo != null) {
-//                    Log.d("MarkerRepository", "Uploading photo for placeId: $placeId")
-//                    val placePicRef = storage.getReference("place_pictures/$placeId")
-//                    placePicRef.putFile(photo).await()  // Čeka da se slika upload-uje
-//                    val downloadUri = placePicRef.downloadUrl.await()  // Čeka da se preuzme URL slike
-//
-//                    Log.d("MarkerRepository", "Updating document with photo URL")
-//                    // Ažuriraj Firestore dokument sa URL-om slike i ID-jem
-//                    documentRef.update(
-//                        mapOf(
-//                            "photo" to downloadUri.toString(),
-//                            "id" to placeId
-//                        )
-//                    ).await()
-//                } else {
-//                    // Ako slika nije dostupna, samo ažuriraj ID
-//                    Log.d("MarkerRepository", "No photo provided, updating only the ID")
-//                    documentRef.update("id", placeId).await()
-//                }
-//
-//                Log.d("MarkerRepository", "Updating user score")
-//                // Ažuriraj score korisnika
-//                val userDocRef = firestore.collection("users").document(userId)
-//                userDocRef.update("score", FieldValue.increment(20)).await()
-//            } catch (e: Exception) {
-//                Log.e("MarkerRepository", "Error writing LocationData", e)
-//                callback(false, "Failed to add marker: ${e.message}")//dodato radi provere
-//            }
-
-        // Fetch markers from Firestore
         fun fetchMarkers() {
             firestore.collection("markers").get()
                 .addOnSuccessListener { result ->
@@ -302,7 +158,6 @@ suspend fun addMarker(
             val withinRadius: Boolean
             // radijus je null ako korisnik ne odobri da se prati lokacija, tako da apliakciaj i dalje radi
             if (radius != null && currentLoc != null) {
-                // Check if the marker is within the specified radius
                 // Ako korisnik nije nista uneo sto se radijusa tice, onda se gleda kao tacno
                 if (radius == 0) {
                     withinRadius = true
@@ -325,8 +180,6 @@ suspend fun addMarker(
             authorMatch && typeMatch && dateMatch && withinRadius
             //Log.d("authorMatch && typeMatch && dateMatch && withinRadius","${authorMatch && typeMatch && dateMatch && withinRadius}")
         }
-
-
         if (filteredList.isNotEmpty()) {
             callback(true)
             _filteredMarkers.value = filteredList

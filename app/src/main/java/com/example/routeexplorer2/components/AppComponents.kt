@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -50,23 +51,42 @@ import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.platform.LocalFocusManager
+import android.content.Context
+import android.os.Build
+import androidx.annotation.RequiresApi
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.TextUnit
 import com.example.routeexplorer2.data.NavigationItem
+import com.example.routeexplorer2.data.model.LocationData
+import com.example.routeexplorer2.data.services.NearbyPlacesDetectionController
+import com.example.routeexplorer2.screens.mapScreen.ServiceControllDialog
+import com.example.routeexplorer2.screens.mapScreen.getServiceRunningState
+import com.example.routeexplorer2.screens.mapScreen.saveServiceRunningState
 import com.example.routeexplorer2.ui.theme.Blue
 import com.example.routeexplorer2.ui.theme.LightBlue
+import com.example.routeexplorer2.viewModels.MarkerViewModel
+import com.example.routeexplorer2.viewModels.UserViewModel
+//import kotlinx.coroutines.flow.internal.NoOpContinuation.context
+
+//import kotlinx.coroutines.flow.internal.NoOpContinuation.context
 
 
 @Composable
@@ -228,24 +248,6 @@ fun NumberFieldComponent(
     )
 }
 
-@Composable
-fun CheckboxComponent(value:String, onTextSelected:(String) -> Unit){
-    Row(modifier= Modifier
-        .fillMaxWidth()
-        .heightIn(56.dp),
-//        .padding(16.dp),
-        verticalAlignment = Alignment.CenterVertically,
-    ){
-        val checkedState = remember {
-            mutableStateOf(false)
-        }
-        Checkbox(checked =checkedState.value,
-            onCheckedChange={
-                checkedState.value!=checkedState.value
-            })
-        ClickableTextComponent(value=value,onTextSelected)
-    }
-}
 
 @Composable
 fun ClickableTextComponent(value:String, onTextSelected:(String) -> Unit){
@@ -351,14 +353,26 @@ fun ClickableLoginTextComponent(tryingToLogin:Boolean=true,onTextSelected: (Stri
 
 
 
+@RequiresApi(Build.VERSION_CODES.O)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun AppToolbar(
     toolbarTitle:String,
     logoutButtonClicked:() ->Unit,
+    userViewModel: UserViewModel,
+    markerViewModel:MarkerViewModel,
     onMenuClicked:() -> Unit,
-    onSearchClicked: () -> Unit
+    onSearchClicked: () -> Unit,
+    onNotificationClicked: () -> Unit,  // New param for notification action
+    onRemoveFiltersClicked: () -> Unit,  // New param for remove filters action,
+    defaultNearbyPlaceController: NearbyPlacesDetectionController,
 ){
+    val filteredMarkers by markerViewModel.filteredMarkers.collectAsState()
+    var isServiceDialogOpen by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    var isServiceRunning by remember { mutableStateOf(getServiceRunningState(context)) }
+    val currentUserLocation by userViewModel.currentUserLocation.collectAsState()
     TopAppBar(
         //backgroundColor= LightBlue, ne moze ovako u ovoj verziji
         title = {
@@ -388,21 +402,60 @@ fun AppToolbar(
                     tint = Color.White
                 )
             }
+            // Remove Filters Icon (appears only if filters are active)
+            if (filteredMarkers.isNotEmpty()) {
+                IconButton(onClick = { onRemoveFiltersClicked.invoke() }) {
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_search_off_24),
+                        contentDescription = "Remove filters",
+                        tint = Color.White
+                    )
+                }
+            }
+
+            IconButton(onClick = { isServiceDialogOpen = true/*onNotificationClicked.invoke()*/ }) {
+                Icon(
+                    painter = if (isServiceRunning) painterResource(id = R.drawable.notifications_active_24)
+                    else painterResource(id = R.drawable.notifications_24),
+                    contentDescription = if (isServiceRunning) "Notifications" else "Notifications Off",
+                    tint = Color.White
+                )
+            }
+
+
             IconButton(onClick={
                 logoutButtonClicked.invoke()
             }){
                 Icon(
                     imageVector = Icons.Filled.Logout,
-                    contentDescription="Logout"
+                    contentDescription="Logout",
+                    tint = Color.White
                 )
             }
-
         },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = colorResource(id = R.color.higherDrawerColor)//LightBlue // Ovde setuješ boju pozadine
 
         )
     )
+    if (isServiceDialogOpen) {
+        ServiceControllDialog(
+            isServiceRunning = isServiceRunning,
+            onConfirm = {
+                isServiceRunning = !isServiceRunning
+                saveServiceRunningState(context, isServiceRunning) // Save the new state
+                if (isServiceRunning) {
+                    defaultNearbyPlaceController.startNearbyPlacesDetectionService() // Start service
+                } else {
+                    defaultNearbyPlaceController.stopNearbyPlacesDetectionService() // Stop service
+                }
+                isServiceDialogOpen = false // Close dialog after confirmation
+            },
+            onDismiss = {
+                isServiceDialogOpen = false
+            },
+        )
+    }
 }
 
 //@Composable

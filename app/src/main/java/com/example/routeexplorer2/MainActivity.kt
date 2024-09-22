@@ -45,7 +45,6 @@ class MainActivity : ComponentActivity() {
     }
     private val homeViewModel: HomeViewModel by viewModels()
 
-    // private val loginViewModel: LoginViewModel by viewModels()
     private val loginViewModel: LoginViewModel by viewModels {
         LoginViewModelFactory(
             userRepository = (application as LoginFlowApp).container.userRepository
@@ -64,32 +63,11 @@ class MainActivity : ComponentActivity() {
         PlaceViewModelFactory(placeRepository = (application as LoginFlowApp).container.placeRepository)
     }
 
-
-    // private val markerViewModel:MarkerViewModel by viewModels()
-    //private val homeViewModel:HomeViewModel
-
-//    private lateinit var mapView: MapView
-//    private var googleMap: GoogleMap? = null
-
     var i: Intent? = null//dodato
 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-
-        //dodato za servis da se prati van viewModela
-//        ActivityCompat.requestPermissions(
-//            this,
-//            arrayOf(
-//                Manifest.permission.ACCESS_COARSE_LOCATION,
-//                Manifest.permission.ACCESS_FINE_LOCATION,
-//            ),
-//            0
-//        )
-//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-//            requestBGLocationPermission()
-        // }//dodato za servis da se prati van viewModela
 
         val defaultNearbyPlacesController = object : NearbyPlacesDetectionController {
             override fun startNearbyPlacesDetectionService() {
@@ -113,7 +91,6 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-//                    Greeting("Android")
                     RouteExplorer(
                         homeViewModel,
                         userViewModel,
@@ -122,7 +99,7 @@ class MainActivity : ComponentActivity() {
                         markerViewModel,
                         placeViewModel,
                         defaultNearbyPlacesController
-//                        mapView
+
                     )
                 }
             }
@@ -130,32 +107,6 @@ class MainActivity : ComponentActivity() {
 //            checkLocationPermission();
         }
     }
-
-    //dodato da se prati iz servisa
-//    @RequiresApi(Build.VERSION_CODES.O)
-//    override fun onStart() {
-//        super.onStart()
-//        i = Intent(applicationContext, LocationTrackerService::class.java)
-//        startForegroundService(i)
-//    }
-//
-//    override fun onStop() {
-//        super.onStop()
-//        stopService(i)
-//    }
-//    @RequiresApi(Build.VERSION_CODES.Q)
-//    fun requestBGLocationPermission() {
-//        ActivityCompat.requestPermissions(
-//            this,
-//            arrayOf(
-//                Manifest.permission.ACCESS_BACKGROUND_LOCATION
-//            ),
-//            0
-//        )
-//    }
-//dodato da se prati iz servisa
-//}
-
 
     @Composable
     fun Greeting(name: String, modifier: Modifier = Modifier) {
@@ -173,8 +124,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-//@Preview
-//@Composable
-//fun DefaultPreview(){
-//    RouteExplorer()
-//}

@@ -30,7 +30,7 @@ class PlaceViewModel(
     val selectedPlace: StateFlow<Place?> get() = placeRepository.selectedPlace
 
 
-    val places = MutableStateFlow<List<Place>>(emptyList()) //ja sam dodao
+    val places = MutableStateFlow<List<Place>>(emptyList())
     fun loadPlace(placeId: String) {
         viewModelScope.launch {
             placeRepository.addPlaceSnapshotListener(placeId)//ovde se poziva PlaceRepository i onda tamo exception
@@ -70,7 +70,7 @@ class PlaceViewModel(
 
     private fun loadPlaces() {
         viewModelScope.launch {
-            places.value = placeRepository.getAllPlaces() // Get all places from repository
+            places.value = placeRepository.getAllPlaces()
         }
     }
 

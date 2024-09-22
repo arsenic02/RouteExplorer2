@@ -63,7 +63,6 @@ class UserViewModel(
 
     override fun onCleared() {
         super.onCleared()
-        // Stop listening when ViewModel is cleared
         userRepository.stopFetchAllUsers()
         userRepository.stopObservingUser()
     }

@@ -70,7 +70,6 @@ fun ReviewDialog(
                     }
                 }
 
-                // Comment text field
                 TextField(
                     value = placeViewModel.comment,
                     onValueChange = {

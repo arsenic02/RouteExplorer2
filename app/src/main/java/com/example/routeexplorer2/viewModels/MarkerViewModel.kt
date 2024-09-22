@@ -45,10 +45,10 @@ class MarkerViewModel(private val markerRepository: MarkerRepository) : ViewMode
         }
         Log.d("MarkerViewModel", "Starting marker creation")
         val iconResId = when (selectedOption) {
-            "Run" -> R.drawable.ic_run_24   //ic_car_24 opet on crta sam run ikonu
+            "Run" -> R.drawable.ic_run_24
             "Bike" -> R.drawable.baseline_directions_bike_24
             "Car" -> R.drawable.ic_car_24
-            else -> R.drawable.ic_car_24 // A default marker icon if needed
+            else -> R.drawable.ic_car_24
         }
         viewModelScope.launch {
             markerRepository.addMarker(
@@ -62,13 +62,12 @@ class MarkerViewModel(private val markerRepository: MarkerRepository) : ViewMode
                 callback = callback,
                 currentTime =  Timestamp.now()
             )
-//            callback(true, "Successfully added marker") //mislim da nije od znacaja za id
+//            callback(true, "Successfully added marker")
             Log.d("MarkerViewModel", "Marker creation process finished")
-//            resetState()
+
         }
     }
 
-    // Fetch markers from Firestore
     fun fetchMarkers() {
         viewModelScope.launch {
             markerRepository.fetchMarkers()

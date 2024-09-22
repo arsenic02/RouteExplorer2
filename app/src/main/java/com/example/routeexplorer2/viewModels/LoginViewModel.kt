@@ -1,19 +1,13 @@
 package com.example.routeexplorer2.viewModels
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.routeexplorer2.data.login.LoginUIEvent
 import com.example.routeexplorer2.data.login.LoginUIState
 import com.example.routeexplorer2.data.repository.UserRepository
-import com.example.routeexplorer2.data.rules.Validator
-import com.example.routeexplorer2.navigation.RouterExplorerAppRouter
-import com.example.routeexplorer2.navigation.Screen
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 //dodato private val userRepository: UserRepository):ViewModel(), a bilo je samo

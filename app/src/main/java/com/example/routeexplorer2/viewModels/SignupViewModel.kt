@@ -9,20 +9,12 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.routeexplorer2.data.repository.UserRepository
-import com.example.routeexplorer2.data.rules.Validator
-import com.example.routeexplorer2.data.signup.RegistrationUIState
-import com.example.routeexplorer2.data.signup.SignupUIEvent
-import com.example.routeexplorer2.navigation.RouterExplorerAppRouter
-import com.example.routeexplorer2.navigation.Screen
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.coroutines.launch
 
 class SignupViewModel(private val userRepository: UserRepository): ViewModel() {
 
     private val TAG = SignupViewModel::class.simpleName
-//    var registrationUIState= mutableStateOf(RegistrationUIState())//cuvaju se inputi za registraciju
 
-//    var allValidationsPassed= mutableStateOf(false)
 
     var signUpInProgress = mutableStateOf(false) //onaj kruzic sto se vrti kada se ucitava
 
@@ -33,18 +25,7 @@ class SignupViewModel(private val userRepository: UserRepository): ViewModel() {
     var imageUri by  mutableStateOf<Uri?>(null)
     var email by mutableStateOf("")
     var password by mutableStateOf("")
-//    var passwordVisible by mutableStateOf(false)
 
-//    fun resetState() {
-//        email = ""
-//        password = ""
-//        username = ""
-//        firstName = ""
-//        lastName = ""
-//        phoneNumber = ""
-//        imageUri = null
-//        passwordVisible = false
-//    }
     fun registerUser(
         callback: (Boolean, String?) -> Unit
     ) {
@@ -100,23 +81,6 @@ class SignupViewModel(private val userRepository: UserRepository): ViewModel() {
         }
     }
 
-    //nzm zasto je zakomentarisao metodu
-//    fun logout(){
-//        val firebaseAuth = FirebaseAuth.getInstance()
-//
-//        firebaseAuth.signOut()
-//        val authStateListener = AuthStateListener{
-//            if(it.currentUser == null){
-//                Log.d(TAG, "Inside sign out complete")
-//                RouterExplorerAppRouter.navigateTo(Screen.LoginScreen)
-//            }
-//            else {
-//                Log.d(TAG, "Inside sign out NOT completed")
-//            }
-//        }
-//
-//        firebaseAuth.addAuthStateListener (authStateListener)
-//    }
 }
 
 class RegisterViewModelFactory(private val userRepository: UserRepository) : ViewModelProvider.Factory {

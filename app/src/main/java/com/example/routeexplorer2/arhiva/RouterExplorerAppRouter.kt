@@ -1,4 +1,4 @@
-package com.example.routeexplorer2.navigation
+package com.example.routeexplorer2.arhiva
 
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
@@ -7,9 +7,9 @@ sealed class Screen{
 
     object SignUpScreen: Screen()
     object TermsAndConditionsScreen: Screen()
-    object LoginScreen:Screen()
+    object LoginScreen: Screen()
 //    object RegisterScreen:Screen()
-    object HomeScreen:Screen()
+    object HomeScreen: Screen()
 }
 
 object RouterExplorerAppRouter {

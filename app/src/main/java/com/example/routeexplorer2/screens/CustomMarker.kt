@@ -52,46 +52,6 @@ fun MapMarker(
     )
 }
 
-//baca exception
-//@Composable
-//fun bitmapDescriptorFromVector(context: Context, vectorResId: Int): BitmapDescriptor? {
-//    val vectorDrawable = ContextCompat.getDrawable(context, vectorResId)
-//    vectorDrawable?.setBounds(0, 0, vectorDrawable.intrinsicWidth, vectorDrawable.intrinsicHeight)
-//    val bitmap = Bitmap.createBitmap(
-//        vectorDrawable!!.intrinsicWidth,
-//        vectorDrawable.intrinsicHeight,
-//        Bitmap.Config.ARGB_8888
-//    )
-//    val canvas = Canvas(bitmap)
-//    vectorDrawable.draw(canvas)
-//    return BitmapDescriptorFactory.fromBitmap(bitmap)
-//}
-
-
-
-//@Composable
-//fun MapMarker(
-//    context: Context,
-//    position: LatLng,
-//    title: String,
-//    snippet: String,
-//    @DrawableRes iconResourceId: Int,
-//    onMapClick: (marker: Marker) -> Boolean,
-//) {
-//    val icon = bitmapDescriptor(
-//        context, iconResourceId
-//    )
-//    Marker(
-//        state = MarkerState(position = position),
-//        title = title,
-//        snippet = snippet,
-//        icon = icon,
-//        onClick = { onMapClick(it) }
-//
-//    )
-//}
-
-//Darkova fja
 fun bitmapDescriptor(
     context: Context,
     vectorResId: Int

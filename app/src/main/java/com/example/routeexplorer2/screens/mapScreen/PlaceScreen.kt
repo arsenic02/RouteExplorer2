@@ -66,11 +66,7 @@ fun PlaceScreen (
     modifier: Modifier = Modifier
 ) {
 
-    // Pratite stanje iz ViewModel-a
     val selectedPlaceState = placeViewModel.selectedPlaceState
-
-   // val placeId = navController.currentBackStackEntry?.arguments?.getString("placeId") ?: ""
-//dodato placeId
 
     // Observe the state
     val selectedPlace by placeViewModel.selectedPlace.collectAsState()
@@ -80,27 +76,13 @@ fun PlaceScreen (
     Log.d("SelectedPlace=","$selectedPlace")//ovo dobro loguje
     Log.d("currentUser=","$currentUser")
 
-    /*
-    SelectedPlaceState=     com.example.routeexplorer2           D  Place(id=9VFb9MHs1pnzlmRIqgw9, name=Palanka, type=, address=, longitude=22.29458637535572, latitude=43.23669847107124, selectedOption=Car, icon=0, reviews=[], avgRating=0.0, reviewCount=0, photo=, timeCreated=Timestamp(seconds=1726744795, nanoseconds=939000000), author=)
-2024-09-19 13:20:10.791 26619-26619 SelectedPlace=          com.example.routeexplorer2           D  Place(id=9VFb9MHs1pnzlmRIqgw9, name=Palanka, type=, address=, longitude=0.0, latitude=0.0, selectedOption=Car, icon=0, reviews=[Review(id=4cdf2084-9e4d-4300-ac13-0bba0ce4bcf5, user=Miljan1, rating=4, text=Lepa staza za voznju automobila, likes=2, markerId=9VFb9MHs1pnzlmRIqgw9), Review(id=a7916873-dec1-40cc-ab0e-c187ad09e83d, user=Nikolaa, rating=2, text=Ne svidja mi se staza, likes=0, markerId=9VFb9MHs1pnzlmRIqgw9)], avgRating=3.0, reviewCount=2, photo=https://firebasestorage.googleapis.com/v0/b/routeexplorer2-2e4c5.appspot.com/o/place_pictures%2F9VFb9MHs1pnzlmRIqgw9?alt=media&token=07d0441e-3c7c-4eb2-8547-4ac5ef0cfbba, timeCreated=Timestamp(seconds=1726744810, nanoseconds=179000000), author=Miljan1)
-2024-09-19 13:20:10.791 26619-26619 currentUser=            com.example.routeexplorer2           D  User(id=8hLyQnIBnEdHRaWvSwWojKoyXEw2, email=nenad@gmail.com, username=Nenad12, firstName=Nenad, lastName=Nenadović, phoneNumber=06485723465, score=0, likedReviews=[], photoPath=https://firebasestorage.googleapis.com/v0/b/routeexplorer2-2e4c5.appspot.com/o/profile_pictures%2F8hLyQnIBnEdHRaWvSwWojKoyXEw2?alt=media&token=8909572f-c4c4-4daf-b430-92fbd3e8dd44)
-     */
-
-    //privremeno zakomentarisano
     LaunchedEffect(selectedPlaceState) {
         Log.d("PlaceScreen", "Loading place with ID: ${selectedPlaceState.id}")
         placeViewModel.loadPlace(selectedPlaceState.id)
     }
 
-//    LaunchedEffect(placeId) {
-//        if (placeId.isNotEmpty()) {
-//            placeViewModel.loadPlace(placeId)
-//        }
-//    }
-
     var isReviewDialogOpen by remember { mutableStateOf(false) }
 
-    //val formattedDate = selectedPlace?.let { formatDate(it.timeCreated) }//ovde mozda treba drugacije
     val formattedDate = selectedPlaceState?.let { formatDate(it.timeCreated) }
     Log.d("PlaceScreen", "Loading place: ${selectedPlaceState.timeCreated}")
     Log.d("formattedData ","$formattedDate")
@@ -143,13 +125,12 @@ fun PlaceScreen (
                 }
             }
 
-            // Author and Date Row
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 4.dp)
             ) {
-                Spacer(modifier = Modifier.weight(1f)) // Pushes the Text to the right
+                Spacer(modifier = Modifier.weight(1f))
                 // cudno
                 Text(
                     text = "by ${selectedPlace?.author} at $formattedDate",
@@ -158,7 +139,6 @@ fun PlaceScreen (
                 )
             }
 
-            // Name, Type, and Address Row
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -199,11 +179,10 @@ fun PlaceScreen (
 
         }
 
-        // Add Button in the bottom right corner
         Button(
             onClick = { isReviewDialogOpen = true },
             modifier = Modifier
-                .align(Alignment.BottomEnd) // Aligns the button to the bottom end
+                .align(Alignment.BottomEnd)
                 .padding(16.dp)
                 .size(56.dp), // Set the size to be circular
             elevation = ButtonDefaults.buttonElevation(defaultElevation = 20.dp),
@@ -211,9 +190,9 @@ fun PlaceScreen (
             contentPadding = PaddingValues(5.dp) // No extra padding inside the button
         ) {
             Icon(
-                imageVector = Icons.Default.Add, // Replace with your desired icon
+                imageVector = Icons.Default.Add,
                 contentDescription = "Add",
-                tint = Color.White // Adjust icon color if needed
+                tint = Color.White
             )
         }
     }
@@ -244,8 +223,8 @@ fun PlaceReview(
             .padding(start = 8.dp, top = 8.dp, end = 0.dp, bottom = 8.dp)
             .fillMaxWidth(),
         colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.secondary, //Card background color
-            contentColor = Color.White  //Card content color,e.g.text
+            containerColor = MaterialTheme.colorScheme.secondary,
+            contentColor = Color.White
         )
     ) {
         Column(
@@ -278,7 +257,6 @@ fun PlaceReview(
                 }
             }
 
-            // Comment text
             if (review.text.isNotEmpty()) {
                 Text(
                     text = review.text,
@@ -287,7 +265,6 @@ fun PlaceReview(
                 )
             }
 
-            // Heart icon and like count
             Row(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.Center,

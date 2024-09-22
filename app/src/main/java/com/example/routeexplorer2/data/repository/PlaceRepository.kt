@@ -75,7 +75,6 @@ class PlaceRepository(
         val username = user?.username ?: return false
 
         return try {
-           // odkomentarisi kada dodje vreme za to
             val reviews = _selectedPlace.value?.reviews
             if (reviews != null) {
                 for (review in reviews) {
@@ -91,7 +90,6 @@ class PlaceRepository(
         }
     }
 
-    // Fetch user from firestore with user id (uuid)
     private suspend fun getUser(userId: String): User? {
         return try {
             val documentSnapshot = firestore
@@ -101,7 +99,7 @@ class PlaceRepository(
                 .await()
             documentSnapshot.toObject(User::class.java)
         } catch (e: Exception) {
-            // Obrada grešaka
+
             null
         }
     }
@@ -121,22 +119,15 @@ class PlaceRepository(
         }
 
         try {
-
-            // Dodajte recenziju u niz reviews u dokumentu fieldId
             addReviewToPlace(placeId, newReview)
-
-            //odkomentarisi kada dodje vreme za to
 
             val reviewCount = selectedPlace.value!!.reviews.size
             val reviews = _selectedPlace.value!!.reviews
             updatePlacesStats(reviewCount, reviews)
 
-            // Ažurirajte score korisnika
             changeAuthorScore(PlaceConstants.POINTS_FOR_ADDING_REVIEW, true)
-
-
         } catch (e: Exception) {
-            // Handle errors
+
         }
     }
 
@@ -158,11 +149,10 @@ class PlaceRepository(
 
             updateAvgRatingAndSizeInFirestore(formattedAvgRating, reviewCount)
         } catch (e: Exception) {
-            // Obrada grešaka
+
         }
     }
 
-    // Function to calculate the average rating of the location
     private fun calculateAvgRating(reviews: MutableList<Review>): Double {
         return if (reviews.isEmpty()) {
             0.0
@@ -178,8 +168,6 @@ class PlaceRepository(
 
     }
 
-
-    // Function to update the average rating in Firestore
     private suspend fun updateAvgRatingAndSizeInFirestore(
         formattedAvgRating: Double,
         reviewCount: Int
@@ -218,11 +206,6 @@ class PlaceRepository(
 
     }
 
-
-
-    // Change review's likes
-    // imas dva nacina da hangle async operation, sa courutine/await i sa cb funkcijama
-    // https://www.youtube.com/watch?v=Bthy1Dla_ws
     private suspend fun updateReviewLikes(
         reviewId: String,
         isLiked: Boolean,
@@ -233,10 +216,8 @@ class PlaceRepository(
         val markerRef = db.collection("markers").document(clickedLocationId)
 
         try {
-            // Retrieve the marker document
             val documentSnapshot = markerRef.get().await()
             if (documentSnapshot.exists()) {
-                // Retrieve the 'reviews' field as a list of maps
                 val reviewsList =
                     documentSnapshot.get("reviews") as? List<Map<String, Any>> ?: emptyList()
 
@@ -259,7 +240,6 @@ class PlaceRepository(
                     }
                 }.toMutableList()
 
-                // Update the specific review in the list
                 val updatedReviews = reviewList.map { review ->
                     if (review.id == reviewId) {
                         val newLikes = if (isLiked) review.likes + 1 else review.likes - 1
@@ -269,7 +249,6 @@ class PlaceRepository(
                     }
                 }
 
-                // Update the 'reviews' field with the modified list
                 markerRef.update("reviews", updatedReviews).await()
                 Log.d("UpdateReviewLikes", "Likes successfully updated.")
             } else {
@@ -296,8 +275,6 @@ class PlaceRepository(
         ).await()
     }
 
-
-    // Change User Score according to liked/unliked review
     private suspend fun changeAuthorScore(scoreValue: Int, increase: Boolean) {
 
         val user = getUser(auth.currentUser!!.uid)
@@ -320,12 +297,10 @@ class PlaceRepository(
                         val newScore =
                             if (increase) existingScore + scoreValue else existingScore - scoreValue
 
-                        // Ažurira score u Firestore
                         userRef.update("score", newScore).await()
                     }
                 }
             } catch (e: Exception) {
-                // Obrada grešaka
                 Log.e("Change Author Score", "Error updating score: ${e.message}")
             }
         }
@@ -336,7 +311,7 @@ class PlaceRepository(
             val snapshot = firestore.collection("markers").get().await()
             snapshot.toObjects(Place::class.java)
         } catch (e: Exception) {
-            emptyList() // Return empty list on failure
+            emptyList()
         }
     }
 

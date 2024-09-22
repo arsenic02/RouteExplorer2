@@ -1,4 +1,4 @@
-package com.example.routeexplorer2.data.signup
+package com.example.routeexplorer2.arhiva
 
 sealed class SignupUIEvent {
 

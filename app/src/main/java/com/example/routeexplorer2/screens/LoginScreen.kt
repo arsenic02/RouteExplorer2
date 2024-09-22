@@ -37,10 +37,10 @@ import com.example.routeexplorer2.viewModels.LoginViewModel
 
 @Composable
 fun LoginScreen(
-    loginViewModel: LoginViewModel /*= viewModel()*/,
+    loginViewModel: LoginViewModel ,
     navController: NavController
     ){
-//ova 2 dodata
+
     var isLoading by remember { mutableStateOf(false) }
     val context = LocalContext.current
     //
@@ -49,7 +49,6 @@ fun LoginScreen(
         contentAlignment = Alignment.Center
     ) {
         Surface(
-            //color = Color.White,
             modifier= Modifier
                 .fillMaxSize()
                 // .background(Color.White)
@@ -63,16 +62,14 @@ fun LoginScreen(
 
                 Spacer(modifier =Modifier.height(20.dp))
 
-                //modifikovana verzija mejla i passworda
+
                 MyTextFieldComponent(
                     labelValue = stringResource(id = R.string.email),
                     painterResource = painterResource(id = R.drawable.ic_mail_24),
                     textValue = loginViewModel.email,
                     onTextSelected = {
-//                        loginViewModel.onEvent(LoginUIEvent.EmailChanged(it))
                                      loginViewModel.email=it
                     },
-                    //errorStatus = loginViewModel.loginUiState.value.emailError
                 )
 
                 PasswordFieldComponent(
@@ -80,17 +77,13 @@ fun LoginScreen(
                     painterResource = painterResource(id = R.drawable.ic_lock_24),
                     password = loginViewModel.password,
                     onTextSelected = {
-//                        loginViewModel.onEvent(LoginUIEvent.PasswordChanged(it))
                         loginViewModel.password=it
                     },
-                   // errorStatus = loginViewModel.loginUiState.value.passwordError
                 )
 
                 Spacer(modifier =Modifier.height(40.dp))
 
                 ClickableLoginTextComponent(tryingToLogin = false, onTextSelected = {
-                    //RouterExplorerAppRouter.navigateTo(Screen.SignUpScreen)
-
                     navController.navigate(Screens.Register.route)
                 })
 
@@ -98,7 +91,6 @@ fun LoginScreen(
 
                 ButtonComponent(value = stringResource(id=R.string.login),
                     onButtonClicked = {
-                        //loginViewModel.onEvent(LoginUIEvent.LoginButtonCLicked)
                         loginViewModel.loginUserWithEmailAndPassword(
                             loginViewModel.email,
                             loginViewModel.password
@@ -106,7 +98,6 @@ fun LoginScreen(
                             isLoading = false
                             if (success) {
                                 navController.navigate(Screens.GoogleMap.route)
-                               // RouterExplorerAppRouter.navigateTo(Screen.HomeScreen)
                                 Log.d(TAG,"Logovao sam se")
                                 loginViewModel.resetState()
                             } else {
@@ -114,8 +105,6 @@ fun LoginScreen(
                             }
                         }
                     },
-                   // isEnabled = loginViewModel.allValidationsPassed.value//true
-//                    isEnabled=loginViewModel.validateDataWithRules()
                 )
             }
 
@@ -128,9 +117,3 @@ fun LoginScreen(
     }
 
 }
-
-//@Preview //sluzi tako da imamo preview odnosno gledamo kako na telefnou izgleda
-//@Composable
-//fun LoginScreenPreview() {
-//    LoginScreen()
-//}

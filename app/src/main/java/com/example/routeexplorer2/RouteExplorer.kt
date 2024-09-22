@@ -56,15 +56,9 @@ fun RouteExplorer(
     val navController = rememberNavController()
 
     LaunchedEffect(navController) {//moze i sa key1=currentUser
-        //isLoading = true //dodato
         homeViewModel.checkForActiveSession(navController)
-        //isLoading = false//dodato
     }
 
-    val mapCallback = rememberUpdatedState(OnMapReadyCallback { googleMap ->
-        // Your map setup code here
-    })
-    //nije ni ovo lose, radi, ali ima mali bag, da se otvori na trenutak npr. ekran za logovanje, pa nema nista, pa se onda za stalno otvori ekran za logovanje
     NavHost(
         navController = navController,
         startDestination = if (userViewModel.isUserLoggedIn()) Screens.GoogleMap.route else Screens.Login.route
@@ -96,10 +90,8 @@ fun RouteExplorer(
 
         composable(Screens.Place.route) {
             PlaceScreen(
-                //signupViewModel = signupViewModel,
                 userViewModel=userViewModel,
                 placeViewModel = placeViewModel,
-                //navController = navController//privremeno
             )
         }
         composable(Screens.Leaderboard.name) {

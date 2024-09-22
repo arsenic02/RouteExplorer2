@@ -43,8 +43,6 @@ fun FilterPlaceModal(
     var expanded by remember { mutableStateOf(false) }
     var showDatePicker by remember { mutableStateOf(false) }
 
-
-    // Show the DateRangePicker within the main dialog
     AlertDialog(
         onDismissRequest = {
             onDismiss()
@@ -115,7 +113,7 @@ fun FilterPlaceModal(
                 // Prikazi ga samo ako je odobrena lokacija
                 if (currentUserLocation != null) {
 
-                    // Koristimo ?: operator da se postavi podrazumevana vrednost ako je filteredRadius null
+                    // Koristi se ?: operator da se postavi podrazumevana vrednost ako je filteredRadius null
                     val currentRadius = markerViewModel.filteredRadius ?: 0
 
                     Text("Radius: $currentRadius km")
@@ -146,7 +144,6 @@ fun FilterPlaceModal(
                     }
                 }
 
-                // Date Range picker
                 if (showDatePicker) {
                     DatePickerModal(
                         setDateRange = { markerViewModel.dateRange = it }
@@ -159,7 +156,6 @@ fun FilterPlaceModal(
         confirmButton = {
             Button(
                 onClick = {
-//                    odkomentarisi posle
                     markerViewModel.applyFilters(currentUserLocation) { isFound ->
                         if (isFound) {
                             markerViewModel.resetFilter()

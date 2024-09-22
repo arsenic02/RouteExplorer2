@@ -40,9 +40,6 @@ import com.example.routeexplorer2.components.NormalTextComponent
 import com.example.routeexplorer2.components.NumberFieldComponent
 import com.example.routeexplorer2.components.PasswordFieldComponent
 import com.example.routeexplorer2.viewModels.SignupViewModel
-import com.example.routeexplorer2.data.signup.SignupUIEvent
-import com.example.routeexplorer2.navigation.RouterExplorerAppRouter
-import com.example.routeexplorer2.navigation.Screen
 
 
 @Composable
@@ -65,7 +62,6 @@ fun SignUpScreen (
                 .verticalScroll(rememberScrollState())
         ) {
             Column(modifier =Modifier.fillMaxSize()){
-                //NormalTextComponent(value = stringResource(id= R.string.hello) )
                 NormalTextComponent(value = stringResource(id = R.string.register))
                 HeadingTextComponent(value = stringResource(id = R.string.routeExpl) )
                 Spacer(modifier = Modifier.height(20.dp))
@@ -75,21 +71,17 @@ fun SignUpScreen (
                       painterResource(id=R.drawable.ic_person_24),
                     textValue = signupViewModel.username,
                     onTextSelected = {
-//                        loginViewModel.onEvent(LoginUIEvent.EmailChanged(it))
                         signupViewModel.username=it
                     },
-                    //errorStatus = signupViewModel.registrationUIState.value.usernameError//.value.emailError
-                )
+                    )
 
                 MyTextFieldComponent(
                     labelValue = stringResource(id = R.string.first_name),
                     painterResource(id=R.drawable.ic_person_24),
                     textValue = signupViewModel.firstName,
                     onTextSelected = {
-//                        loginViewModel.onEvent(LoginUIEvent.EmailChanged(it))
                         signupViewModel.firstName=it
                     },
-                    //errorStatus = signupViewModel.registrationUIState.value.firstNameError//.value.emailError
                 )
 
                 MyTextFieldComponent(
@@ -97,10 +89,8 @@ fun SignUpScreen (
                     painterResource(id=R.drawable.ic_person_24),
                     textValue = signupViewModel.lastName,
                     onTextSelected = {
-//                        loginViewModel.onEvent(LoginUIEvent.EmailChanged(it))
                         signupViewModel.lastName=it
                     },
-                    //errorStatus = signupViewModel.registrationUIState.value.lastNameError//.value.emailError
                 )
 
                 NumberFieldComponent(
@@ -110,17 +100,14 @@ fun SignUpScreen (
                     onTextSelected = {
                         signupViewModel.phoneNumber=it
                     },
-                    //errorStatus = signupViewModel.registrationUIState.value.phoneError
                 )
                 MyTextFieldComponent(
                     labelValue = stringResource(id = R.string.email),
                     painterResource = painterResource(id = R.drawable.ic_mail_24),
                     textValue = signupViewModel.email,
                     onTextSelected = {
-//                        loginViewModel.onEvent(LoginUIEvent.EmailChanged(it))
                         signupViewModel.email=it
                     },
-                   // errorStatus = signupViewModel.registrationUIState.value.emailError//.value.emailError
                 )
 
                 PasswordFieldComponent(
@@ -131,7 +118,6 @@ fun SignUpScreen (
 
                         signupViewModel.password=it
                     },
-                    //errorStatus = signupViewModel.registrationUIState.value.passwordError
                 )
                 Spacer(modifier=Modifier.height(40.dp))
 
@@ -140,7 +126,6 @@ fun SignUpScreen (
                 }
 
                 ClickableLoginTextComponent(tryingToLogin = true, onTextSelected = {
-//                    RouterExplorerAppRouter.navigateTo(Screen.LoginScreen)
                     navController.navigate(Screens.Login.name)
                 })
 
@@ -149,31 +134,21 @@ fun SignUpScreen (
                 ButtonComponent(
                     value =stringResource(id=R.string.register),
                     onButtonClicked = {
-                        //signupViewModel.onEvent(SignupUIEvent.RegisterButtonCLicked)
-                        //isLoading = true
                         Log.d(TAG, "Kliknuto na dugme register")
                         signupViewModel.registerUser()
                         { success, toastMsg ->
                             //isLoading = false
                             if (success) {
                                 navController.navigate(Screens.Login.route)
-//                                navController.navigate(Screens.GoogleMap.route)//sa route kaze, uspesno ste se registrovali
-                               // signupViewModel.resetState()
                                 Toast.makeText(context, toastMsg, Toast.LENGTH_SHORT).show()
                             } else {
                                 Toast.makeText(context, toastMsg, Toast.LENGTH_SHORT).show()
                             }
                         }
                     },
-                    //isEnabled = signupViewModel.allValidationsPassed.value
-
                 )
-
                 Spacer(modifier=Modifier.height(20.dp))
-
-
             }
-
         }
 
         if(signupViewModel.signUpInProgress.value){
@@ -183,9 +158,3 @@ fun SignUpScreen (
     }
 
 }
-
-//@Preview
-//@Composable
-//fun DefaultPreviewOfSignUpScreen(){
-//    SignUpScreen()
-//}

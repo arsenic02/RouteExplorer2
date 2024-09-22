@@ -43,10 +43,9 @@ class UserRepository (
         callback: (Boolean) -> Unit
     ) {
         try {
-            // Sign in with email and password
             val authResult = FirebaseAuth.getInstance()
                 .signInWithEmailAndPassword(email, password)
-                .await() // Wait for authentication result
+                .await()
 
             if (authResult.user != null) {
                 startObservingUser()
@@ -56,7 +55,6 @@ class UserRepository (
             }
 
         } catch (e: Exception) {
-            // Handle errors
             e.printStackTrace()
             callback(false)
         }
@@ -79,7 +77,7 @@ class UserRepository (
 
             Log.d("UserRepository authresult","$authResult")
             Log.d("UserRepository userId","$authResult")
-            // Ovo si mogao sa User class da instanciras, rekli su na firestore https://firebase.google.com/docs/firestore/manage-data/add-data
+
             val user = mapOf(
                 "id" to userId,
                 "email" to email,
@@ -157,7 +155,6 @@ class UserRepository (
                     val users = snapshot.documents.mapNotNull { document ->
                         document.toObject(User::class.java)
                     }
-                    // Update StateFlow with the list of users
                     _allUsers.value = users
                 }
             }
@@ -174,7 +171,6 @@ class UserRepository (
             stopObservingUser()
             callback(true)
         } catch (e: Exception) {
-            // Log error or handle failure
             callback(false)
         }
     }

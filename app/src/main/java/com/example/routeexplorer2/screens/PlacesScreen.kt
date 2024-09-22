@@ -67,7 +67,6 @@ fun PlacesScreen(
 ) {
 
     Log.d("selectPlace","$selectPlace")
-    //2024-09-19 13:05:39.473 21883-21883 selectPlace             com.example.routeexplorer2           D  Function1<com.example.routeexplorer2.data.model.Place, kotlin.Unit>
     val context = LocalContext.current
 
     val currentUserLocation by userViewModel.currentUserLocation.collectAsState()
@@ -75,7 +74,7 @@ fun PlacesScreen(
     var isFilteredModalOpen by remember { mutableStateOf(false) }
 
     val filteredMarkers by markerViewModel.filteredMarkers.collectAsState()
-    val markers by markerViewModel.markers.collectAsState(emptyList())//bilo je navedeno empty list
+    val markers by markerViewModel.markers.collectAsState(emptyList())
 
     Box(modifier = modifier.fillMaxSize()) {
         LazyColumn {
@@ -83,16 +82,7 @@ fun PlacesScreen(
                 if (filteredMarkers.isNotEmpty()) filteredMarkers else markers
             items(markersToDisplay) { marker ->
                 Log.d("marker","$marker")
-                /*
-                Place(id=8n48SWO5nK776gyyaCtv, name=Aleksinac, type=, address=, longitude=21.711555272340775, latitude=43.53981752159446, selectedOption=Car, icon=0, reviews=[], avgRating=0.0, reviewCount=0, photo=, timeCreated=Timestamp(seconds=1726744630, nanoseconds=821000000), author=)
-                Place(id=8n48SWO5nK776gyyaCtv, name=Aleksinac, type=, address=, longitude=21.711555272340775, latitude=43.53981752159446, selectedOption=Car, icon=0, reviews=[], avgRating=0.0, reviewCount=0, photo=, timeCreated=Timestamp(seconds=1726744630, nanoseconds=821000000), author=)
-                Place(id=9VFb9MHs1pnzlmRIqgw9, name=Palanka, type=, address=, longitude=22.29458637535572, latitude=43.23669847107124, selectedOption=Car, icon=0, reviews=[], avgRating=0.0, reviewCount=0, photo=, timeCreated=Timestamp(seconds=1726744630, nanoseconds=823000000), author=)
-                Place(id=9VFb9MHs1pnzlmRIqgw9, name=Palanka, type=, address=, longitude=22.29458637535572, latitude=43.23669847107124, selectedOption=Car, icon=0, reviews=[], avgRating=0.0, reviewCount=0, photo=, timeCreated=Timestamp(seconds=1726744630, nanoseconds=823000000), author=)
-                Place(id=UE0uyKMgmCcq8R3i4duC, name=Nis, type=, address=, longitude=21.885009706020355, latitude=43.33866089077561, selectedOption=Run, icon=0, reviews=[], avgRating=0.0, reviewCount=0, photo=, timeCreated=Timestamp(seconds=1726744630, nanoseconds=825000000), author=)
-                Place(id=UE0uyKMgmCcq8R3i4duC, name=Nis, type=, address=, longitude=21.885009706020355, latitude=43.33866089077561, selectedOption=Run, icon=0, reviews=[], avgRating=0.0, reviewCount=0, photo=, timeCreated=Timestamp(seconds=1726744630, nanoseconds=825000000), author=)
-                Place(id=pIzaYl5ZpasQ7ZcSUwT2, name=Knjazevac, type=, address=, longitude=22.269599922001362, latitude=43.619452657606175, selectedOption=Car, icon=0, reviews=[], avgRating=0.0, reviewCount=0, photo=, timeCreated=Timestamp(seconds=1726744630, nanoseconds=826000000), author=)
-                Place(id=pIzaYl5ZpasQ7ZcSUwT2, name=Knjazevac, type=, address=, longitude=22.269599922001362, latitude=43.619452657606175, selectedOption=Car, icon=0, reviews=[], avgRating=0.0, reviewCount=0, photo=, timeCreated=Timestamp(seconds=1726744630, nanoseconds=826000000), author=)
-                 */
+
                 PlaceCard(
                     place = marker,
                     navController = navController,
@@ -124,9 +114,9 @@ fun PlacesScreen(
             contentPadding = PaddingValues(10.dp) // No extra padding inside the button
         ) {
             Icon(
-                imageVector = Icons.Default.Search, // Replace with your desired icon
+                imageVector = Icons.Default.Search,
                 contentDescription = "Filter",
-                tint = Color.White // Adjust icon color if needed
+                tint = Color.White
             )
         }
 
@@ -140,13 +130,13 @@ fun PlacesScreen(
                         top = 16.dp,
                         bottom = 24.dp,
                         start = 130.dp
-                    ) // Adjust padding as needed
-                    .size(40.dp) // Larger size for the button
+                    )
+                    .size(40.dp)
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_search_off_24),
                     contentDescription = "Remove filters",
-                    tint = MaterialTheme.colorScheme.primary, // Adjust icon color if needed
+                    tint = MaterialTheme.colorScheme.primary,
                     modifier = Modifier.size(32.dp)
                 )
             }
@@ -163,17 +153,12 @@ fun PlaceCard(
     modifier: Modifier = Modifier
 ) {
 
-    //ovde treba da pzozovem place iz viewModela
     Log.d("place: ","$place")
-    //place: Place(id=8n48SWO5nK776gyyaCtv, name=Aleksinac, type=, address=, longitude=21.711555272340775, latitude=43.53981752159446, selectedOption=Car, icon=0, reviews=[], avgRating=0.0, reviewCount=0, photo=, timeCreated=Timestamp(seconds=1726744188, nanoseconds=826000000), author=)
-    //place: Place(id=9VFb9MHs1pnzlmRIqgw9, name=Palanka, type=, address=, longitude=22.29458637535572, latitude=43.23669847107124, selectedOption=Car, icon=0, reviews=[], avgRating=0.0, reviewCount=0, photo=, timeCreated=Timestamp(seconds=1726744188, nanoseconds=827000000), author=)
-//    place: Place(id=UE0uyKMgmCcq8R3i4duC, name=Nis, type=, address=, longitude=21.885009706020355, latitude=43.33866089077561, selectedOption=Run, icon=0, reviews=[], avgRating=0.0, reviewCount=0, photo=, timeCreated=Timestamp(seconds=1726744188, nanoseconds=829000000), author=)
-//    place: Place(id=pIzaYl5ZpasQ7ZcSUwT2, name=Knjazevac, type=, address=, longitude=22.269599922001362, latitude=43.619452657606175, selectedOption=Car, icon=0, reviews=[], avgRating=0.0, reviewCount=0, photo=, timeCreated=Timestamp(seconds=1726744188, nanoseconds=831000000), author=)
+
     var expanded by remember { mutableStateOf(false) }
 
     val formattedDate = formatDate(place.timeCreated)
     val formattedAddress = extractAddressPart(place.address)
-
 
     Box(
         modifier = modifier.padding(12.dp)
@@ -206,10 +191,6 @@ fun PlaceCard(
                             .clip(MaterialTheme.shapes.small),
                         contentScale = ContentScale.Crop,
                         painter = painter,
-
-                        // Content Description is not needed here - image is decorative, and setting a null content
-                        // description allows accessibility services to skip this element during navigation.
-
                         contentDescription = null
                     )
                     Column(modifier = modifier) {

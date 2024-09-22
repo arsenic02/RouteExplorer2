@@ -98,9 +98,6 @@ import kotlinx.coroutines.flow.onEach
 //import kotlinx.coroutines.flow.internal.NoOpContinuation.context
 import kotlinx.coroutines.launch
 
-//import kotlin.coroutines.jvm.internal.CompletedContinuation.context
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @RequiresApi(Build.VERSION_CODES.O)
 @Composable
@@ -136,7 +133,6 @@ fun HomeScreen(
 
     Log.d("isServiceRunning","$isServiceRunning")
     val currentPosition = currentUserLocation ?: LocationData(43.321445, 21.896104)//LocationData iz klase LocationData
-//    val nisCenter = LatLng(43.321445, 21.896104)
 
     val requestPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestMultiplePermissions(),
@@ -357,7 +353,6 @@ fun HomeScreen(
 
                                 isAddPlaceModalOpen=true
                                 markerViewModel.setLatLng(latLng)
-                               // markerViewModel.setNewAddress(reverseGeocodeLocation(context = context, it))
                             }
                         ) {
 
@@ -499,11 +494,9 @@ fun HomeScreen(
                                     isServiceRunning = !isServiceRunning
                                     saveServiceRunningState(context, isServiceRunning) // Save the new state
                                     if (isServiceRunning) {
-//                                        startLocationService(context)//implementacija pracenja lokacije direktno preko servisa, ne radi
-                                        defaultNearbyPlaceController.startNearbyPlacesDetectionService()//prvobitna implementacija
+                                        defaultNearbyPlaceController.startNearbyPlacesDetectionService()
                                     } else {
-//                                        stopLocationService(context)//implementacija pracenja lokacije direktno preko servisa, ne radi
-                                        defaultNearbyPlaceController.stopNearbyPlacesDetectionService()//prvobitna implementacija
+                                        defaultNearbyPlaceController.stopNearbyPlacesDetectionService()
                                     }
                                 },
                                 onDismiss = {

@@ -105,7 +105,7 @@ fun RouteExplorer(
                 userViewModel = userViewModel,
                 markerViewModel = markerViewModel,
                 placeViewModel=placeViewModel,
-                selectPlace = { placeViewModel.setCurrentPlaceState(it)}//.setCurrentFieldState(it)}
+                selectPlace = { placeViewModel.setCurrentPlaceState(it)}
             )
         }
     }

@@ -11,7 +11,6 @@ import com.example.routeexplorer2.Screens
 import com.example.routeexplorer2.data.NavigationItem
 import com.google.firebase.auth.FirebaseAuth
 
-//ovo je zapravo za drawer
 class HomeViewModel: ViewModel() {
     private val TAG = HomeViewModel::class.simpleName
     val isLoading = MutableLiveData(true)  // Initialize as loading
@@ -32,21 +31,6 @@ class HomeViewModel: ViewModel() {
     )
 
     val isUserLoggedIn:MutableLiveData<Boolean> =MutableLiveData()
-// fun logout(){
-//        val firebaseAuth = FirebaseAuth.getInstance()
-//
-//        firebaseAuth.signOut()
-//        val authStateListener = FirebaseAuth.AuthStateListener {
-//            if (it.currentUser == null) {
-//                Log.d(TAG, "Inside sign out complete")
-//                RouterExplorerAppRouter.navigateTo(Screen.LoginScreen)
-//            } else {
-//                Log.d(TAG, "Inside sign out NOT completed")
-//            }
-//        }
-//
-//        firebaseAuth.addAuthStateListener (authStateListener)
-//    }/
 
     fun checkForActiveSession(navController: NavController){
         isLoading.value = true

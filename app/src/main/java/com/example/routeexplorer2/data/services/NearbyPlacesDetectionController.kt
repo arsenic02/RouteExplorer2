@@ -5,7 +5,7 @@ import androidx.annotation.RequiresApi
 
 interface NearbyPlacesDetectionController {
     @RequiresApi(Build.VERSION_CODES.O)
-    fun startNearbyPlacesDetectionService() //u homeScreen se poziva
+    fun startNearbyPlacesDetectionService()
 
     @RequiresApi(Build.VERSION_CODES.O)
     fun stopNearbyPlacesDetectionService()

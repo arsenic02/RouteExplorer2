@@ -363,8 +363,8 @@ fun AppToolbar(
     markerViewModel:MarkerViewModel,
     onMenuClicked:() -> Unit,
     onSearchClicked: () -> Unit,
-    onNotificationClicked: () -> Unit,  // New param for notification action
-    onRemoveFiltersClicked: () -> Unit,  // New param for remove filters action,
+    onNotificationClicked: () -> Unit,
+    onRemoveFiltersClicked: () -> Unit,
     defaultNearbyPlaceController: NearbyPlacesDetectionController,
 ){
     val filteredMarkers by markerViewModel.filteredMarkers.collectAsState()
@@ -374,7 +374,6 @@ fun AppToolbar(
     var isServiceRunning by remember { mutableStateOf(getServiceRunningState(context)) }
     val currentUserLocation by userViewModel.currentUserLocation.collectAsState()
     TopAppBar(
-        //backgroundColor= LightBlue, ne moze ovako u ovoj verziji
         title = {
             Text(
                 text = toolbarTitle,
@@ -458,19 +457,6 @@ fun AppToolbar(
     }
 }
 
-//@Composable
-//fun NavigationDrawerHeader(value:String?){
-//    Box(modifier= Modifier
-//        .fillMaxWidth()
-//        .padding(32.dp)
-//    ){
-//        NavigationDrawerText(title = value?:stringResource(R.string.navigation_header)
-//            ,28.sp)
-//
-//      //  HeadingTextComponent(value = stringResource(R.string.navigation_header))
-//    }
-//}
-
 @Composable
 fun NavigationDrawerHeader(firstName: String?, lastName: String?, email: String?, username: String?, phone: String?) {
     Column(modifier = Modifier.padding(16.dp)) {
@@ -494,8 +480,8 @@ fun NavigationDrawerHeader(firstName: String?, lastName: String?, email: String?
 @Composable
 fun NavigationDrawerBody(
     navigationDrawerItems:List<NavigationItem>,
-    imageUrl: Uri?, // Dodaj parametar za sliku
-   onImageChange: (Uri) -> Unit, // Callback za promenu slike
+    imageUrl: Uri?,
+   onImageChange: (Uri) -> Unit,
     onNavigationItemClicked: (NavigationItem) -> Unit
 ){
     LazyColumn(modifier=Modifier.fillMaxWidth()){
@@ -507,16 +493,8 @@ fun NavigationDrawerBody(
                     .padding(16.dp),
                 contentAlignment = Alignment.Center
             ) {
-//                ImagePicker(
-//                    imageUrl = imageUrl,
-//                    onGalleryChange = onImageChange
-//                )
-
             }
         }
-        //items(navigationDrawerItems){//bilo je ovako
-//            NavigationItemRow(item = it, onNavigationItemClicked) //bilo je ovako
-        //}
 
         items(navigationDrawerItems) { item ->
             NavigationItemRow(item = item, onNavigationItemClicked = { clickedItem ->
@@ -547,8 +525,6 @@ fun NavigationItemRow(item:NavigationItem,
         Spacer(modifier=Modifier.width(18.dp))
 
         NavigationDrawerText(title = item.title,18.sp)
-
-//        NormalTextComponent(value = item.title)
     }
 }
 
@@ -560,10 +536,6 @@ fun NavigationDrawerText(title:String,textUnit:TextUnit){
             color= Color.White,
             fontSize=textUnit,
             fontStyle=FontStyle.Normal,
-//            shadow= Shadow(
-//                color=Color.White,
-//                offset=shadowOffset,2f
-//            )
         )
     )
 }

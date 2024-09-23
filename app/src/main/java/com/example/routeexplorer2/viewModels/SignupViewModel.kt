@@ -34,30 +34,26 @@ class SignupViewModel(private val userRepository: UserRepository): ViewModel() {
             return
         }
 
-//        if (!isValidPhoneNumber(phoneNumber)) {
-//            callback(false, " The phone number is not in a valid format.")
-//            return
-//        }
-        // Proveri da li e-mail ima validan format
-//        if (!isValidEmail(email)) {
-//            // Obavestite korisnika o nevažećem e-mailu
-//            callback(false, "The email is not valid.")
-//            return
-//        }
+        ///////
+        if (!isValidPhoneNumber(phoneNumber)) {
+            callback(false, " The phone number is not in a valid format.")
+            return
+        }
 
-        // Proveri da li lozinka zadovoljava minimalne kriterijume
+        if (!isValidEmail(email)) {
+            callback(false, "The email is not valid.")
+            return
+        }
+
         if (!isValidPassword(password)) {
-            // Obavestite korisnika o nevalidnoj lozinci
             callback(false, "The password must contain at least 6 characters.")
             return
         }
 
-        // Proveri da li je imageUri prisutan
-//        if (!isImageUriValid(imageUri)) {
-//            // Obavestite korisnika da nije odabrana slika
-//            callback(false, "Please, upload an image.")
-//            return
-//        }
+        if (!isImageUriValid(imageUri)) {
+            callback(false, "Please, upload an image.")
+            return
+        }
 
         viewModelScope.launch {
             userRepository.registerUser(
@@ -93,10 +89,10 @@ class RegisterViewModelFactory(private val userRepository: UserRepository) : Vie
     }
 }
 
-/*private fun isValidEmail(email: String): Boolean {
+private fun isValidEmail(email: String): Boolean {
     val emailPattern = "[a-zA-Z0-9._-]+@[a-zA-Z]+\\.[a-zA-Z]+"
     return email.matches(emailPattern.toRegex())
-}*/
+}
 
 private fun isValidPassword(password: String): Boolean {
     // Firebase zahteva minimalno 6 karaktera
@@ -109,7 +105,6 @@ private fun isImageUriValid(uri: Uri?): Boolean {
 }
 
 private fun isValidPhoneNumber(phoneNumber: String): Boolean {
-    // Regularni izraz za validaciju broja telefona
     val regex = "^((\\+\\d{1,3}(-| )?)?(\\(?\\d{3}\\)?[-. ]?)?\\d{3}[-. ]?\\d{4})\$".toRegex()
     return regex.matches(phoneNumber)
 }

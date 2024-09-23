@@ -1,4 +1,4 @@
-package com.example.routeexplorer2.data.login
+package com.example.routeexplorer2.arhiva.login
 
 sealed class LoginUIEvent {
 

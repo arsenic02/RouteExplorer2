@@ -33,7 +33,7 @@ class PlaceViewModel(
     val places = MutableStateFlow<List<Place>>(emptyList())
     fun loadPlace(placeId: String) {
         viewModelScope.launch {
-            placeRepository.addPlaceSnapshotListener(placeId)//ovde se poziva PlaceRepository i onda tamo exception
+            placeRepository.addPlaceSnapshotListener(placeId)
         }
     }
 

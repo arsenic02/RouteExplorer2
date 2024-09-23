@@ -44,7 +44,7 @@ import com.example.routeexplorer2.viewModels.SignupViewModel
 
 @Composable
 fun SignUpScreen (
-    signupViewModel: SignupViewModel =viewModel(),//viewModel je bio zakomentarisan
+    signupViewModel: SignupViewModel =viewModel(),
     navController:NavController
 ){
     var isLoading by remember { mutableStateOf(false) }

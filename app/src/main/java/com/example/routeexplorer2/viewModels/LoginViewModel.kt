@@ -6,12 +6,10 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.routeexplorer2.data.login.LoginUIState
+import com.example.routeexplorer2.arhiva.login.LoginUIState
 import com.example.routeexplorer2.data.repository.UserRepository
 import kotlinx.coroutines.launch
 
-//dodato private val userRepository: UserRepository):ViewModel(), a bilo je samo
-//class LoginViewModel:ViewModel()
 class LoginViewModel(private val userRepository: UserRepository):ViewModel(){
 
     private val TAG = LoginViewModel::class.simpleName
@@ -20,7 +18,6 @@ class LoginViewModel(private val userRepository: UserRepository):ViewModel(){
 
     var loginInProgress =mutableStateOf(false)
 
-//ova dodato
     var email by mutableStateOf("")
     var password by mutableStateOf("")
     var passwordVisible by mutableStateOf(false)
@@ -62,7 +59,6 @@ class LoginViewModel(private val userRepository: UserRepository):ViewModel(){
     }
 }
 
-//dodato
 class LoginViewModelFactory(private val userRepository: UserRepository) :
     ViewModelProvider.Factory {
     @Suppress("UNCHECKED_CAST")

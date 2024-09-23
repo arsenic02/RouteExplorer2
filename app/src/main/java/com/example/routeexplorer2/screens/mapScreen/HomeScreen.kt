@@ -412,81 +412,8 @@ fun HomeScreen(
                                     .align(Alignment.TopEnd)
                                     .padding(12.dp)
                             ) {
-
-//                                if (filteredMarkers.isNotEmpty()) {
-//                                    IconButton(
-//                                        onClick = { markerViewModel.removeFilters() },
-//                                        modifier = Modifier
-//                                            .padding(start = 8.dp)
-//                                            .size(40.dp)
-//                                    ) {
-//                                        Icon(
-//                                            painter = painterResource(id = R.drawable.ic_search_off_24),
-//                                            contentDescription = "Remove filters",
-//                                            tint = MaterialTheme.colorScheme.primary,
-//                                            modifier = Modifier.size(32.dp)
-//                                        )
-//                                    }
-//                                }
-                                //notifications dugme je bilo na mapi
-//                                IconButton(
-//                                    onClick = { isServiceDialogOpen = true },
-//                                    modifier = Modifier.size(40.dp)
-//                                ) {
-//                                    Icon(
-//                                        painter = if (isServiceRunning) painterResource(id = R.drawable.notifications_active_24) else painterResource(
-//                                            id = R.drawable.notifications_24
-//                                        ),
-//                                        contentDescription = if (isServiceRunning) "Notifications" else "Notifications Off",
-//                                        tint = MaterialTheme.colorScheme.primary,
-//                                        modifier = Modifier.size(32.dp)
-//                                    )
-//                                }
-
                             }
                         }
-
-//radi, samo lose poziciniranje
-//                        if (filteredMarkers.isNotEmpty()) {
-//                            IconButton(
-//                                onClick = { markerViewModel.removeFilters() },
-//                                modifier = Modifier
-//                                    .align(Alignment.BottomCenter)
-//                                    .padding(
-//                                        top = 16.dp,
-//                                        bottom = 24.dp,
-//                                        start = 130.dp
-//                                    )
-//                                    .size(40.dp)
-//                            ) {
-//                                Icon(
-//                                    painter = painterResource(id = R.drawable.ic_search_off_24),
-//                                    contentDescription = "Remove filters",
-//                                    tint = MaterialTheme.colorScheme.primary,
-//                                    modifier = Modifier.size(32.dp)
-//                                )
-//                            }
-//                        }
-//
-//                        currentUserLocation?.let {
-//                            IconButton(
-//                                onClick = { isServiceDialogOpen = true },
-//                                modifier = Modifier
-//                                    .align(Alignment.TopEnd)
-//                                    .padding(12.dp)
-//                                    .size(40.dp)
-//                            ) {
-//                                Icon(
-//                                    painter = if (isServiceRunning) painterResource(id = R.drawable.notifications_active_24) else painterResource(
-//                                        id = R.drawable.notifications_24
-//                                    ),
-//                                    contentDescription = if (isServiceRunning) "Notifications" else "Notifications Off",
-//                                    tint = MaterialTheme.colorScheme.primary, // Adjust icon color if needed
-//                                    modifier = Modifier.size(32.dp)
-//                                )
-//                            }
-//                        }
-
                         if (isServiceDialogOpen) {
                             ServiceControllDialog(
                                 isServiceRunning = isServiceRunning,
